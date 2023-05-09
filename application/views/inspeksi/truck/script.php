@@ -6,7 +6,28 @@
                 'excelHtml5'
             ]
         });
+
+        $('#ficAssistant').select2();
+
     });
+
+    function checkAllItem(e) {
+        var checkboxes = $("input[id='chk-all-good-cat1[]']");
+
+        if (e.checked) {
+            for (i = 0; i < checkboxes.length; i++) {
+                if (checkboxes[i].type == 'checkbox') {
+                    checkboxes[i].checked = true;
+                }
+            }
+        } else {
+            for (i = 0; i < checkboxes.length; i++) {
+                if (checkboxes[i].type == 'checkbox') {
+                    checkboxes[i].checked = false;
+                }
+            }
+        }
+    }
 
     $("#btnNextPage").on('click', function() {
         $("#previewGeneralInspeksi").hide('slow');
@@ -87,7 +108,8 @@
             } else {
                 //jika tipe data tidak sesuai
                 alert(
-                    "Hanya dapat menampilkan preview tipe gambar. Harap simpan perubahan untuk melihat dan merubah gambar.");
+                    "Hanya dapat menampilkan preview tipe gambar. Harap simpan perubahan untuk melihat dan merubah gambar."
+                );
             }
         }
     }

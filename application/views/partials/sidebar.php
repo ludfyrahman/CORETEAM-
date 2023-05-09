@@ -7,7 +7,7 @@
         </a>
     </div>
     <hr class="horizontal dark mt-0">
-    <div class="collapse navbar-collapse w-auto " id="sidenav-collapse-main">
+    <div id="sidenav-collapse-main">
         <ul class="navbar-nav">
             <li class="nav-item">
                 <a class="nav-link <?= ($this->uri->segment(1) == 'Dashboard' ? 'active' : '') ?>" href="<?= base_url('Dashboard') ?>">
@@ -20,7 +20,7 @@
             <li class="nav-item">
                 <a class="nav-link" data-bs-toggle="collapse" href="#menu-collapse" role="button" aria-expanded="false" aria-controls="menu-collapse">
                     <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                        <i class="ni ni-calendar-grid-58 text-warning text-sm opacity-10"></i>
+                        <i class="ni ni-calendar-grid-58 text-success text-sm opacity-10"></i>
                     </div>
                     <span class="nav-link-text ms-1">Inspeksi</span>
                 </a>
@@ -37,17 +37,17 @@
                         <li class="nav-item">
                             <a class="nav-link" href="<?= base_url('') ?>./pages/rtl.html">
                                 <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                                    <i class="ni ni-world-2 text-danger text-sm opacity-10"></i>
+                                    <i class="fa-solid fa-car text-warning text-sm opacity-10"></i>
                                 </div>
-                                <span class="nav-link-text ms-1">Boat Car</span>
+                                <span class="nav-link-text ms-1">Rescue Car</span>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="<?= base_url('') ?>./pages/rtl.html">
                                 <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                                    <i class="ni ni-world-2 text-danger text-sm opacity-10"></i>
+                                    <i class="fa-solid fa-ship text-info text-sm opacity-10"></i>
                                 </div>
-                                <span class="nav-link-text ms-1">Rescue Car</span>
+                                <span class="nav-link-text ms-1">Rescue Boat</span>
                             </a>
                         </li>
                     </ul>
@@ -86,3 +86,5 @@
             pro</a>
     </div> -->
 </aside>
+
+<main class="main-content position-relative border-radius-lg ">
