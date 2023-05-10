@@ -36,16 +36,12 @@
             </div>
             <a href="javascript:void(0)" class="switch-trigger background-color">
                 <div class="badge-colors my-2 text-start">
-                    <span class="badge filter bg-gradient-primary active" data-color="primary"
-                        onclick="sidebarColor(this)"></span>
+                    <span class="badge filter bg-gradient-primary active" data-color="primary" onclick="sidebarColor(this)"></span>
                     <span class="badge filter bg-gradient-dark" data-color="dark" onclick="sidebarColor(this)"></span>
                     <span class="badge filter bg-gradient-info" data-color="info" onclick="sidebarColor(this)"></span>
-                    <span class="badge filter bg-gradient-success" data-color="success"
-                        onclick="sidebarColor(this)"></span>
-                    <span class="badge filter bg-gradient-warning" data-color="warning"
-                        onclick="sidebarColor(this)"></span>
-                    <span class="badge filter bg-gradient-danger" data-color="danger"
-                        onclick="sidebarColor(this)"></span>
+                    <span class="badge filter bg-gradient-success" data-color="success" onclick="sidebarColor(this)"></span>
+                    <span class="badge filter bg-gradient-warning" data-color="warning" onclick="sidebarColor(this)"></span>
+                    <span class="badge filter bg-gradient-danger" data-color="danger" onclick="sidebarColor(this)"></span>
                 </div>
             </a>
             <!-- Sidenav Type -->
@@ -54,44 +50,35 @@
                 <p class="text-sm">Choose between 2 different sidenav types.</p>
             </div>
             <div class="d-flex">
-                <button class="btn bg-gradient-primary w-100 px-3 mb-2 active me-2" data-class="bg-white"
-                    onclick="sidebarType(this)">White</button>
-                <button class="btn bg-gradient-primary w-100 px-3 mb-2" data-class="bg-default"
-                    onclick="sidebarType(this)">Dark</button>
+                <button class="btn bg-gradient-primary w-100 px-3 mb-2 active me-2" data-class="bg-white" onclick="sidebarType(this)">White</button>
+                <button class="btn bg-gradient-primary w-100 px-3 mb-2" data-class="bg-default" onclick="sidebarType(this)">Dark</button>
             </div>
             <p class="text-sm d-xl-none d-block mt-2">You can change the sidenav type just on desktop view.</p>
             <!-- Navbar Fixed -->
             <div class="d-flex my-3">
                 <h6 class="mb-0">Navbar Fixed</h6>
                 <div class="form-check form-switch ps-0 ms-auto my-auto">
-                    <input class="form-check-input mt-1 ms-auto" type="checkbox" id="navbarFixed"
-                        onclick="navbarFixed(this)">
+                    <input class="form-check-input mt-1 ms-auto" type="checkbox" id="navbarFixed" onclick="navbarFixed(this)">
                 </div>
             </div>
             <hr class="horizontal dark my-sm-4">
             <div class="mt-2 mb-5 d-flex">
                 <h6 class="mb-0">Light / Dark</h6>
                 <div class="form-check form-switch ps-0 ms-auto my-auto">
-                    <input class="form-check-input mt-1 ms-auto" type="checkbox" id="dark-version"
-                        onclick="darkMode(this)">
+                    <input class="form-check-input mt-1 ms-auto" type="checkbox" id="dark-version" onclick="darkMode(this)">
                 </div>
             </div>
             <a class="btn bg-gradient-dark w-100" href="https://www.creative-tim.com/product/argon-dashboard">Free
                 Download</a>
-            <a class="btn btn-outline-dark w-100"
-                href="https://www.creative-tim.com/learning-lab/bootstrap/license/argon-dashboard">View
+            <a class="btn btn-outline-dark w-100" href="https://www.creative-tim.com/learning-lab/bootstrap/license/argon-dashboard">View
                 documentation</a>
             <div class="w-100 text-center">
-                <a class="github-button" href="https://github.com/creativetimofficial/argon-dashboard"
-                    data-icon="octicon-star" data-size="large" data-show-count="true"
-                    aria-label="Star creativetimofficial/argon-dashboard on GitHub">Star</a>
+                <a class="github-button" href="https://github.com/creativetimofficial/argon-dashboard" data-icon="octicon-star" data-size="large" data-show-count="true" aria-label="Star creativetimofficial/argon-dashboard on GitHub">Star</a>
                 <h6 class="mt-3">Thank you for sharing!</h6>
-                <a href="https://twitter.com/intent/tweet?text=Check%20Argon%20Dashboard%20made%20by%20%40CreativeTim%20%23webdesign%20%23dashboard%20%23bootstrap5&amp;url=https%3A%2F%2Fwww.creative-tim.com%2Fproduct%2Fargon-dashboard"
-                    class="btn btn-dark mb-0 me-2" target="_blank">
+                <a href="https://twitter.com/intent/tweet?text=Check%20Argon%20Dashboard%20made%20by%20%40CreativeTim%20%23webdesign%20%23dashboard%20%23bootstrap5&amp;url=https%3A%2F%2Fwww.creative-tim.com%2Fproduct%2Fargon-dashboard" class="btn btn-dark mb-0 me-2" target="_blank">
                     <i class="fab fa-twitter me-1" aria-hidden="true"></i> Tweet
                 </a>
-                <a href="https://www.facebook.com/sharer/sharer.php?u=https://www.creative-tim.com/product/argon-dashboard"
-                    class="btn btn-dark mb-0 me-2" target="_blank">
+                <a href="https://www.facebook.com/sharer/sharer.php?u=https://www.creative-tim.com/product/argon-dashboard" class="btn btn-dark mb-0 me-2" target="_blank">
                     <i class="fab fa-facebook-square me-1" aria-hidden="true"></i> Share
                 </a>
             </div>
@@ -105,104 +92,109 @@
 <script src="<?= base_url('assets/js/plugins/smooth-scrollbar.min.js') ?>"></script>
 <script src="<?= base_url('assets/js/plugins/chartjs.min.js') ?>"></script>
 <script>
-var ctx1 = document.getElementById("chart-line").getContext("2d");
+    var ctx1 = document.getElementById("chart-line").getContext("2d");
 
-var gradientStroke1 = ctx1.createLinearGradient(0, 230, 0, 50);
+    var gradientStroke1 = ctx1.createLinearGradient(0, 230, 0, 50);
 
-gradientStroke1.addColorStop(1, 'rgba(94, 114, 228, 0.2)');
-gradientStroke1.addColorStop(0.2, 'rgba(94, 114, 228, 0.0)');
-gradientStroke1.addColorStop(0, 'rgba(94, 114, 228, 0)');
-new Chart(ctx1, {
-    type: "line",
-    data: {
-        labels: ["Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-        datasets: [{
-            label: "Mobile apps",
-            tension: 0.4,
-            borderWidth: 0,
-            pointRadius: 0,
-            borderColor: "#5e72e4",
-            backgroundColor: gradientStroke1,
-            borderWidth: 3,
-            fill: true,
-            data: [50, 40, 300, 220, 500, 250, 400, 230, 500],
-            maxBarThickness: 6
+    gradientStroke1.addColorStop(1, 'rgba(94, 114, 228, 0.2)');
+    gradientStroke1.addColorStop(0.2, 'rgba(94, 114, 228, 0.0)');
+    gradientStroke1.addColorStop(0, 'rgba(94, 114, 228, 0)');
+    new Chart(ctx1, {
+        type: "line",
+        data: {
+            labels: ["Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+            datasets: [{
+                label: "Mobile apps",
+                tension: 0.4,
+                borderWidth: 0,
+                pointRadius: 0,
+                borderColor: "#5e72e4",
+                backgroundColor: gradientStroke1,
+                borderWidth: 3,
+                fill: true,
+                data: [50, 40, 300, 220, 500, 250, 400, 230, 500],
+                maxBarThickness: 6
 
-        }],
-    },
-    options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-            legend: {
-                display: false,
-            }
+            }],
         },
-        interaction: {
-            intersect: false,
-            mode: 'index',
-        },
-        scales: {
-            y: {
-                grid: {
-                    drawBorder: false,
-                    display: true,
-                    drawOnChartArea: true,
-                    drawTicks: false,
-                    borderDash: [5, 5]
-                },
-                ticks: {
-                    display: true,
-                    padding: 10,
-                    color: '#fbfbfb',
-                    font: {
-                        size: 11,
-                        family: "Open Sans",
-                        style: 'normal',
-                        lineHeight: 2
-                    },
-                }
-            },
-            x: {
-                grid: {
-                    drawBorder: false,
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
                     display: false,
-                    drawOnChartArea: false,
-                    drawTicks: false,
-                    borderDash: [5, 5]
-                },
-                ticks: {
-                    display: true,
-                    color: '#ccc',
-                    padding: 20,
-                    font: {
-                        size: 11,
-                        family: "Open Sans",
-                        style: 'normal',
-                        lineHeight: 2
-                    },
                 }
             },
+            interaction: {
+                intersect: false,
+                mode: 'index',
+            },
+            scales: {
+                y: {
+                    grid: {
+                        drawBorder: false,
+                        display: true,
+                        drawOnChartArea: true,
+                        drawTicks: false,
+                        borderDash: [5, 5]
+                    },
+                    ticks: {
+                        display: true,
+                        padding: 10,
+                        color: '#fbfbfb',
+                        font: {
+                            size: 11,
+                            family: "Open Sans",
+                            style: 'normal',
+                            lineHeight: 2
+                        },
+                    }
+                },
+                x: {
+                    grid: {
+                        drawBorder: false,
+                        display: false,
+                        drawOnChartArea: false,
+                        drawTicks: false,
+                        borderDash: [5, 5]
+                    },
+                    ticks: {
+                        display: true,
+                        color: '#ccc',
+                        padding: 20,
+                        font: {
+                            size: 11,
+                            family: "Open Sans",
+                            style: 'normal',
+                            lineHeight: 2
+                        },
+                    }
+                },
+            },
         },
-    },
-});
+    });
 </script>
 <script>
-var win = navigator.platform.indexOf('Win') > -1;
-if (win && document.querySelector('#sidenav-scrollbar')) {
-    var options = {
-        damping: '0.5'
+    var win = navigator.platform.indexOf('Win') > -1;
+    if (win && document.querySelector('#sidenav-scrollbar')) {
+        var options = {
+            damping: '0.5'
+        }
+        Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
     }
-    Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
-}
 </script>
 <!-- Github buttons -->
 <script async defer src="https://buttons.github.io/buttons.js"></script>
 <!-- Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc -->
 <script src="<?= base_url('assets/js/argon-dashboard.min.js') ?>"></script>
-<script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
-<script type="text/javascript" src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
-<script type="text/javascript" src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
+<!-- <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script> -->
+<!-- <script type="text/javascript" src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script> -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"></script>
+
+<script src="<?= base_url('assets/'); ?>vendors/jquery-datatables/jquery.dataTables.min.js"></script>
+<script src="<?= base_url('assets/'); ?>vendors/jquery-datatables/custom.jquery.dataTables.bootstrap5.min.js"></script>
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js" integrity="sha512-bu+7sMX9I9jV1NZGMe2SP11vmUy+mdmkgbSxC6S2Q8KlCZ45E1J97vU6pw48W8b07kbzNthh6BvKIlFpyW8+JQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script> -->
 </body>
 
 </html>
