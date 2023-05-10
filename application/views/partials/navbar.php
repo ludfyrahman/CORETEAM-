@@ -17,8 +17,8 @@
                             <span class="d-sm-inline d-none">Username</span>
                         </button>
                         <ul class="dropdown-menu px-2 py-3" aria-labelledby="dropdownMenuButton">
-                            <li><a class="dropdown-item border-radius-md" href="javascript:;">My Profile</a></li>
-                            <li><a class="dropdown-item border-radius-md text-danger" href="javascript:;">Logout</a>
+                            <li><a class="dropdown-item border-radius-md" href="<?= base_url('KelolaAkun/profile') ?>">My Profile</a></li>
+                            <li><button class="dropdown-item border-radius-md text-danger" data-bs-toggle="modal" data-bs-target="#modal-notification">Logout</button>
                             </li>
                 </li>
             </ul>
@@ -29,3 +29,26 @@
     </div>
     </div>
 </nav>
+
+<!-- Modal konfirmasi inspeksi -->
+<div class="modal fade" id="modal-notification" tabindex="-1" role="dialog" aria-labelledby="modal-notification" aria-hidden="true">
+    <div class="modal-dialog modal-danger modal-dialog-centered modal-" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title" id="modal-title-notification">Alert</h6>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="py-3 text-center">
+                    <i class="ni ni-bell-55 ni-3x"></i>
+                    <h4 class="text-gradient text-danger mt-4">Warning!</h4>
+                    <p>Apakah anda yakin ingin keluar?</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger text-white" data-bs-dismiss="modal">Kembali</button>
+                <a href="<?= base_url('Auth') ?>" type="button" class="btn btn-primary ml-auto">Keluar</a>
+            </div>
+        </div>
+    </div>
+</div>
