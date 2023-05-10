@@ -35,7 +35,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="<?= base_url('') ?>./pages/rtl.html">
+                            <a class="nav-link <?= ($this->uri->segment(2) == 'InspeksiCar' ? 'active' : '') ?>" href="<?= base_url('Inspeksi/InspeksiCar') ?>">
                                 <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
                                     <i class="fa-solid fa-car text-warning text-sm opacity-10"></i>
                                 </div>
@@ -43,7 +43,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="<?= base_url('') ?>./pages/rtl.html">
+                            <a class="nav-link <?= ($this->uri->segment(2) == 'InspeksiBoat' ? 'active' : '') ?>" href="<?= base_url('Inspeksi/InspeksiBoat') ?>">
                                 <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
                                     <i class="fa-solid fa-ship text-info text-sm opacity-10"></i>
                                 </div>
@@ -59,7 +59,7 @@
             </li>
 
             <li class="nav-item">
-                <a class="nav-link " href="<?= base_url('') ?>./pages/profile.html">
+                <a class="nav-link <?= ($this->uri->segment(1) == 'KelolaAkun' ? 'active' : '') ?>" href="<?= base_url('KelolaAkun') ?>">
                     <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
                         <i class="ni ni-single-02 text-dark text-sm opacity-10"></i>
                     </div>
