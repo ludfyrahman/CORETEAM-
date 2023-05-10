@@ -39,9 +39,8 @@
                                 <label for="status">Status</label>
                                 <select class="form-control text-sm" id="status">
                                     <option value="">Pilih status</option>
-                                    <option value="1">Andre</option>
-                                    <option value="2">Ludfi</option>
-                                    <option value="3">Nafis</option>
+                                    <option value="0">FIC Assistant</option>
+                                    <option value="1">FIC Commander</option>
                                 </select>
                             </div>
                         </div>
@@ -62,7 +61,7 @@
                     </div>
                 </div>
             </div>
-            <button class="btn btn-icon btn-3 btn-primary mb-0 ms-2 float-end" type="button" id="btnsaveinspeksi" data-bs-toggle="modal" data-bs-target="#modal-notification">
+            <button class="btn btn-icon btn-3 btn-primary mb-0 ms-2 float-end" type="button" id="btnsaveuser">
                 <span class="btn-inner--icon text-white"><i class="ni ni-check-bold"></i></span>
                 <span class="btn-inner--text text-white">Simpan</span>
             </button>
