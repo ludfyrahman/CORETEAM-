@@ -6,12 +6,14 @@ class KelolaAkun extends CI_Controller
     public function __construct()
     {
         parent::__construct();
+        $this->load->model('M_KelolaAkun');
         // cek_session();
     }
 
     public function index()
     {
         $data['mainurl'] = 'Kelola akun';
+        $data['user']    = $this->M_KelolaAkun->read();
 
         $this->load->view('partials/header');
         $this->load->view('partials/sidebar');
@@ -25,7 +27,7 @@ class KelolaAkun extends CI_Controller
     public function createAccount()
     {
         $data['mainurl'] = 'Add user';
-        
+
         $this->load->view('partials/header');
         $this->load->view('partials/sidebar');
         $this->load->view('partials/navbar', $data);
@@ -34,7 +36,21 @@ class KelolaAkun extends CI_Controller
         $this->load->view('user/script');
         $this->load->view('partials/modal_source');
     }
-    
+
+    public function saveAccount()
+    {
+        $nama       = $this->input->post('nama');
+        $username   = $this->input->post('username');
+        $role       = $this->input->post('role');
+        $status     = $this->input->post('status');
+        $password   = password_hash($this->input->post('nama'), PASSWORD_DEFAULT);
+        $created_at = date('Y-m-d H:i:s');
+
+        $this->M_KelolaAkun->saveAccount($nama, $username, $role, $status, $password, $created_at);
+
+        echo 1;
+    }
+
     public function detailAccount()
     {
         $data['mainurl'] = 'Detail user';
@@ -47,7 +63,7 @@ class KelolaAkun extends CI_Controller
         $this->load->view('user/script');
         $this->load->view('partials/modal_source');
     }
-    
+
     public function profile()
     {
         $data['mainurl'] = 'My Profile';

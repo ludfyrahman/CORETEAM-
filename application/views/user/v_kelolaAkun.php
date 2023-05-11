@@ -25,69 +25,57 @@
                                 </tr>
                             </thead>
                             <tbody class="text-center">
-                                <tr>
-                                    <td class="text-sm">1</td>
-                                    <td class="text-sm">Nafis</td>
-                                    <td class="text-sm">schatzy</td>
-                                    <td class="text-sm">User</td>
-                                    <td class="text-sm">FIC Assistant</td>
-                                    <td class="text-sm"><span class="badge bg-success">Aktif</span></td>
-                                    <td class="text-sm">04-05-2023</td>
-                                    <td class="text-sm">04-05-2023</td>
-                                    <td>
-                                        <!-- <a href="#" class="btn btn-icon btn-3 btn-warning w-40" type="button" title="Edit User">
+                                <?php $no = 1;
+                                foreach ($user as $data) { ?>
+                                    <tr>
+                                        <td class="text-sm"><?= $no ?></td>
+                                        <td class="text-sm"><?= $data['nama'] ?></td>
+                                        <td class="text-sm"><?= $data['username'] ?></td>
+                                        <td class="text-sm">
+                                            <?php
+                                            if ($data['role'] == '0') {
+                                                echo 'Superadmin';
+                                            } else if ($data['role'] == '1') {
+                                                echo 'User';
+                                            } else {
+                                                echo 'Spectator';
+                                            }
+                                            ?>
+                                        </td>
+                                        <td class="text-sm">
+                                            <?php
+                                            if ($data['status'] == '0') {
+                                                echo 'FIC Assistant';
+                                            } else {
+                                                echo 'FIC Commander';
+                                            }
+                                            ?>
+                                        </td>
+                                        <td class="text-sm">
+                                            <?php
+                                            if ($data['status'] == '0') { ?>
+                                                <span class="badge bg-danger">Non-Aktif</span>
+                                            <?php } else { ?>
+                                                <span class="badge bg-success">Aktif</span>
+                                            <?php }
+                                            ?>
+                                        </td>
+                                        <td class="text-sm"><?= date('d-m-Y (H:i:s)', strtotime($data['created_at'])) ?></td>
+                                        <td class="text-sm"><?= date('d-m-Y (H:i:s)', strtotime($data['updated_at'])) ?></td>
+                                        <td>
+                                            <!-- <a href="#" class="btn btn-icon btn-3 btn-warning w-40" type="button" title="Edit User">
                                             <span class="btn-inner--icon text-white"><i class="fa-solid fa-pencil-alt"></i></span>
                                         </a> -->
-                                        <a href="<?= base_url('KelolaAkun/detailAccount') ?>" class="btn btn-icon btn-3 btn-warning w-50" type="button" title="Detail User">
-                                            <span class="btn-inner--icon text-white"><i class="fa-solid fa-search-plus"></i></span>
-                                        </a>
-                                        <button class="btn btn-icon btn-3 btn-danger w-50" type="button" title="Delete User" data-bs-toggle="modal" data-bs-target="#modal-notification">
-                                            <span class="btn-inner--icon text-white"><i class="fa-solid fa-trash"></i></span>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="text-sm">2</td>
-                                    <td class="text-sm">Ludfi</td>
-                                    <td class="text-sm">ludfyrhmn</td>
-                                    <td class="text-sm">Spectator</td>
-                                    <td class="text-sm">FIC Assistant</td>
-                                    <td class="text-sm"><span class="badge bg-danger">Non-aktif</span></td>
-                                    <td class="text-sm">04-05-2023</td>
-                                    <td class="text-sm">04-05-2023</td>
-                                    <td>
-                                        <!-- <a href="#" class="btn btn-icon btn-3 btn-warning w-40" type="button" title="Edit User">
-                                            <span class="btn-inner--icon text-white"><i class="fa-solid fa-pencil-alt"></i></span>
-                                        </a> -->
-                                        <a href="#" class="btn btn-icon btn-3 btn-warning w-50" type="button" title="Detail User">
-                                            <span class="btn-inner--icon text-white"><i class="fa-solid fa-search-plus"></i></span>
-                                        </a>
-                                        <a href="#" class="btn btn-icon btn-3 btn-danger w-50" type="button" title="Delete User">
-                                            <span class="btn-inner--icon text-white"><i class="fa-solid fa-trash"></i></span>
-                                        </a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="text-sm">3</td>
-                                    <td class="text-sm">Andre</td>
-                                    <td class="text-sm">sterben</td>
-                                    <td class="text-sm">Superadmin</td>
-                                    <td class="text-sm">FIC Commander</td>
-                                    <td class="text-sm"><span class="badge bg-success">Aktif</span></td>
-                                    <td class="text-sm">04-05-2023</td>
-                                    <td class="text-sm">04-05-2023</td>
-                                    <td>
-                                        <!-- <a href="#" class="btn btn-icon btn-3 btn-warning w-40" type="button" title="Edit User">
-                                            <span class="btn-inner--icon text-white"><i class="fa-solid fa-pencil-alt"></i></span>
-                                        </a> -->
-                                        <a href="#" class="btn btn-icon btn-3 btn-warning w-50" type="button" title="Detail User">
-                                            <span class="btn-inner--icon text-white"><i class="fa-solid fa-search-plus"></i></span>
-                                        </a>
-                                        <a href="#" class="btn btn-icon btn-3 btn-danger w-50" type="button" title="Delete User">
-                                            <span class="btn-inner--icon text-white"><i class="fa-solid fa-trash"></i></span>
-                                        </a>
-                                    </td>
-                                </tr>
+                                            <a href="<?= base_url('KelolaAkun/detailAccount/' . $data['id_user']) ?>" class="btn btn-icon btn-3 btn-warning w-50" type="button" title="Detail User">
+                                                <span class="btn-inner--icon text-white"><i class="fa-solid fa-search-plus"></i></span>
+                                            </a>
+                                            <button class="btn btn-icon btn-3 btn-danger w-50" type="button" title="Delete User" data-bs-toggle="modal" data-bs-target="#modal-notification">
+                                                <span class="btn-inner--icon text-white"><i class="fa-solid fa-trash"></i></span>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                <?php $no++;
+                                } ?>
                             </tbody>
                         </table>
                     </div>
