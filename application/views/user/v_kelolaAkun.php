@@ -53,7 +53,7 @@
                                         </td>
                                         <td class="text-sm">
                                             <?php
-                                            if ($data['status'] == '0') { ?>
+                                            if ($data['is_active'] == '0') { ?>
                                                 <span class="badge bg-danger">Non-Aktif</span>
                                             <?php } else { ?>
                                                 <span class="badge bg-success">Aktif</span>
@@ -69,7 +69,7 @@
                                             <a href="<?= base_url('KelolaAkun/detailAccount/' . $data['id_user']) ?>" class="btn btn-icon btn-3 btn-warning w-50" type="button" title="Detail User">
                                                 <span class="btn-inner--icon text-white"><i class="fa-solid fa-search-plus"></i></span>
                                             </a>
-                                            <button class="btn btn-icon btn-3 btn-danger w-50" type="button" title="Delete User" data-bs-toggle="modal" data-bs-target="#modal-notification">
+                                            <button class="btn btn-icon btn-3 btn-danger w-50" type="button" onclick="showModalConfirm('<?= $data['id_user'] ?>')" title="Delete User">
                                                 <span class="btn-inner--icon text-white"><i class="fa-solid fa-trash"></i></span>
                                             </button>
                                         </td>

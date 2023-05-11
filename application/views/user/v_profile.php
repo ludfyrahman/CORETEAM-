@@ -40,19 +40,19 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="example-text-input" class="form-control-label">Nama Lengkap</label>
-                                        <input id="nama" class="form-control" type="text" value="lucky.jesse" disabled>
+                                        <input class="form-control text-sm" type="text" value="<?= $detail['nama'] ?>" disabled>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="example-text-input" class="form-control-label">Username</label>
-                                        <input id="username" class="form-control" type="text" value="jesse@example.com" disabled>
+                                        <input class="form-control text-sm" type="text" value="<?= $detail['username'] ?>" disabled>
                                     </div>
                                 </div>
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label for="example-text-input" class="form-control-label">Position</label>
-                                        <input id="status" class="form-control" type="text" value="Jesse" disabled>
+                                        <input class="form-control text-sm" type="text" value="<?= ($this->session->userdata('status') == 0 ? 'FIC Assistant' : 'FIC Commander' ) ?>" disabled>
                                     </div>
                                 </div>
                             </div>
@@ -68,19 +68,19 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="example-text-input" class="form-control-label">Nama Lengkap</label>
-                                        <input id="nama" class="form-control" type="text" value="lucky.jesse">
+                                        <input id="nama" class="form-control text-sm" type="text" value="<?= $detail['nama'] ?>">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="example-text-input" class="form-control-label">Username</label>
-                                        <input id="username" class="form-control" type="text" value="jesse@example.com">
+                                        <input id="username" class="form-control text-sm" type="text" value="<?= $detail['username'] ?>">
                                     </div>
                                 </div>
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label for="example-text-input" class="form-control-label">Position</label>
-                                        <input id="status" class="form-control" type="text" value="Jesse">
+                                        <input id="status" class="form-control text-sm" type="text" value="<?= ($detail['status'] == 0 ? 'FIC Assistant' : 'FIC Commander' ) ?>" disabled>
                                     </div>
                                 </div>
                             </div>
@@ -96,19 +96,19 @@
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label for="example-text-input" class="form-control-label">Password lama</label>
-                                        <input id="pwLama" class="form-control" type="password" value="lucky.jesse">
+                                        <input id="pwLama" class="form-control" type="password" value="">
                                     </div>
                                 </div>
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label for="example-text-input" class="form-control-label">Password baru</label>
-                                        <input id="pwBaru" class="form-control" type="password" value="jesse@example.com">
+                                        <input id="pwBaru" class="form-control" type="password" value="">
                                     </div>
                                 </div>
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label for="example-text-input" class="form-control-label">Konfirmasi password baru</label>
-                                        <input id="konfirPW" class="form-control" type="password" value="Jesse">
+                                        <input id="konfirPW" class="form-control" type="password" value="">
                                     </div>
                                 </div>
                             </div>
@@ -116,11 +116,11 @@
                     </div>
                 </div>
             </div>
-            <button class="btn btn-icon btn-3 btn-primary mb-0 ms-2 float-end" style="display: none;" type="button" id="btnupdateprofile" data-bs-toggle="modal" data-bs-target="#modal-notification">
+            <button class="btn btn-icon btn-3 btn-primary mb-0 ms-2 float-end" style="display: none;" type="button" id="btnupdateprofile">
                 <span class="btn-inner--icon text-white"><i class="ni ni-check-bold"></i></span>
                 <span class="btn-inner--text text-white">Update profile</span>
             </button>
-            <button class="btn btn-icon btn-3 btn-primary mb-0 ms-2 float-end" style="display: none;" type="button" id="btnupdatepassword" data-bs-toggle="modal" data-bs-target="#modal-notification">
+            <button class="btn btn-icon btn-3 btn-primary mb-0 ms-2 float-end" style="display: none;" type="button" id="btnupdatepassword">
                 <span class="btn-inner--icon text-white"><i class="ni ni-check-bold"></i></span>
                 <span class="btn-inner--text text-white">Update password</span>
             </button>
