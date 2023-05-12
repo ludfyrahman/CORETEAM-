@@ -30,6 +30,18 @@
     }
 
     $("#btnNextPage").on('click', function() {
+        var tglWaktuInspeksi = $('#tglWaktuInspeksi').val();
+        var shift = $('#shift').val();
+        var fireIncidentCommander = $('#fireIncidentCommander').val();
+        var ficAssistantArray = $('#ficAssistant').val();
+        var fuelLevel = $('#fuelLevel').val();
+
+        if (tglWaktuInspeksi == '' || shift == '' || fireIncidentCommander == '' || ficAssistantArray == '' || fuelLevel == '') {
+            alert('Form Inspeksi ada yang kosong');
+            return false;
+        }
+
+
         $("#previewGeneralInspeksi").hide('slow');
         $("#btnNextPage").hide('slow');
         $("#previewChecklistItem").show('slow');
@@ -57,6 +69,13 @@
     })
 
     $("#btnNextPage2").on('click', function() {
+        var item = $("tbody > tr input[type='checkbox']:checked");
+
+        if (item.length == 0) {
+            alert('Kondisi Item ada yang kosong');
+            return false;
+        }
+
         $("#previewChecklistItem").hide('slow');
         $("#previewChecklistItem2").hide('slow');
         $("#previewChecklistItem3").hide('slow');
@@ -88,10 +107,12 @@
 
     //hanya bisa memilih 1 checkbox
     $('input[type="checkbox"]').on('change', function() {
-        // Mendapatkan baris (tr) dari checkbox yang dipilih
+        // Mendapatkan baris (tr/th) dari checkbox yang dipilih
         var row = $(this).closest('tbody > tr');
+        var rowTH = $(this).closest('thead > tr');
         // Menonaktifkan semua checkbox pada baris yang sama
         row.find('input[type="checkbox"]').not(this).prop('checked', false);
+        rowTH.find('input[type="checkbox"]').not(this).prop('checked', false);
     });
 
     function tampilkanPreview(gambar, idpreview) {
@@ -124,12 +145,89 @@
     }
 
     $('#btnsaveinspeksi').on('click', function() {
-        var tglWaktuInspeksi = $('#tglWaktuInspeksi').val();
-        var formattedDatetimeValue = tglWaktuInspeksi.replace(/T/, ' ').replace(/\..+/, '');
+        var form_data = new FormData();
 
+        // form pertama
+        var tglWaktuInspeksi = $('#tglWaktuInspeksi').val();
+        var tglWaktuInspeksiFormatted = tglWaktuInspeksi.replace(/T/, ' ').replace(/\..+/, '');
         var shift = $('#shift').val();
         var fireIncidentCommander = $('#fireIncidentCommander').val();
         var ficAssistantArray = $('#ficAssistant').val();
         var fuelLevel = $('#fuelLevel').val();
+
+        //form ketiga
+        var file = $('#attachment').prop('files')[0];
+        var remark = $('#remark').val();
+
+        if (file == '' || remark == '') {
+            alert('Form Attachment ada yang kosong');
+            return false;
+        }
+        return false;
+
+        // ambil input type checkbox dengan ketentuan checked
+        var checkbox = $("tbody > tr input[type='checkbox']:checked");
+
+        // memasukkan data checkbox checked ke dalam array()
+        var arr_item = [];
+        $(checkbox).each(function() {
+            var value = $(this).val();
+            var subcategory = $(this).attr('data-subcategory');
+            var item = $(this).attr('data-item');
+
+            arr_item.push({
+                subcategory: subcategory,
+                id_item: item,
+                conditions: value
+            });
+        })
+
+        // cek apa ada data kosong pada setiap subcategory, jika ada maka muncul alert
+        $('.subCat').each(function() {
+            var jumlahItemSubCategory = $(this).val();
+            var subcategory = $(this).attr('data-subcategory');
+
+            var count = arr_item.filter(row => row.subcategory === subcategory).length
+
+            if (count != jumlahItemSubCategory) {
+                alert('gagal, ada data yang belum diinput pada subcategory ' + subcategory + '');
+                return false;
+            }
+        });
+
+        var json_arr = JSON.stringify(arr_item);
+        var json_arr_assistant = JSON.stringify(ficAssistantArray);
+        form_data.append('tglWaktu', tglWaktuInspeksiFormatted);
+        form_data.append('shift', shift);
+        form_data.append('commander', fireIncidentCommander);
+        form_data.append('assistant', json_arr_assistant);
+        form_data.append('fuelLevel', fuelLevel);
+        form_data.append('file', file);
+        form_data.append('remark', remark);
+        form_data.append('arrItem', json_arr);
+
+        $.ajax({
+            type: "POST",
+            url: "<?= base_url('Inspeksi/InspeksiTruck/saveInspeksi') ?>",
+            data: form_data,
+            contentType: false,
+            processData: false,
+            dataType: "JSON",
+            success: function(response) {
+                if (response.status == false) {
+                    alert(response.message);
+                    setTimeout(() => {
+                        window.location.href = "<?= base_url('Inspeksi/InspeksiTruck') ?>"
+                    }, 1000);
+                } else {
+                    alert(response.message);
+                    setTimeout(() => {
+                        window.location.href = "<?= base_url('Inspeksi/InspeksiTruck') ?>"
+                    }, 1000);
+                }
+            }
+        })
+
+
     })
 </script>
