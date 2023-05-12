@@ -20,8 +20,8 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="tglInspeksi">Tanggal</label>
-                                    <input type="date" class="form-control text-sm" id="tglInspeksi">
+                                    <label for="tglInspeksi">Tanggal dan Waktu</label>
+                                    <input type="datetime-local" class="form-control text-sm" id="tglWaktuInspeksi">
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -43,9 +43,11 @@
                                     <label for="fireIncidentCommander">Fire Incident Commander</label>
                                     <select class="form-control text-sm" id="fireIncidentCommander">
                                         <option value="">Pilih Fire Incident Commander</option>
-                                        <option value="1">Andre</option>
-                                        <option value="2">Ludfi</option>
-                                        <option value="3">Nafis</option>
+                                        <?php
+                                        foreach ($commander as $value) { ?>
+                                            <option value="<?= $value['id'] ?>"><?= $value['nama'] ?></option>
+                                        <?php }
+                                        ?>
                                     </select>
                                 </div>
                             </div>
@@ -54,9 +56,11 @@
                                     <label for="ficAssistant">FIC Assistant</label>
                                     <select class="form-control text-sm" id="ficAssistant" aria-placeholder="true" multiple>
                                         <option value="">Pilih FIC Assistant</option>
-                                        <option value="1">Andre</option>
-                                        <option value="2">Ludfi</option>
-                                        <option value="3">Nafis</option>
+                                        <?php
+                                        foreach ($assistant as $value) { ?>
+                                            <option value="<?= $value['id'] ?>"><?= $value['nama'] ?></option>
+                                        <?php }
+                                        ?>
                                     </select>
                                 </div>
                             </div>
@@ -66,7 +70,7 @@
                                 <div class="form-group">
                                     <label for="fuelLevel">Fuel Level</label>
                                     <div class="input-group input-group-alternative mb-4">
-                                        <input class="form-control" placeholder="Fuel level..." type="number">
+                                        <input class="form-control" id="fuelLevel" placeholder="Fuel level..." type="number" min="0">
                                         <span class="input-group-text"><i class="fa-solid fa-percent"></i></span>
                                     </div>
                                 </div>
@@ -80,6 +84,11 @@
                 <span class="btn-inner--text text-white">Selanjutnya</span>
             </button>
         </div>
+        
+        <!-- total item by subcategory  -->
+        <?php foreach ($countsub as $value) { ?>
+            <input type="hidden" class="subCat" data-subcategory="<?= $value['subcategory'] ?>" value="<?= $value['total'] ?>">
+        <?php }  ?>
 
         <div class="col-lg-6 col-md-12">
             <div id="previewChecklistItem" class="card mb-4" style="display: none;">
@@ -88,52 +97,24 @@
                 </div>
                 <div class="card-body p-4">
                     <div class="table-responsive">
-                        <table id="table1" class="table table-stripped" style="width:100%">
+                        <table id="tableCat1" class="table table-stripped" style="width:100%">
                             <thead class="text-center">
                                 <tr>
                                     <th class="text-xs font-weight-bolder">Item</th>
-                                    <th class="text-xs font-weight-bolder ps-2"><input type="checkbox" class="form-check-input me-2" onchange="checkAllItem(this)"> Good</th>
-                                    <th class="text-center text-xs font-weight-bolder"><input type="checkbox" class="form-check-input me-2"> Damage</th>
-                                    <th class="text-center text-xs font-weight-bolder"><input type="checkbox" class="form-check-input me-2"> N/A</th>
+                                    <th class="text-xs font-weight-bolder ps-2 pb-1"><input id="good-cat1" type="checkbox" class="form-check-input me-2" onchange="checkAllItem(this, 'chk-all-good-cat1[]')"> <label for="good-cat1">Good</label></th>
+                                    <th class="text-center text-xs font-weight-bolder ps-2 pb-1"><input type="checkbox" id="damage-cat1" class="form-check-input me-2" onchange="checkAllItem(this, 'chk-all-damage-cat1[]')"> <label for="damage-cat1">Damage</label> </th>
+                                    <th class="text-center text-xs font-weight-bolder ps-2 pb-1"><input type="checkbox" id="none-cat1" class="form-check-input me-2" onchange="checkAllItem(this, 'chk-all-none-cat1[]')"> <label for="none-cat1">N/A</label></th>
                                 </tr>
                             </thead>
                             <tbody class="text-center">
-                                <tr>
-                                    <td class="text-sm">Engine Oil Level</td>
-                                    <td><input type="checkbox" class="form-check-input" id="chk-all-good-cat1[]"></td>
-                                    <td><input type="checkbox" class="form-check-input"></td>
-                                    <td><input type="checkbox" class="form-check-input"></td>
-                                </tr>
-                                <tr>
-                                    <td class="text-sm">Coolant Level</td>
-                                    <td><input type="checkbox" class="form-check-input" id="chk-all-good-cat1[]"></td>
-                                    <td><input type="checkbox" class="form-check-input"></td>
-                                    <td><input type="checkbox" class="form-check-input"></td>
-                                </tr>
-                                <tr>
-                                    <td class="text-sm">Brake Fluid</td>
-                                    <td><input type="checkbox" class="form-check-input" id="chk-all-good-cat1[]"></td>
-                                    <td><input type="checkbox" class="form-check-input"></td>
-                                    <td><input type="checkbox" class="form-check-input"></td>
-                                </tr>
-                                <tr>
-                                    <td class="text-sm">Power Steering Fluid</td>
-                                    <td><input type="checkbox" class="form-check-input" id="chk-all-good-cat1[]"></td>
-                                    <td><input type="checkbox" class="form-check-input"></td>
-                                    <td><input type="checkbox" class="form-check-input"></td>
-                                </tr>
-                                <tr>
-                                    <td class="text-sm">Brake Fluid</td>
-                                    <td><input type="checkbox" class="form-check-input" id="chk-all-good-cat1[]"></td>
-                                    <td><input type="checkbox" class="form-check-input"></td>
-                                    <td><input type="checkbox" class="form-check-input"></td>
-                                </tr>
-                                <tr>
-                                    <td class="text-sm">Power Steering Fluid</td>
-                                    <td><input type="checkbox" class="form-check-input" id="chk-all-good-cat1[]"></td>
-                                    <td><input type="checkbox" class="form-check-input"></td>
-                                    <td><input type="checkbox" class="form-check-input"></td>
-                                </tr>
+                                <?php foreach ($subcat1 as $value) { ?>
+                                    <tr>
+                                        <td class="text-sm"><?= $value['item'] ?></td>
+                                        <td><input type="checkbox" class="form-check-input" data-subcategory="<?= $value['subcategory'] ?>" data-item="<?= $value['id_item'] ?>" id="chk-all-good-cat1[]" value="2"></td>
+                                        <td><input type="checkbox" class="form-check-input" data-subcategory="<?= $value['subcategory'] ?>" data-item="<?= $value['id_item'] ?>" id="chk-all-damage-cat1[]" value="1"></td>
+                                        <td><input type="checkbox" class="form-check-input" data-subcategory="<?= $value['subcategory'] ?>" data-item="<?= $value['id_item'] ?>" id="chk-all-none-cat1[]" value="0"></td>
+                                    </tr>
+                                <?php }  ?>
                             </tbody>
                         </table>
                     </div>
@@ -147,40 +128,24 @@
                 </div>
                 <div class="card-body p-4">
                     <div class="table-responsive">
-                        <table id="table1" class="table table-stripped" style="width:100%">
+                        <table id="tableCat2" class="table table-stripped" style="width:100%">
                             <thead class="text-center">
                                 <tr>
                                     <th class="text-xs font-weight-bolder">Item</th>
-                                    <th class="text-xs font-weight-bolder ps-2">Good</th>
-                                    <th class="text-center text-xs font-weight-bolder">Damage</th>
-                                    <th class="text-center text-xs font-weight-bolder">N/A</th>
+                                    <th class="text-xs font-weight-bolder ps-2 pb-1"><input id="good-cat2" type="checkbox" class="form-check-input me-2" onchange="checkAllItem(this, 'chk-all-good-cat2[]')"> <label for="good-cat2">Good</label></th>
+                                    <th class="text-center text-xs font-weight-bolder ps-2 pb-1"><input type="checkbox" id="damage-cat2" class="form-check-input me-2" onchange="checkAllItem(this, 'chk-all-damage-cat2[]')"> <label for="damage-cat2">Damage</label> </th>
+                                    <th class="text-center text-xs font-weight-bolder ps-2 pb-1"><input type="checkbox" id="none-cat2" class="form-check-input me-2" onchange="checkAllItem(this, 'chk-all-none-cat2[]')"> <label for="none-cat2">N/A</label></th>
                                 </tr>
                             </thead>
                             <tbody class="text-center">
-                                <tr>
-                                    <td class="text-sm">Engine Oil Level</td>
-                                    <td><input type="checkbox" class="form-check-input" id="engine"></td>
-                                    <td><input type="checkbox" class="form-check-input" id="engine"></td>
-                                    <td><input type="checkbox" class="form-check-input" id="engine"></td>
-                                </tr>
-                                <tr>
-                                    <td class="text-sm">Coolant Level</td>
-                                    <td><input type="checkbox" class="form-check-input" id="coolant"></td>
-                                    <td><input type="checkbox" class="form-check-input" id="coolant"></td>
-                                    <td><input type="checkbox" class="form-check-input" id="coolant"></td>
-                                </tr>
-                                <tr>
-                                    <td class="text-sm">Brake Fluid</td>
-                                    <td><input type="checkbox" class="form-check-input"></td>
-                                    <td><input type="checkbox" class="form-check-input"></td>
-                                    <td><input type="checkbox" class="form-check-input"></td>
-                                </tr>
-                                <tr>
-                                    <td class="text-sm">Power Steering Fluid</td>
-                                    <td><input type="checkbox" class="form-check-input"></td>
-                                    <td><input type="checkbox" class="form-check-input"></td>
-                                    <td><input type="checkbox" class="form-check-input"></td>
-                                </tr>
+                                <?php foreach ($subcat2 as $value) { ?>
+                                    <tr>
+                                        <td class="text-sm"><?= $value['item'] ?></td>
+                                        <td><input type="checkbox" class="form-check-input" data-subcategory="<?= $value['subcategory'] ?>" data-item="<?= $value['id_item'] ?>" id="chk-all-good-cat2[]" value="2"></td>
+                                        <td><input type="checkbox" class="form-check-input" data-subcategory="<?= $value['subcategory'] ?>" data-item="<?= $value['id_item'] ?>" id="chk-all-damage-cat2[]" value="1"></td>
+                                        <td><input type="checkbox" class="form-check-input" data-subcategory="<?= $value['subcategory'] ?>" data-item="<?= $value['id_item'] ?>" id="chk-all-none-cat2[]" value="0"></td>
+                                    </tr>
+                                <?php }  ?>
                             </tbody>
                         </table>
                     </div>
@@ -194,44 +159,24 @@
                 </div>
                 <div class="card-body p-4">
                     <div class="table-responsive">
-                        <table id="table1" class="table table-stripped" style="width:100%">
+                        <table id="tableCat3" class="table table-stripped" style="width:100%">
                             <thead class="text-center">
                                 <tr>
-                                    <th class="text-xs font-weight-bolder">
-                                        Item</th>
-                                    <th class="text-xs font-weight-bolder ps-2">
-                                        Good</th>
-                                    <th class="text-center text-xs font-weight-bolder">
-                                        Damage</th>
-                                    <th class="text-center text-xs font-weight-bolder">
-                                        N/A</th>
+                                    <th class="text-xs font-weight-bolder">Item</th>
+                                    <th class="text-xs font-weight-bolder ps-2 pb-1"><input id="good-cat3" type="checkbox" class="form-check-input me-2" onchange="checkAllItem(this, 'chk-all-good-cat3[]')"> <label for="good-cat3">Good</label></th>
+                                    <th class="text-center text-xs font-weight-bolder ps-2 pb-1"><input type="checkbox" id="damage-cat3" class="form-check-input me-2" onchange="checkAllItem(this, 'chk-all-damage-cat3[]')"> <label for="damage-cat3">Damage</label> </th>
+                                    <th class="text-center text-xs font-weight-bolder ps-2 pb-1"><input type="checkbox" id="none-cat3" class="form-check-input me-2" onchange="checkAllItem(this, 'chk-all-none-cat3[]')"> <label for="none-cat3">N/A</label></th>
                                 </tr>
                             </thead>
                             <tbody class="text-center">
-                                <tr>
-                                    <td class="text-sm">Engine Oil Level</td>
-                                    <td><input type="checkbox" class="form-check-input"></td>
-                                    <td><input type="checkbox" class="form-check-input"></td>
-                                    <td><input type="checkbox" class="form-check-input"></td>
-                                </tr>
-                                <tr>
-                                    <td class="text-sm">Coolant Level</td>
-                                    <td><input type="checkbox" class="form-check-input"></td>
-                                    <td><input type="checkbox" class="form-check-input"></td>
-                                    <td><input type="checkbox" class="form-check-input"></td>
-                                </tr>
-                                <tr>
-                                    <td class="text-sm">Brake Fluid</td>
-                                    <td><input type="checkbox" class="form-check-input"></td>
-                                    <td><input type="checkbox" class="form-check-input"></td>
-                                    <td><input type="checkbox" class="form-check-input"></td>
-                                </tr>
-                                <tr>
-                                    <td class="text-sm">Power Steering Fluid</td>
-                                    <td><input type="checkbox" class="form-check-input"></td>
-                                    <td><input type="checkbox" class="form-check-input"></td>
-                                    <td><input type="checkbox" class="form-check-input"></td>
-                                </tr>
+                                <?php foreach ($subcat3 as $value) { ?>
+                                    <tr>
+                                        <td class="text-sm"><?= $value['item'] ?></td>
+                                        <td><input type="checkbox" class="form-check-input" data-subcategory="<?= $value['subcategory'] ?>" data-item="<?= $value['id_item'] ?>" id="chk-all-good-cat3[]" value="2"></td>
+                                        <td><input type="checkbox" class="form-check-input" data-subcategory="<?= $value['subcategory'] ?>" data-item="<?= $value['id_item'] ?>" id="chk-all-damage-cat3[]" value="1"></td>
+                                        <td><input type="checkbox" class="form-check-input" data-subcategory="<?= $value['subcategory'] ?>" data-item="<?= $value['id_item'] ?>" id="chk-all-none-cat3[]" value="0"></td>
+                                    </tr>
+                                <?php }  ?>
                             </tbody>
                         </table>
                     </div>
@@ -245,46 +190,86 @@
                 </div>
                 <div class="card-body p-4">
                     <div class="table-responsive">
-                        <table id="table1" class="table table-stripped" style="width:100%">
+                        <table id="tableCat4" class="table table-stripped" style="width:100%">
                             <thead class="text-center">
                                 <tr>
                                     <th class="text-xs font-weight-bolder">Item</th>
-                                    <th class="text-xs font-weight-bolder ps-2">Good</th>
-                                    <th class="text-center text-xs font-weight-bolder">Damage</th>
-                                    <th class="text-center text-xs font-weight-bolder">N/A</th>
+                                    <th class="text-xs font-weight-bolder ps-2 pb-1"><input id="good-cat4" type="checkbox" class="form-check-input me-2" onchange="checkAllItem(this, 'chk-all-good-cat4[]')"> <label for="good-cat4">Good</label></th>
+                                    <th class="text-center text-xs font-weight-bolder ps-2 pb-1"><input type="checkbox" id="damage-cat4" class="form-check-input me-2" onchange="checkAllItem(this, 'chk-all-damage-cat4[]')"> <label for="damage-cat4">Damage</label> </th>
+                                    <th class="text-center text-xs font-weight-bolder ps-2 pb-1"><input type="checkbox" id="none-cat4" class="form-check-input me-2" onchange="checkAllItem(this, 'chk-all-none-cat4[]')"> <label for="none-cat4">N/A</label></th>
                                 </tr>
                             </thead>
                             <tbody class="text-center">
+                                <?php foreach ($subcat4 as $value) { ?>
+                                    <tr>
+                                        <td class="text-sm"><?= $value['item'] ?></td>
+                                        <td><input type="checkbox" class="form-check-input" data-subcategory="<?= $value['subcategory'] ?>" data-item="<?= $value['id_item'] ?>" id="chk-all-good-cat4[]" value="2"></td>
+                                        <td><input type="checkbox" class="form-check-input" data-subcategory="<?= $value['subcategory'] ?>" data-item="<?= $value['id_item'] ?>" id="chk-all-damage-cat4[]" value="1"></td>
+                                        <td><input type="checkbox" class="form-check-input" data-subcategory="<?= $value['subcategory'] ?>" data-item="<?= $value['id_item'] ?>" id="chk-all-none-cat4[]" value="0"></td>
+                                    </tr>
+                                <?php }  ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6 col-md-12">
+            <div id="previewChecklistItem5" class="card mb-4" style="display: none;">
+                <div class="card-header pb-3 bg-white">
+                    <h6>5. Ziegler Superstucture (Pump Compartment)</h6>
+                </div>
+                <div class="card-body p-4">
+                    <div class="table-responsive">
+                        <table id="tableCat5" class="table table-stripped" style="width:100%">
+                            <thead class="text-center">
                                 <tr>
-                                    <td class="text-sm">Engine Oil Level</td>
-                                    <td><input type="checkbox" class="form-check-input" id="engine"></td>
-                                    <td><input type="checkbox" class="form-check-input" id="engine"></td>
-                                    <td><input type="checkbox" class="form-check-input" id="engine"></td>
+                                    <th class="text-xs font-weight-bolder">Item</th>
+                                    <th class="text-xs font-weight-bolder ps-2 pb-1"><input id="good-cat5" type="checkbox" class="form-check-input me-2" onchange="checkAllItem(this, 'chk-all-good-cat5[]')"> <label for="good-cat5">Good</label></th>
+                                    <th class="text-center text-xs font-weight-bolder ps-2 pb-1"><input type="checkbox" id="damage-cat5" class="form-check-input me-2" onchange="checkAllItem(this, 'chk-all-damage-cat5[]')"> <label for="damage-cat5">Damage</label> </th>
+                                    <th class="text-center text-xs font-weight-bolder ps-2 pb-1"><input type="checkbox" id="none-cat5" class="form-check-input me-2" onchange="checkAllItem(this, 'chk-all-none-cat5[]')"> <label for="none-cat5">N/A</label></th>
                                 </tr>
+                            </thead>
+                            <tbody class="text-center">
+                                <?php foreach ($subcat5 as $value) { ?>
+                                    <tr>
+                                        <td class="text-sm"><?= $value['item'] ?></td>
+                                        <td><input type="checkbox" class="form-check-input" data-subcategory="<?= $value['subcategory'] ?>" data-item="<?= $value['id_item'] ?>" id="chk-all-good-cat5[]" value="2"></td>
+                                        <td><input type="checkbox" class="form-check-input" data-subcategory="<?= $value['subcategory'] ?>" data-item="<?= $value['id_item'] ?>" id="chk-all-damage-cat5[]" value="1"></td>
+                                        <td><input type="checkbox" class="form-check-input" data-subcategory="<?= $value['subcategory'] ?>" data-item="<?= $value['id_item'] ?>" id="chk-all-none-cat5[]" value="0"></td>
+                                    </tr>
+                                <?php }  ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6 col-md-12">
+            <div id="previewChecklistItem6" class="card mb-4" style="display: none;">
+                <div class="card-header pb-3 bg-white">
+                    <h6>6. FIREMAN TOOLS & EQUIPMENTS</h6>
+                </div>
+                <div class="card-body p-4">
+                    <div class="table-responsive">
+                        <table id="tableCat6" class="table table-stripped" style="width:100%">
+                            <thead class="text-center">
                                 <tr>
-                                    <td class="text-sm">Coolant Level</td>
-                                    <td><input type="checkbox" class="form-check-input" id="coolant"></td>
-                                    <td><input type="checkbox" class="form-check-input" id="coolant"></td>
-                                    <td><input type="checkbox" class="form-check-input" id="coolant"></td>
+                                    <th class="text-xs font-weight-bolder">Item</th>
+                                    <th class="text-xs font-weight-bolder ps-2 pb-1"><input id="good-cat6" type="checkbox" class="form-check-input me-2" onchange="checkAllItem(this, 'chk-all-good-cat6[]')"> <label for="good-cat6">Good</label></th>
+                                    <th class="text-center text-xs font-weight-bolder ps-2 pb-1"><input type="checkbox" id="damage-cat6" class="form-check-input me-2" onchange="checkAllItem(this, 'chk-all-damage-cat6[]')"> <label for="damage-cat6">Damage</label> </th>
+                                    <th class="text-center text-xs font-weight-bolder ps-2 pb-1"><input type="checkbox" id="none-cat6" class="form-check-input me-2" onchange="checkAllItem(this, 'chk-all-none-cat6[]')"> <label for="none-cat6">N/A</label></th>
                                 </tr>
-                                <tr>
-                                    <td class="text-sm">Brake Fluid</td>
-                                    <td><input type="checkbox" class="form-check-input"></td>
-                                    <td><input type="checkbox" class="form-check-input"></td>
-                                    <td><input type="checkbox" class="form-check-input"></td>
-                                </tr>
-                                <tr>
-                                    <td class="text-sm">Power Steering Fluid</td>
-                                    <td><input type="checkbox" class="form-check-input"></td>
-                                    <td><input type="checkbox" class="form-check-input"></td>
-                                    <td><input type="checkbox" class="form-check-input"></td>
-                                </tr>
-                                <tr>
-                                    <td class="text-sm">Power Steering Fluid</td>
-                                    <td><input type="checkbox" class="form-check-input"></td>
-                                    <td><input type="checkbox" class="form-check-input"></td>
-                                    <td><input type="checkbox" class="form-check-input"></td>
-                                </tr>
+                            </thead>
+                            <tbody class="text-center">
+                                <?php foreach ($subcat6 as $value) { ?>
+                                    <tr>
+                                        <td class="text-sm"><?= $value['item'] ?></td>
+                                        <td><input type="checkbox" class="form-check-input" data-subcategory="<?= $value['subcategory'] ?>" data-item="<?= $value['id_item'] ?>" id="chk-all-good-cat6[]" value="2"></td>
+                                        <td><input type="checkbox" class="form-check-input" data-subcategory="<?= $value['subcategory'] ?>" data-item="<?= $value['id_item'] ?>" id="chk-all-damage-cat6[]" value="1"></td>
+                                        <td><input type="checkbox" class="form-check-input" data-subcategory="<?= $value['subcategory'] ?>" data-item="<?= $value['id_item'] ?>" id="chk-all-none-cat6[]" value="0"></td>
+                                    </tr>
+                                <?php }  ?>
                             </tbody>
                         </table>
                     </div>
@@ -344,7 +329,7 @@
                 <span class="btn-inner--icon"><i class="ni ni-bold-left"></i></span>
                 <span class="btn-inner--text">Kembali</span>
             </button>
-            <button class="btn btn-icon btn-3 btn-primary mb-0 float-end" type="button" id="btnsaveinspeksi" style="display: none;" data-bs-toggle="modal" data-bs-target="#modal-notification">
+            <button class="btn btn-icon btn-3 btn-primary mb-0 float-end" type="button" id="btnsaveinspeksi" style="display: none;">
                 <span class="btn-inner--icon text-white"><i class="ni ni-check-bold"></i></span>
                 <span class="btn-inner--text text-white">Simpan</span>
             </button>

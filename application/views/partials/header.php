@@ -16,9 +16,7 @@
     <link href="<?= base_url('assets/css/nucleo-svg.css') ?>" rel="stylesheet" />
     <!-- Font Awesome Icons -->
     <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-        integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
-        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link href="<?= base_url('assets/css/nucleo-svg.css') ?>" rel="stylesheet" />
     <!-- CSS Files -->
     <link id="pagestyle" href="<?= base_url('assets/css/argon-dashboard.css') ?>" rel="stylesheet" />
@@ -41,8 +39,10 @@
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
-    <link rel="stylesheet"
-        href="<?= base_url('assets/'); ?>vendors/jquery-datatables/jquery.dataTables.bootstrap5.min.css">
+    <link rel="stylesheet" href="<?= base_url('assets/'); ?>vendors/jquery-datatables/jquery.dataTables.bootstrap5.min.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/@pnotify/core@5.2.0/dist/PNotify.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/@pnotify/core@5.2.0/dist/PNotify.min.css" rel="stylesheet">
 </head>
 
 <body class="g-sidenav-show bg-gray-100">
