@@ -217,7 +217,7 @@ class M_InspeksiTruck extends CI_Model
 
   public function insertInspeksi($id_user, $tglWaktu, $shift, $commander, $fuelLevel, $kodeFile, $uploadImage, $remark, $date_now)
   {
-    $this->db->set('inspected_by', 1);
+    $this->db->set('inspected_by', $id_user);
     $this->db->set('tgl_inspeksi', $tglWaktu);
     $this->db->set('shift', $shift);
     $this->db->set('fire_incident_commander', $commander);
