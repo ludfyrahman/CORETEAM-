@@ -69,10 +69,39 @@
     })
 
     $("#btnNextPage2").on('click', function() {
-        var item = $("tbody > tr input[type='checkbox']:checked");
+        // ambil input type checkbox dengan ketentuan checked
+        var checkbox = $("tbody > tr input[type='checkbox']:checked");
 
-        if (item.length == 0) {
-            alert('Kondisi Item ada yang kosong');
+        // memasukkan data checkbox checked ke dalam array()
+        var arr_item = [];
+        $(checkbox).each(function() {
+            var value = $(this).val();
+            var subcategory = $(this).attr('data-subcategory');
+            var item = $(this).attr('data-item');
+
+            arr_item.push({
+                subcategory: subcategory,
+                id_item: item,
+                conditions: value
+            });
+        })
+
+        // cek apa ada data kosong pada setiap subcategory, jika ada maka muncul alert
+        var boolean = true;
+        $('.subCat').each(function() {
+            var jumlahItemSubCategory = $(this).val();
+            var subcategory = $(this).attr('data-subcategory');
+
+            var count = arr_item.filter(row => row.subcategory === subcategory).length
+
+            if (count != jumlahItemSubCategory) {
+                boolean = false;
+                return false;
+            }
+        });
+
+        if (boolean == false) {
+            alert('Ada Item yang belum dipilih');
             return false;
         }
 
@@ -163,7 +192,6 @@
             alert('Form Attachment ada yang kosong');
             return false;
         }
-        return false;
 
         // ambil input type checkbox dengan ketentuan checked
         var checkbox = $("tbody > tr input[type='checkbox']:checked");
@@ -181,19 +209,6 @@
                 conditions: value
             });
         })
-
-        // cek apa ada data kosong pada setiap subcategory, jika ada maka muncul alert
-        $('.subCat').each(function() {
-            var jumlahItemSubCategory = $(this).val();
-            var subcategory = $(this).attr('data-subcategory');
-
-            var count = arr_item.filter(row => row.subcategory === subcategory).length
-
-            if (count != jumlahItemSubCategory) {
-                alert('gagal, ada data yang belum diinput pada subcategory ' + subcategory + '');
-                return false;
-            }
-        });
 
         var json_arr = JSON.stringify(arr_item);
         var json_arr_assistant = JSON.stringify(ficAssistantArray);
@@ -219,6 +234,8 @@
                     setTimeout(() => {
                         window.location.href = "<?= base_url('Inspeksi/InspeksiTruck') ?>"
                     }, 1000);
+                } else if (response.status == 'error') {
+                    alert(response.message);
                 } else {
                     alert(response.message);
                     setTimeout(() => {

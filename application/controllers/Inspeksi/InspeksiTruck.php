@@ -61,8 +61,7 @@ class InspeksiTruck extends CI_Controller
         $config['max_size']        = '2048';
         $config['allowed_types']   = 'jpg|jpeg|png';
         $config['source_image']    = $_FILES['file']['tmp_name'];
-        $config['max_size']        = '2048';
-        $config['upload_path']     = './assets/uploads/';
+        $config['upload_path']     = './uploads/';
 
         $this->load->library('upload', $config);
         $this->upload->initialize($config);
@@ -118,7 +117,7 @@ class InspeksiTruck extends CI_Controller
                 echo json_encode(array('status' => true, 'message' => 'Data Berhasil Disimpan'));
             }
         } else {
-            echo json_encode(array('status' => false, 'message' => $this->upload->display_errors()));
+            echo json_encode(array('status' => 'error', 'message' => $this->upload->display_errors()));
         }
     }
 }
