@@ -11,23 +11,30 @@
 
     });
 
-    function checkAllItem(e, string) {
-        var checkboxes = $("input[id='" + string + "']");
+    function checkAllItem(e, id1, id2, id3) {
+        var checkboxes = $("input[id='" + id1 + "']");
+        var checkboxes2 = $("input[id='" + id2 + "']");
+        var checkboxes3 = $("input[id='" + id3 + "']");
 
         if (e.checked) {
-            for (i = 0; i < checkboxes.length; i++) {
-                if (checkboxes[i].type == 'checkbox') {
-                    checkboxes[i].checked = true;
-                }
-            }
+            checkboxes.prop('checked', true);
+            checkboxes2.prop('checked', false);
+            checkboxes3.prop('checked', false);
         } else {
-            for (i = 0; i < checkboxes.length; i++) {
-                if (checkboxes[i].type == 'checkbox') {
-                    checkboxes[i].checked = false;
-                }
-            }
+            checkboxes.prop('checked', false);
         }
     }
+
+    //hanya bisa memilih 1 checkbox
+    $('input[type="checkbox"]').on('change', function() {
+        // Mendapatkan baris (tr/th) dari checkbox yang dipilih
+        var row = $(this).closest('tbody > tr');
+        var rowTH = $(this).closest('thead > tr');
+        console.log(rowTH);
+        // Menonaktifkan semua checkbox pada baris yang sama
+        row.find('input[type="checkbox"]').not(this).prop('checked', false);
+        rowTH.find('input[type="checkbox"]').not(this).prop('checked', false);
+    });
 
     $("#btnNextPage").on('click', function() {
         var tglWaktuInspeksi = $('#tglWaktuInspeksi').val();
@@ -133,16 +140,6 @@
         $("#btnsaveinspeksi").hide('slow');
         $("#btnNextPage").hide('slow');
     })
-
-    //hanya bisa memilih 1 checkbox
-    $('input[type="checkbox"]').on('change', function() {
-        // Mendapatkan baris (tr/th) dari checkbox yang dipilih
-        var row = $(this).closest('tbody > tr');
-        var rowTH = $(this).closest('thead > tr');
-        // Menonaktifkan semua checkbox pada baris yang sama
-        row.find('input[type="checkbox"]').not(this).prop('checked', false);
-        rowTH.find('input[type="checkbox"]').not(this).prop('checked', false);
-    });
 
     function tampilkanPreview(gambar, idpreview) {
         //membuat objek gambar
