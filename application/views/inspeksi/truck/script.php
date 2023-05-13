@@ -1,11 +1,6 @@
 <script type="text/javascript">
     $(document).ready(function() {
-        $('#truckInspeksiTable').DataTable({
-            dom: 'Bfrtip',
-            buttons: [
-                'excelHtml5'
-            ]
-        });
+        $('#truckInspeksiTable').DataTable({});
 
         $('#ficAssistant').select2();
 

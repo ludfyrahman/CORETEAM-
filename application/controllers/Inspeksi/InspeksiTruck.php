@@ -89,10 +89,13 @@ class InspeksiTruck extends CI_Controller
                 $kodeFile = 'FT' . "-" . $angka;
             }
 
+            // get id category truck
+            $idCatFireTruck = $this->M_InspeksiTruck->getIDCatFireTruck();
+
             $this->db->trans_begin();
 
             // insert ke table inspeksi
-            $insert = $this->M_InspeksiTruck->insertInspeksi($id_user, $tglWaktu, $shift, $commander, $fuelLevel, $kodeFile, $uploadImage['file_name'], $remark, $date_now);
+            $insert = $this->M_InspeksiTruck->insertInspeksi($id_user, $tglWaktu, $shift, $commander, $fuelLevel, $kodeFile, $uploadImage['file_name'], $remark, $date_now, $idCatFireTruck['id_category']);
 
             // get id_inspeksi di tabel inspeksi
             $id = $this->M_InspeksiTruck->getIDInspeksi();
@@ -119,5 +122,10 @@ class InspeksiTruck extends CI_Controller
         } else {
             echo json_encode(array('status' => 'error', 'message' => $this->upload->display_errors()));
         }
+    }
+
+    public function getInspeksi()
+    {
+        $result = $this->M_InspeksiTruck->getInspeksi();
     }
 }

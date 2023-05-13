@@ -215,7 +215,20 @@ class M_InspeksiTruck extends CI_Model
     return $query;
   }
 
-  public function insertInspeksi($id_user, $tglWaktu, $shift, $commander, $fuelLevel, $kodeFile, $uploadImage, $remark, $date_now)
+  public function getIDCatFireTruck()
+  {
+    $query = $this->db->query("SELECT id_category FROM category WHERE category = 'Fire Truck'");
+
+    if ($query->num_rows() == 0) {
+      $query = 0;
+    } else {
+      $query = $query->row_array();
+    }
+
+    return $query;
+  }
+
+  public function insertInspeksi($id_user, $tglWaktu, $shift, $commander, $fuelLevel, $kodeFile, $uploadImage, $remark, $date_now, $idCategory)
   {
     $this->db->set('inspected_by', $id_user);
     $this->db->set('tgl_inspeksi', $tglWaktu);
@@ -226,6 +239,7 @@ class M_InspeksiTruck extends CI_Model
     $this->db->set('attachment', $uploadImage);
     $this->db->set('remark', $remark);
     $this->db->set('created_at', $date_now);
+    $this->db->set('id_category', $idCategory);
     $this->db->insert('inspeksi');
 
     $affectedrows = $this->db->affected_rows();
@@ -286,4 +300,9 @@ class M_InspeksiTruck extends CI_Model
 
     return $queryinsert;
   }
+
+  // public function getInspeksi()
+  // {
+  //   $query = $this->db->query("")
+  // }
 }
