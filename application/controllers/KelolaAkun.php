@@ -7,7 +7,7 @@ class KelolaAkun extends CI_Controller
     {
         parent::__construct();
         $this->load->model('M_KelolaAkun');
-        // cek_session();
+        cek_session();
     }
 
     public function index()
