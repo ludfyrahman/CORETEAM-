@@ -1,10 +1,71 @@
 <script type="text/javascript">
     $(document).ready(function() {
-        $('#truckInspeksiTable').DataTable({});
 
         $('#ficAssistant').select2();
 
+        // jika id tabel ada
+        if ($('#truckInspeksiTable')) {
+            getInspeksi();
+        }
+
     });
+
+    function getInspeksi() {
+        $.ajax({
+            type: "POST",
+            url: "<?= base_url('Inspeksi/InspeksiTruck/getInspeksi') ?>",
+            dataType: "JSON",
+            success: function(response) {
+                if ($.fn.DataTable.isDataTable('#truckInspeksiTable')) {
+                    $('#truckInspeksiTable').DataTable().clear();
+                    $('#truckInspeksiTable').DataTable().destroy();
+                }
+
+                $('#truckInspeksiTable > tbody').empty();
+
+                if (response.length != 0) {
+                    var no = 1;
+                    $.each(response, function(i, v) {
+                        var roleUser = <?= $this->session->userdata('role'); ?>;
+
+                        var button = '';
+                        if (roleUser == 2) {
+                            button = '<a href="<?= base_url('Inspeksi/InspeksiTruck/exportLaporanInspeksi/') ?>' +
+                                v.id_inspeksi + '" class="btn btn-icon btn-3 btn-success w-30" type="button" title="Export Inspeksi">' +
+                                '<span class="btn-inner--icon text-white"><i class="fa-solid fa-file-excel"></i></span></a>'
+                        } else {
+                            button = '<a href="<?= base_url('Inspeksi/InspeksiTruck/editInspeksi/') ?>' +
+                                v.id_inspeksi + '" class="btn btn-icon btn-3 btn-warning w-30" type="button" title="Edit Inspeksi">' +
+                                '<span class="btn-inner--icon text-white"><i class="fa-solid fa-pencil-alt"></i></span></a> ' +
+                                '<a href="<?= base_url('Inspeksi/InspeksiTruck/exportLaporanInspeksi/') ?>' +
+                                v.id_inspeksi + '" class="btn btn-icon btn-3 btn-success w-30" type="button" title="Export Inspeksi">' +
+                                '<span class="btn-inner--icon text-white"><i class="fa-solid fa-file-excel"></i></span></a> '
+                        }
+
+                        $('#truckInspeksiTable > tbody').append(`
+                            <tr>
+                            <td class="text-sm">${no++}</td>
+                            <td class="text-sm">${v.kode_inspeksi}</td>
+                            <td class="text-sm">${v.tgl_inspeksi}</td>
+                            <td class="text-sm">${v.nama}</td>
+                            <td class="text-sm"> 
+                            ${button}</td>
+                            </tr>
+                        `)
+                    });
+
+                    $('#truckInspeksiTable').DataTable();
+
+                } else {
+                    $('#truckInspeksiTable > tbody').append(`
+                            <tr>
+                            <td colspan="5" class="text-sm text-danger">Data Kosong</td>
+                            </tr>
+                        `)
+                }
+            }
+        })
+    }
 
     function checkAllItem(e, id1, id2, id3) {
         var checkboxes = $("input[id='" + id1 + "']");
@@ -117,6 +178,7 @@
         $("#btnPrevPage").hide('slow');
         $("#btnPrevPage2").show('slow');
         $("#btnsaveinspeksi").show('slow');
+        $("#updatebtnsaveinspeksi").show('slow');
         $("#previewAttachment").show('slow');
     })
 
@@ -133,6 +195,7 @@
         $("#btnPrevPage").show('slow');
         $("#btnPrevPage2").hide('slow');
         $("#btnsaveinspeksi").hide('slow');
+        $("#updatebtnsaveinspeksi").hide('slow');
         $("#btnNextPage").hide('slow');
     })
 
@@ -192,11 +255,9 @@
         var arr_item = [];
         $(checkbox).each(function() {
             var value = $(this).val();
-            var subcategory = $(this).attr('data-subcategory');
             var item = $(this).attr('data-item');
 
             arr_item.push({
-                subcategory: subcategory,
                 id_item: item,
                 conditions: value
             });
@@ -236,7 +297,81 @@
                 }
             }
         })
+    });
 
+    $('#updatebtnsaveinspeksi').on('click', function() {
+        var form_data = new FormData();
 
+        // form pertama
+        var tglWaktuInspeksi = $('#tglWaktuInspeksi').val();
+        var tglWaktuInspeksiFormatted = tglWaktuInspeksi.replace(/T/, ' ').replace(/\..+/, '');
+        var shift = $('#shift').val();
+        var fireIncidentCommander = $('#fireIncidentCommander').val();
+        var ficAssistantArray = $('#ficAssistant').val();
+        var fuelLevel = $('#fuelLevel').val();
+        var id_inspeksi = $('#idInspeksi').val();
+
+        //form ketiga
+        var file = $('#attachment').prop('files')[0];
+        var remark = $('#remark').val();
+        var filePertama = $('#attachment_pertama').val();
+        if (file == undefined) {
+            file = '';
+        }
+
+        //form kedua
+        // ambil input type checkbox dengan ketentuan checked
+        var checkbox = $("tbody > tr input[type='checkbox']:checked");
+
+        // memasukkan data checkbox checked ke dalam array()
+        var arr_item = [];
+        $(checkbox).each(function() {
+            var value = $(this).val();
+            var item = $(this).attr('data-item');
+            var idInspeksiDetail = $(this).attr('data-id-inspeksi-detail');
+
+            arr_item.push({
+                id_inspeksi_detail: idInspeksiDetail,
+                id_item: item,
+                conditions: value
+            });
+        })
+
+        var json_arr = JSON.stringify(arr_item);
+        var json_arr_assistant = JSON.stringify(ficAssistantArray);
+        form_data.append('tglWaktu', tglWaktuInspeksiFormatted);
+        form_data.append('shift', shift);
+        form_data.append('commander', fireIncidentCommander);
+        form_data.append('assistant', json_arr_assistant);
+        form_data.append('fuelLevel', fuelLevel);
+        form_data.append('file', file);
+        form_data.append('filePertama', filePertama);
+        form_data.append('remark', remark);
+        form_data.append('arrItem', json_arr);
+        form_data.append('idInspeksi', id_inspeksi);
+
+        $.ajax({
+            type: "POST",
+            url: "<?= base_url('Inspeksi/InspeksiTruck/updateInspeksi') ?>",
+            data: form_data,
+            contentType: false,
+            processData: false,
+            dataType: "JSON",
+            success: function(response) {
+                if (response.status == false) {
+                    alert(response.message);
+                    setTimeout(() => {
+                        window.location.href = "<?= base_url('Inspeksi/InspeksiTruck') ?>"
+                    }, 1000);
+                } else if (response.status == 'error') {
+                    alert(response.message);
+                } else {
+                    alert(response.message);
+                    setTimeout(() => {
+                        window.location.href = "<?= base_url('Inspeksi/InspeksiTruck') ?>"
+                    }, 1000);
+                }
+            }
+        })
     })
 </script>
