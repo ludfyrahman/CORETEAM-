@@ -84,7 +84,7 @@
                 <span class="btn-inner--text text-white">Selanjutnya</span>
             </button>
         </div>
-        
+
         <!-- total item by subcategory  -->
         <?php foreach ($countsub as $value) { ?>
             <input type="hidden" class="subCat" data-subcategory="<?= $value['subcategory'] ?>" value="<?= $value['total'] ?>">
@@ -101,9 +101,9 @@
                             <thead class="text-center">
                                 <tr>
                                     <th class="text-xs font-weight-bolder">Item</th>
-                                    <th class="text-xs font-weight-bolder ps-2 pb-1"><input id="good-cat1" type="checkbox" class="form-check-input me-2" onchange="checkAllItem(this, 'chk-all-good-cat1[]')"> <label for="good-cat1">Good</label></th>
-                                    <th class="text-center text-xs font-weight-bolder ps-2 pb-1"><input type="checkbox" id="damage-cat1" class="form-check-input me-2" onchange="checkAllItem(this, 'chk-all-damage-cat1[]')"> <label for="damage-cat1">Damage</label> </th>
-                                    <th class="text-center text-xs font-weight-bolder ps-2 pb-1"><input type="checkbox" id="none-cat1" class="form-check-input me-2" onchange="checkAllItem(this, 'chk-all-none-cat1[]')"> <label for="none-cat1">N/A</label></th>
+                                    <th class="text-xs font-weight-bolder ps-2 pb-1"><input id="good-cat1" type="checkbox" class="form-check-input me-2" onchange="checkAllItem(this, 'chk-all-good-cat1[]', 'chk-all-damage-cat1[]', 'chk-all-none-cat1[]')"> <label for="good-cat1">Good</label></th>
+                                    <th class="text-center text-xs font-weight-bolder ps-2 pb-1"><input type="checkbox" id="damage-cat1" class="form-check-input me-2" onchange="checkAllItem(this, 'chk-all-damage-cat1[]', 'chk-all-good-cat1[]', 'chk-all-none-cat1[]')"> <label for="damage-cat1">Damage</label> </th>
+                                    <th class="text-center text-xs font-weight-bolder ps-2 pb-1"><input type="checkbox" id="none-cat1" class="form-check-input me-2" onchange="checkAllItem(this, 'chk-all-none-cat1[]', 'chk-all-good-cat1[]', 'chk-all-damage-cat1[]' )"> <label for="none-cat1">N/A</label></th>
                                 </tr>
                             </thead>
                             <tbody class="text-center">
@@ -132,9 +132,9 @@
                             <thead class="text-center">
                                 <tr>
                                     <th class="text-xs font-weight-bolder">Item</th>
-                                    <th class="text-xs font-weight-bolder ps-2 pb-1"><input id="good-cat2" type="checkbox" class="form-check-input me-2" onchange="checkAllItem(this, 'chk-all-good-cat2[]')"> <label for="good-cat2">Good</label></th>
-                                    <th class="text-center text-xs font-weight-bolder ps-2 pb-1"><input type="checkbox" id="damage-cat2" class="form-check-input me-2" onchange="checkAllItem(this, 'chk-all-damage-cat2[]')"> <label for="damage-cat2">Damage</label> </th>
-                                    <th class="text-center text-xs font-weight-bolder ps-2 pb-1"><input type="checkbox" id="none-cat2" class="form-check-input me-2" onchange="checkAllItem(this, 'chk-all-none-cat2[]')"> <label for="none-cat2">N/A</label></th>
+                                    <th class="text-xs font-weight-bolder ps-2 pb-1"><input id="good-cat2" type="checkbox" class="form-check-input me-2" onchange="checkAllItem(this, 'chk-all-good-cat2[]', 'chk-all-damage-cat2[]', 'chk-all-none-cat2[]')"> <label for="good-cat2">Good</label></th>
+                                    <th class="text-center text-xs font-weight-bolder ps-2 pb-1"><input type="checkbox" id="damage-cat2" class="form-check-input me-2" onchange="checkAllItem(this, 'chk-all-damage-cat2[]', 'chk-all-good-cat2[]', 'chk-all-none-cat2[]')"> <label for="damage-cat2">Damage</label> </th>
+                                    <th class="text-center text-xs font-weight-bolder ps-2 pb-1"><input type="checkbox" id="none-cat2" class="form-check-input me-2" onchange="checkAllItem(this, 'chk-all-none-cat2[]', 'chk-all-good-cat2[]', 'chk-all-damage-cat2[]' )"> <label for="none-cat2">N/A</label></th>
                                 </tr>
                             </thead>
                             <tbody class="text-center">
@@ -163,9 +163,9 @@
                             <thead class="text-center">
                                 <tr>
                                     <th class="text-xs font-weight-bolder">Item</th>
-                                    <th class="text-xs font-weight-bolder ps-2 pb-1"><input id="good-cat3" type="checkbox" class="form-check-input me-2" onchange="checkAllItem(this, 'chk-all-good-cat3[]')"> <label for="good-cat3">Good</label></th>
-                                    <th class="text-center text-xs font-weight-bolder ps-2 pb-1"><input type="checkbox" id="damage-cat3" class="form-check-input me-2" onchange="checkAllItem(this, 'chk-all-damage-cat3[]')"> <label for="damage-cat3">Damage</label> </th>
-                                    <th class="text-center text-xs font-weight-bolder ps-2 pb-1"><input type="checkbox" id="none-cat3" class="form-check-input me-2" onchange="checkAllItem(this, 'chk-all-none-cat3[]')"> <label for="none-cat3">N/A</label></th>
+                                    <th class="text-xs font-weight-bolder ps-2 pb-1"><input id="good-cat3" type="checkbox" class="form-check-input me-2" onchange="checkAllItem(this, 'chk-all-good-cat3[]', 'chk-all-damage-cat3[]', 'chk-all-none-cat3[]')"> <label for="good-cat3">Good</label></th>
+                                    <th class="text-center text-xs font-weight-bolder ps-2 pb-1"><input type="checkbox" id="damage-cat3" class="form-check-input me-2" onchange="checkAllItem(this, 'chk-all-damage-cat3[]', 'chk-all-good-cat3[]', 'chk-all-none-cat3[]')"> <label for="damage-cat3">Damage</label> </th>
+                                    <th class="text-center text-xs font-weight-bolder ps-2 pb-1"><input type="checkbox" id="none-cat3" class="form-check-input me-2" onchange="checkAllItem(this, 'chk-all-none-cat3[]', 'chk-all-good-cat3[]', 'chk-all-damage-cat3[]' )"> <label for="none-cat3">N/A</label></th>
                                 </tr>
                             </thead>
                             <tbody class="text-center">
@@ -194,9 +194,9 @@
                             <thead class="text-center">
                                 <tr>
                                     <th class="text-xs font-weight-bolder">Item</th>
-                                    <th class="text-xs font-weight-bolder ps-2 pb-1"><input id="good-cat4" type="checkbox" class="form-check-input me-2" onchange="checkAllItem(this, 'chk-all-good-cat4[]')"> <label for="good-cat4">Good</label></th>
-                                    <th class="text-center text-xs font-weight-bolder ps-2 pb-1"><input type="checkbox" id="damage-cat4" class="form-check-input me-2" onchange="checkAllItem(this, 'chk-all-damage-cat4[]')"> <label for="damage-cat4">Damage</label> </th>
-                                    <th class="text-center text-xs font-weight-bolder ps-2 pb-1"><input type="checkbox" id="none-cat4" class="form-check-input me-2" onchange="checkAllItem(this, 'chk-all-none-cat4[]')"> <label for="none-cat4">N/A</label></th>
+                                    <th class="text-xs font-weight-bolder ps-2 pb-1"><input id="good-cat4" type="checkbox" class="form-check-input me-2" onchange="checkAllItem(this, 'chk-all-good-cat4[]', 'chk-all-damage-cat4[]', 'chk-all-none-cat4[]')"> <label for="good-cat4">Good</label></th>
+                                    <th class="text-center text-xs font-weight-bolder ps-2 pb-1"><input type="checkbox" id="damage-cat4" class="form-check-input me-2" onchange="checkAllItem(this, 'chk-all-damage-cat4[]', 'chk-all-good-cat4[]', 'chk-all-none-cat4[]')"> <label for="damage-cat4">Damage</label> </th>
+                                    <th class="text-center text-xs font-weight-bolder ps-2 pb-1"><input type="checkbox" id="none-cat4" class="form-check-input me-2" onchange="checkAllItem(this, 'chk-all-none-cat4[]', 'chk-all-good-cat4[]', 'chk-all-damage-cat4[]' )"> <label for="none-cat4">N/A</label></th>
                                 </tr>
                             </thead>
                             <tbody class="text-center">
@@ -225,9 +225,9 @@
                             <thead class="text-center">
                                 <tr>
                                     <th class="text-xs font-weight-bolder">Item</th>
-                                    <th class="text-xs font-weight-bolder ps-2 pb-1"><input id="good-cat5" type="checkbox" class="form-check-input me-2" onchange="checkAllItem(this, 'chk-all-good-cat5[]')"> <label for="good-cat5">Good</label></th>
-                                    <th class="text-center text-xs font-weight-bolder ps-2 pb-1"><input type="checkbox" id="damage-cat5" class="form-check-input me-2" onchange="checkAllItem(this, 'chk-all-damage-cat5[]')"> <label for="damage-cat5">Damage</label> </th>
-                                    <th class="text-center text-xs font-weight-bolder ps-2 pb-1"><input type="checkbox" id="none-cat5" class="form-check-input me-2" onchange="checkAllItem(this, 'chk-all-none-cat5[]')"> <label for="none-cat5">N/A</label></th>
+                                    <th class="text-xs font-weight-bolder ps-2 pb-1"><input id="good-cat5" type="checkbox" class="form-check-input me-2" onchange="checkAllItem(this, 'chk-all-good-cat5[]', 'chk-all-damage-cat5[]', 'chk-all-none-cat5[]')"> <label for="good-cat5">Good</label></th>
+                                    <th class="text-center text-xs font-weight-bolder ps-2 pb-1"><input type="checkbox" id="damage-cat5" class="form-check-input me-2" onchange="checkAllItem(this, 'chk-all-damage-cat5[]', 'chk-all-good-cat5[]', 'chk-all-none-cat5[]')"> <label for="damage-cat5">Damage</label> </th>
+                                    <th class="text-center text-xs font-weight-bolder ps-2 pb-1"><input type="checkbox" id="none-cat5" class="form-check-input me-2" onchange="checkAllItem(this, 'chk-all-none-cat5[]', 'chk-all-good-cat5[]', 'chk-all-damage-cat5[]' )"> <label for="none-cat5">N/A</label></th>
                                 </tr>
                             </thead>
                             <tbody class="text-center">
@@ -256,9 +256,9 @@
                             <thead class="text-center">
                                 <tr>
                                     <th class="text-xs font-weight-bolder">Item</th>
-                                    <th class="text-xs font-weight-bolder ps-2 pb-1"><input id="good-cat6" type="checkbox" class="form-check-input me-2" onchange="checkAllItem(this, 'chk-all-good-cat6[]')"> <label for="good-cat6">Good</label></th>
-                                    <th class="text-center text-xs font-weight-bolder ps-2 pb-1"><input type="checkbox" id="damage-cat6" class="form-check-input me-2" onchange="checkAllItem(this, 'chk-all-damage-cat6[]')"> <label for="damage-cat6">Damage</label> </th>
-                                    <th class="text-center text-xs font-weight-bolder ps-2 pb-1"><input type="checkbox" id="none-cat6" class="form-check-input me-2" onchange="checkAllItem(this, 'chk-all-none-cat6[]')"> <label for="none-cat6">N/A</label></th>
+                                    <th class="text-xs font-weight-bolder ps-2 pb-1"><input id="good-cat6" type="checkbox" class="form-check-input me-2" onchange="checkAllItem(this, 'chk-all-good-cat6[]', 'chk-all-damage-cat6[]', 'chk-all-none-cat6[]')"> <label for="good-cat6">Good</label></th>
+                                    <th class="text-center text-xs font-weight-bolder ps-2 pb-1"><input type="checkbox" id="damage-cat6" class="form-check-input me-2" onchange="checkAllItem(this, 'chk-all-damage-cat6[]', 'chk-all-good-cat6[]', 'chk-all-none-cat6[]')"> <label for="damage-cat6">Damage</label> </th>
+                                    <th class="text-center text-xs font-weight-bolder ps-2 pb-1"><input type="checkbox" id="none-cat6" class="form-check-input me-2" onchange="checkAllItem(this, 'chk-all-none-cat6[]', 'chk-all-good-cat6[]', 'chk-all-damage-cat6[]' )"> <label for="none-cat6">N/A</label></th>
                                 </tr>
                             </thead>
                             <tbody class="text-center">
