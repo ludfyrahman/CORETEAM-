@@ -1,15 +1,24 @@
 <script type="text/javascript">
+    function showNotification(type, msg, desc) {
+        toastr[type](desc, msg, {
+            "closeButton": true,
+            "progressBar": true,
+            "positionClass": "toast-top-right",
+            "timeOut": "3000",
+        });
+    }
+
     $("#btn-login").on("click", function() {
         var username = $("#username").val();
         var password = $("#password").val();
 
         if (username == '') {
-            alert('Username tidak boleh kosong!');
+            showNotification('error', 'Gagal', 'Username tidak boleh kosong!');
             return false;
         }
 
         if (password == '') {
-            alert('Password tidak boleh kosong!');
+            showNotification('error', 'Gagal', 'Password tidak boleh kosong!');
             return false;
         }
 
@@ -27,13 +36,13 @@
                         location.href =
                             "<?= base_url("Dashboard") ?>";
                     }, 2000);
-                    alert('Selamat datang!');
+                    showNotification('success', 'Sukses', 'Selamat datang!');
                 } else if (response == 0) {
-                    alert('Username atau password salah!');
+                    showNotification('error', 'Gagal', 'Username atau password salah!');
                 } else if (response == 2) {
-                    alert('Akun telah di Non-aktifkan!');
+                    showNotification('error', 'Gagal', 'Akun telah ditangguhkan!');
                 } else {
-                    alert('Terjadi kesalahan pada sistem!');
+                    showNotification('error', 'Gagal', 'Terjadi kesalahan pada sistem!');
                 }
             }
         });
