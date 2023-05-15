@@ -155,13 +155,13 @@ class InspeksiTruck extends CI_Controller
 
             if ($this->db->trans_status() === FALSE) {
                 $this->db->trans_rollback();
-                echo json_encode(array('status' => false, 'message' => 'Gagal Menyimpan Data Inspeksi'));
+                echo json_encode(array('status' => 0, 'type' => 'error', 'msg' => 'Error', 'desc' => 'Gagal Menyimpan Data Inspeksi'));
             } else {
                 $this->db->trans_commit();
-                echo json_encode(array('status' => true, 'message' => 'Data Berhasil Disimpan'));
+                echo json_encode(array('status' => 1, 'type' => 'success', 'msg' => 'Sukses', 'desc' => 'Data Berhasil Disimpan'));
             }
         } else {
-            echo json_encode(array('status' => 'error', 'message' => $this->upload->display_errors()));
+            echo json_encode(array('status' => 2, 'type' => 'error', 'msg' => 'Sukses', 'desc' => $this->upload->display_errors()));
         }
     }
 
@@ -226,13 +226,13 @@ class InspeksiTruck extends CI_Controller
 
                 if ($this->db->trans_status() === FALSE) {
                     $this->db->trans_rollback();
-                    echo json_encode(array('status' => false, 'message' => 'Gagal Menyimpan Data Inspeksi'));
+                    echo json_encode(array('status' => 0, 'type' => 'error', 'msg' => 'Error', 'desc' => 'Gagal Menyimpan Data Inspeksi'));
                 } else {
                     $this->db->trans_commit();
-                    echo json_encode(array('status' => true, 'message' => 'Data Berhasil Disimpan'));
+                    echo json_encode(array('status' => 1, 'type' => 'success', 'msg' => 'Sukses', 'desc' => 'Data Berhasil Disimpan'));
                 }
             } else {
-                echo json_encode(array('status' => 'error', 'message' => $this->upload->display_errors()));
+                echo json_encode(array('status' => 2, 'type' => 'error', 'msg' => 'Sukses', 'desc' => $this->upload->display_errors()));
             }
         } else {
             $this->db->trans_begin();
@@ -257,10 +257,10 @@ class InspeksiTruck extends CI_Controller
 
             if ($this->db->trans_status() === FALSE) {
                 $this->db->trans_rollback();
-                echo json_encode(array('status' => false, 'message' => 'Gagal Menyimpan Data Inspeksi'));
+                echo json_encode(array('status' => 0, 'type' => 'error', 'msg' => 'Error', 'desc' => 'Gagal Menyimpan Data Inspeksi'));
             } else {
                 $this->db->trans_commit();
-                echo json_encode(array('status' => true, 'message' => 'Data Berhasil Disimpan'));
+                echo json_encode(array('status' => 1, 'type' => 'success', 'msg' => 'Sukses', 'desc' => 'Data Berhasil Disimpan'));
             }
         }
     }
