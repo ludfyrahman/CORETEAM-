@@ -85,7 +85,7 @@
         // Mendapatkan baris (tr/th) dari checkbox yang dipilih
         var row = $(this).closest('tbody > tr');
         var rowTH = $(this).closest('thead > tr');
-        console.log(rowTH);
+
         // Menonaktifkan semua checkbox pada baris yang sama
         row.find('input[type="checkbox"]').not(this).prop('checked', false);
         rowTH.find('input[type="checkbox"]').not(this).prop('checked', false);
@@ -221,7 +221,6 @@
             } else {
                 //jika tipe data tidak sesuai
                 showNotification('warning', 'Warning', 'Hanya dapat menampilkan preview tipe gambar. Harap simpan perubahan untuk melihat dan merubah gambar.');
-
             }
         }
     }
