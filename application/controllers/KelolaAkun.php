@@ -61,8 +61,8 @@ class KelolaAkun extends CI_Controller
         $this->load->view('partials/navbar', $data);
         $this->load->view('user/v_detailKelolaAkun', $data);
         $this->load->view('partials/footer');
-        $this->load->view('user/script');
         $this->load->view('partials/modal_source');
+        $this->load->view('user/script');
     }
 
     public function setEnable() {

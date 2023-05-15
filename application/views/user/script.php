@@ -41,6 +41,13 @@
 
     $("#btnenable").on('click', function() {
         var id_user = $("#id_user").val();
+        
+        $("#modal-enable-akun").modal('show');
+        $("#enable_link").attr('data-id', id_user);
+    })
+    
+    function enableAccount() {
+        var id_user = $("#enable_link").attr("data-id");
 
         $.ajax({
             type: "POST",
@@ -57,7 +64,7 @@
                 }
             }
         })
-    })
+    }
 
     function showModalConfirm(id_user) {
         $("#modal-delete-akun").modal('show');
@@ -66,6 +73,7 @@
 
     function deleteAccount() {
         var id_hapus = $("#delete_link").attr("data-id");
+
         $.ajax({
             type: "POST",
             url: "<?= base_url('KelolaAkun/deleteAccount') ?>",
@@ -87,10 +95,17 @@
             }
         });
     }
-
+    
     $("#btndisable").on('click', function() {
         var id_user = $("#id_user").val();
-
+        
+        $("#modal-disable-akun").modal('show');
+        $("#disable_link").attr('data-id', id_user);
+    })
+    
+    function disableAccount() {
+        var id_user = $("#disable_link").attr("data-id");
+        
         $.ajax({
             type: "POST",
             url: "<?= base_url('KelolaAkun/setDisable') ?>",
@@ -106,7 +121,7 @@
                 }
             }
         })
-    })
+    }
 
     $("#btnsaveuser").on('click', function() {
         var nama = $("#nama").val();
