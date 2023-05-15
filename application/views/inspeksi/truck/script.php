@@ -99,7 +99,7 @@
         var fuelLevel = $('#fuelLevel').val();
 
         if (tglWaktuInspeksi == '' || shift == '' || fireIncidentCommander == '' || ficAssistantArray == '' || fuelLevel == '') {
-            showNotification('error', 'Error', 'Form Inspeksi ada yang kosong');
+            showNotification('warning', 'Warning', 'Form Inspeksi ada yang kosong');
             return false;
         }
 
@@ -163,7 +163,7 @@
         });
 
         if (boolean == false) {
-            showNotification('error', 'Error', 'Ada item yang belum dipilih');
+            showNotification('warning', 'Warning', 'Ada item yang belum dipilih');
             return false;
         }
 
@@ -220,7 +220,7 @@
                 reader.readAsDataURL(gbPreview);
             } else {
                 //jika tipe data tidak sesuai
-                showNotification('error', 'Error', 'Hanya dapat menampilkan preview tipe gambar. Harap simpan perubahan untuk melihat dan merubah gambar.');
+                showNotification('warning', 'Warning', 'Hanya dapat menampilkan preview tipe gambar. Harap simpan perubahan untuk melihat dan merubah gambar.');
 
             }
         }
@@ -242,7 +242,7 @@
         var remark = $('#remark').val();
 
         if (file == '' || remark == '') {
-            showNotification('error', 'Error', 'Form Attachment ada yang kosong');
+            showNotification('warning', 'Warning', 'Form Attachment ada yang kosong');
             return false;
         }
 
