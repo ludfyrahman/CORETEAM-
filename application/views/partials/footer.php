@@ -187,14 +187,43 @@
 <script async defer src="https://buttons.github.io/buttons.js"></script>
 <!-- Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc -->
 <script src="<?= base_url('assets/js/argon-dashboard.min.js') ?>"></script>
-<!-- <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script> -->
-<!-- <script type="text/javascript" src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
-<script type="text/javascript" src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script> -->
-<!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"></script> -->
 
 <script src="<?= base_url('assets/'); ?>vendors/jquery-datatables/jquery.dataTables.min.js"></script>
 <script src="<?= base_url('assets/'); ?>vendors/jquery-datatables/custom.jquery.dataTables.bootstrap5.min.js"></script>
-<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js" integrity="sha512-bu+7sMX9I9jV1NZGMe2SP11vmUy+mdmkgbSxC6S2Q8KlCZ45E1J97vU6pw48W8b07kbzNthh6BvKIlFpyW8+JQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script> -->
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+
+<script type="text/javascript">
+    $('#btnLogOut').on('click', function() {
+        confirmAlert('Alert', 'Apakah anda yakin ingin keluar?', 'warning', 'Ya, keluar', 'Tidak').then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = '<?= base_url('Auth/logout') ?>';
+            }
+        })
+    })
+
+    function showNotification(type, msg, desc) {
+        toastr[type](desc, msg, {
+            "closeButton": true,
+            "progressBar": true,
+            "positionClass": "toast-top-right",
+            "timeOut": "2000",
+        });
+    }
+
+    function confirmAlert(title, text, icon, btnYes, btnNo) {
+        return Swal.fire({
+            title: title,
+            text: text,
+            icon: icon,
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: btnYes,
+            cancelButtonText: btnNo
+        })
+    }
+</script>
 </body>
 
 </html>

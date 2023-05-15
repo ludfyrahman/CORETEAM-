@@ -7,7 +7,6 @@
         if ($('#truckInspeksiTable')) {
             getInspeksi();
         }
-
     });
 
     function getInspeksi() {
@@ -100,7 +99,7 @@
         var fuelLevel = $('#fuelLevel').val();
 
         if (tglWaktuInspeksi == '' || shift == '' || fireIncidentCommander == '' || ficAssistantArray == '' || fuelLevel == '') {
-            alert('Form Inspeksi ada yang kosong');
+            showNotification('error', 'Error', 'Form Inspeksi ada yang kosong');
             return false;
         }
 
@@ -164,7 +163,7 @@
         });
 
         if (boolean == false) {
-            alert('Ada Item yang belum dipilih');
+            showNotification('error', 'Error', 'Ada item yang belum dipilih');
             return false;
         }
 
@@ -221,9 +220,8 @@
                 reader.readAsDataURL(gbPreview);
             } else {
                 //jika tipe data tidak sesuai
-                alert(
-                    "Hanya dapat menampilkan preview tipe gambar. Harap simpan perubahan untuk melihat dan merubah gambar."
-                );
+                showNotification('error', 'Error', 'Hanya dapat menampilkan preview tipe gambar. Harap simpan perubahan untuk melihat dan merubah gambar.');
+
             }
         }
     }
@@ -244,7 +242,7 @@
         var remark = $('#remark').val();
 
         if (file == '' || remark == '') {
-            alert('Form Attachment ada yang kosong');
+            showNotification('error', 'Error', 'Form Attachment ada yang kosong');
             return false;
         }
 
@@ -274,27 +272,31 @@
         form_data.append('remark', remark);
         form_data.append('arrItem', json_arr);
 
-        $.ajax({
-            type: "POST",
-            url: "<?= base_url('Inspeksi/InspeksiTruck/saveInspeksi') ?>",
-            data: form_data,
-            contentType: false,
-            processData: false,
-            dataType: "JSON",
-            success: function(response) {
-                if (response.status == false) {
-                    alert(response.message);
-                    setTimeout(() => {
-                        window.location.href = "<?= base_url('Inspeksi/InspeksiTruck') ?>"
-                    }, 1000);
-                } else if (response.status == 'error') {
-                    alert(response.message);
-                } else {
-                    alert(response.message);
-                    setTimeout(() => {
-                        window.location.href = "<?= base_url('Inspeksi/InspeksiTruck') ?>"
-                    }, 1000);
-                }
+        confirmAlert('Apakah anda yakin?', 'Pastikan data yang anda input benar!', 'warning', 'Ya, simpan', 'Tidak').then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    type: "POST",
+                    url: "<?= base_url('Inspeksi/InspeksiTruck/saveInspeksi') ?>",
+                    data: form_data,
+                    contentType: false,
+                    processData: false,
+                    dataType: "JSON",
+                    success: function(response) {
+                        if (response.status == 0) {
+                            showNotification(response.type, response.msg, response.desc);
+                            setTimeout(() => {
+                                window.location.href = "<?= base_url('Inspeksi/InspeksiTruck') ?>"
+                            }, 2000);
+                        } else if (response.status == 2) {
+                            showNotification(response.type, response.msg, response.desc);
+                        } else {
+                            showNotification(response.type, response.msg, response.desc);
+                            setTimeout(() => {
+                                window.location.href = "<?= base_url('Inspeksi/InspeksiTruck') ?>"
+                            }, 2000);
+                        }
+                    }
+                })
             }
         })
     });
@@ -350,27 +352,31 @@
         form_data.append('arrItem', json_arr);
         form_data.append('idInspeksi', id_inspeksi);
 
-        $.ajax({
-            type: "POST",
-            url: "<?= base_url('Inspeksi/InspeksiTruck/updateInspeksi') ?>",
-            data: form_data,
-            contentType: false,
-            processData: false,
-            dataType: "JSON",
-            success: function(response) {
-                if (response.status == false) {
-                    alert(response.message);
-                    setTimeout(() => {
-                        window.location.href = "<?= base_url('Inspeksi/InspeksiTruck') ?>"
-                    }, 1000);
-                } else if (response.status == 'error') {
-                    alert(response.message);
-                } else {
-                    alert(response.message);
-                    setTimeout(() => {
-                        window.location.href = "<?= base_url('Inspeksi/InspeksiTruck') ?>"
-                    }, 1000);
-                }
+        confirmAlert('Apakah anda yakin?', 'Pastikan data yang anda input benar!', 'warning', 'Ya, simpan', 'Tidak').then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    type: "POST",
+                    url: "<?= base_url('Inspeksi/InspeksiTruck/updateInspeksi') ?>",
+                    data: form_data,
+                    contentType: false,
+                    processData: false,
+                    dataType: "JSON",
+                    success: function(response) {
+                        if (response.status == 0) {
+                            showNotification(response.type, response.msg, response.desc);
+                            setTimeout(() => {
+                                window.location.href = "<?= base_url('Inspeksi/InspeksiTruck') ?>"
+                            }, 2000);
+                        } else if (response.status == 2) {
+                            showNotification(response.type, response.msg, response.desc);
+                        } else {
+                            showNotification(response.type, response.msg, response.desc);
+                            setTimeout(() => {
+                                window.location.href = "<?= base_url('Inspeksi/InspeksiTruck') ?>"
+                            }, 2000);
+                        }
+                    }
+                })
             }
         })
     })
