@@ -69,7 +69,7 @@
                                             <a href="<?= base_url('KelolaAkun/detailAccount/' . $data['id_user']) ?>" class="btn btn-icon btn-3 btn-warning w-50" type="button" title="Detail User">
                                                 <span class="btn-inner--icon text-white"><i class="fa-solid fa-search-plus"></i></span>
                                             </a>
-                                            <button class="btn btn-icon btn-3 btn-danger w-50" type="button" onclick="showModalConfirm('<?= $data['id_user'] ?>')" title="Delete User">
+                                            <button class="btn btn-icon btn-3 btn-danger w-50" type="button" onclick="deleteAccount('<?= $data['id_user'] ?>')" title="Delete User">
                                                 <span class="btn-inner--icon text-white"><i class="fa-solid fa-trash"></i></span>
                                             </button>
                                         </td>

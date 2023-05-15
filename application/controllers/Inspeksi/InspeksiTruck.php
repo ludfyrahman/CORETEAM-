@@ -26,8 +26,6 @@ class InspeksiTruck extends CI_Controller
 
     public function createInspeksi()
     {
-        $this->load->model('M_InspeksiTruck');
-
         $data['mainurl'] = 'Add Inspeksi Truck';
         $data['commander'] = $this->M_InspeksiTruck->getFireIncidentCommander();
         $data['assistant'] = $this->M_InspeksiTruck->getFICAssistant();
@@ -49,8 +47,6 @@ class InspeksiTruck extends CI_Controller
 
     public function editInspeksi($id_inspeksi)
     {
-        $this->load->model('M_InspeksiTruck');
-
         $data['mainurl'] = 'Add Inspeksi Truck';
         $data['commander'] = $this->M_InspeksiTruck->getFireIncidentCommander();
         $data['assistant'] = $this->M_InspeksiTruck->getFICAssistant();

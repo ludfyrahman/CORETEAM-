@@ -1,35 +1,99 @@
 <script type="text/javascript">
     $(document).ready(function() {
-        $('#boatInspeksiTable').DataTable({
-            dom: 'Bfrtip',
-            buttons: [
-                'excelHtml5'
-            ]
-        });
-
         $('#ficAssistant').select2();
 
+        // jika id tabel ada
+        if ($('#boatInspeksiTable')) {
+            getInspeksi();
+        }
     });
 
-    function checkAllItem(e) {
-        var checkboxes = $("input[id='chk-all-good-cat1[]']");
+    function getInspeksi() {
+        $.ajax({
+            type: "POST",
+            url: "<?= base_url('Inspeksi/InspeksiBoat/getInspeksi') ?>",
+            dataType: "JSON",
+            success: function(response) {
+                if ($.fn.DataTable.isDataTable('#boatInspeksiTable')) {
+                    $('#boatInspeksiTable').DataTable().clear();
+                    $('#boatInspeksiTable').DataTable().destroy();
+                }
+
+                $('#boatInspeksiTable > tbody').empty();
+
+                if (response.length != 0) {
+                    var no = 1;
+                    $.each(response, function(i, v) {
+                        var roleUser = <?= $this->session->userdata('role'); ?>;
+
+                        var button = '';
+                        if (roleUser == 2) {
+                            button = '<a href="<?= base_url('Inspeksi/InspeksiTruck/exportLaporanInspeksi/') ?>' +
+                                v.id_inspeksi + '" class="btn btn-icon btn-3 btn-success w-30" type="button" title="Export Inspeksi">' +
+                                '<span class="btn-inner--icon text-white"><i class="fa-solid fa-file-excel"></i></span></a>'
+                        } else {
+                            button = '<a href="<?= base_url('Inspeksi/InspeksiTruck/editInspeksi/') ?>' +
+                                v.id_inspeksi + '" class="btn btn-icon btn-3 btn-warning w-30" type="button" title="Edit Inspeksi">' +
+                                '<span class="btn-inner--icon text-white"><i class="fa-solid fa-pencil-alt"></i></span></a> ' +
+                                '<a href="<?= base_url('Inspeksi/InspeksiTruck/exportLaporanInspeksi/') ?>' +
+                                v.id_inspeksi + '" class="btn btn-icon btn-3 btn-success w-30" type="button" title="Export Inspeksi">' +
+                                '<span class="btn-inner--icon text-white"><i class="fa-solid fa-file-excel"></i></span></a> '
+                        }
+
+                        $('#boatInspeksiTable > tbody').append(`
+                            <tr>
+                                <td class="text-sm">${no++}</td>
+                                <td class="text-sm">${v.kode_inspeksi}</td>
+                                <td class="text-sm">${v.tgl_inspeksi}</td>
+                                <td class="text-sm">${v.nama}</td>
+                                <td class="text-sm">${button}</td>
+                            </tr>
+                        `)
+                    });
+
+                    $('#boatInspeksiTable').DataTable({
+                        "language": {
+                            "info": '<span class="text-sm">Menampilkan _START_ hingga _END_ dari _TOTAL_ baris</span>'
+                        },
+                    });
+
+                } else {
+                    $('#boatInspeksiTable > tbody').append(`
+                            <tr>
+                            <td colspan="5" class="text-sm text-danger">Data Kosong</td>
+                            </tr>
+                        `)
+                }
+            }
+        })
+    }
+
+    function checkAllItem(e, id1, id2, id3) {
+        var checkboxes = $("input[id='" + id1 + "']");
+        var checkboxes2 = $("input[id='" + id2 + "']");
+        var checkboxes3 = $("input[id='" + id3 + "']");
 
         if (e.checked) {
-            for (i = 0; i < checkboxes.length; i++) {
-                if (checkboxes[i].type == 'checkbox') {
-                    checkboxes[i].checked = true;
-                }
-            }
+            checkboxes.prop('checked', true);
+            checkboxes2.prop('checked', false);
+            checkboxes3.prop('checked', false);
         } else {
-            for (i = 0; i < checkboxes.length; i++) {
-                if (checkboxes[i].type == 'checkbox') {
-                    checkboxes[i].checked = false;
-                }
-            }
+            checkboxes.prop('checked', false);
         }
     }
 
     $("#btnNextPage").on('click', function() {
+        var tglWaktuInspeksi = $('#tglWaktuInspeksi').val();
+        var shift = $('#shift').val();
+        var fireIncidentCommander = $('#fireIncidentCommander').val();
+        var ficAssistantArray = $('#ficAssistant').val();
+        var fuelLevel = $('#fuelLevel').val();
+
+        if (tglWaktuInspeksi == '' || shift == '' || fireIncidentCommander == '' || ficAssistantArray == '' || fuelLevel == '') {
+            showNotification('warning', 'Warning', 'Form Inspeksi ada yang kosong');
+            return false;
+        }
+
         $("#previewGeneralInspeksi").hide('slow');
         $("#btnNextPage").hide('slow');
         $("#previewChecklistItem").show('slow');
@@ -52,6 +116,42 @@
     })
 
     $("#btnNextPage2").on('click', function() {
+        // ambil input type checkbox dengan ketentuan checked
+        var checkbox = $("tbody > tr input[type='checkbox']:checked");
+
+        // memasukkan data checkbox checked ke dalam array()
+        var arr_item = [];
+        $(checkbox).each(function() {
+            var value = $(this).val();
+            var subcategory = $(this).attr('data-subcategory');
+            var item = $(this).attr('data-item');
+
+            arr_item.push({
+                subcategory: subcategory,
+                id_item: item,
+                conditions: value
+            });
+        })
+
+        // cek apa ada data kosong pada setiap subcategory, jika ada maka muncul alert
+        var boolean = true;
+        $('.subCat').each(function() {
+            var jumlahItemSubCategory = $(this).val();
+            var subcategory = $(this).attr('data-subcategory');
+
+            var count = arr_item.filter(row => row.subcategory === subcategory).length
+
+            if (count != jumlahItemSubCategory) {
+                boolean = false;
+                return false;
+            }
+        });
+
+        if (boolean == false) {
+            showNotification('warning', 'Warning', 'Ada item yang belum dipilih');
+            return false;
+        }
+
         $("#previewChecklistItem").hide('slow');
         $("#previewChecklistItem2").hide('slow');
         $("#previewChecklistItem3").hide('slow');
@@ -79,10 +179,13 @@
 
     //hanya bisa memilih 1 checkbox
     $('input[type="checkbox"]').on('change', function() {
-        // Mendapatkan baris (tr) dari checkbox yang dipilih
-        var row = $(this).closest('tr');
+        // Mendapatkan baris (tr/th) dari checkbox yang dipilih
+        var row = $(this).closest('tbody > tr');
+        var rowTH = $(this).closest('thead > tr');
+
         // Menonaktifkan semua checkbox pada baris yang sama
         row.find('input[type="checkbox"]').not(this).prop('checked', false);
+        rowTH.find('input[type="checkbox"]').not(this).prop('checked', false);
     });
 
     function tampilkanPreview(gambar, idpreview) {
@@ -107,10 +210,83 @@
                 reader.readAsDataURL(gbPreview);
             } else {
                 //jika tipe data tidak sesuai
-                alert(
-                    "Hanya dapat menampilkan preview tipe gambar. Harap simpan perubahan untuk melihat dan merubah gambar."
-                );
+                showNotification('warning', 'Warning', 'Hanya dapat menampilkan preview tipe gambar. Harap simpan perubahan untuk melihat dan merubah gambar.');
             }
         }
     }
+
+    $('#btnsaveinspeksi').on('click', function() {
+        var form_data = new FormData();
+
+        // form pertama
+        var tglWaktuInspeksi = $('#tglWaktuInspeksi').val();
+        var tglWaktuInspeksiFormatted = tglWaktuInspeksi.replace(/T/, ' ').replace(/\..+/, '');
+        var shift = $('#shift').val();
+        var fireIncidentCommander = $('#fireIncidentCommander').val();
+        var ficAssistantArray = $('#ficAssistant').val();
+        var fuelLevel = $('#fuelLevel').val();
+
+        //form ketiga
+        var file = $('#attachment').prop('files')[0];
+        var remark = $('#remark').val();
+
+        if (file == '' || remark == '') {
+            showNotification('warning', 'Warning', 'Form Attachment ada yang kosong');
+            return false;
+        }
+
+        // ambil input type checkbox dengan ketentuan checked
+        var checkbox = $("tbody > tr input[type='checkbox']:checked");
+
+        // memasukkan data checkbox checked ke dalam array()
+        var arr_item = [];
+        $(checkbox).each(function() {
+            var value = $(this).val();
+            var item = $(this).attr('data-item');
+
+            arr_item.push({
+                id_item: item,
+                conditions: value
+            });
+        })
+
+        var json_arr = JSON.stringify(arr_item);
+        var json_arr_assistant = JSON.stringify(ficAssistantArray);
+        form_data.append('tglWaktu', tglWaktuInspeksiFormatted);
+        form_data.append('shift', shift);
+        form_data.append('commander', fireIncidentCommander);
+        form_data.append('assistant', json_arr_assistant);
+        form_data.append('fuelLevel', fuelLevel);
+        form_data.append('file', file);
+        form_data.append('remark', remark);
+        form_data.append('arrItem', json_arr);
+
+        confirmAlert('Apakah anda yakin?', 'Pastikan data yang anda input benar!', 'warning', 'Ya, simpan', 'Tidak').then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    type: "POST",
+                    url: "<?= base_url('Inspeksi/InspeksiBoat/saveInspeksi') ?>",
+                    data: form_data,
+                    contentType: false,
+                    processData: false,
+                    dataType: "JSON",
+                    success: function(response) {
+                        if (response.status == 0) {
+                            showNotification(response.type, response.msg, response.desc);
+                            setTimeout(() => {
+                                window.location.href = "<?= base_url('Inspeksi/InspeksiBoat') ?>"
+                            }, 2000);
+                        } else if (response.status == 2) {
+                            showNotification(response.type, response.msg, response.desc);
+                        } else {
+                            showNotification(response.type, response.msg, response.desc);
+                            setTimeout(() => {
+                                window.location.href = "<?= base_url('Inspeksi/InspeksiBoat') ?>"
+                            }, 2000);
+                        }
+                    }
+                })
+            }
+        })
+    });
 </script>

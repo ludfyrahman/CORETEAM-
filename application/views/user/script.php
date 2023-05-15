@@ -41,87 +41,77 @@
 
     $("#btnenable").on('click', function() {
         var id_user = $("#id_user").val();
-        
-        $("#modal-enable-akun").modal('show');
-        $("#enable_link").attr('data-id', id_user);
-    })
-    
-    function enableAccount() {
-        var id_user = $("#enable_link").attr("data-id");
 
-        $.ajax({
-            type: "POST",
-            url: "<?= base_url('KelolaAkun/setEnable') ?>",
-            data: {
-                id_user: id_user
-            },
-            success: function(response) {
-                if (response == 1) {
-                    alert('Akun berhasil diaktifkan!');
-                    setTimeout(() => {
-                        location.href = '<?= base_url('KelolaAkun') ?>';
-                    }, 2000);
-                }
+        confirmAlert('Apakah anda yakin?', 'Tekan ya untuk mengaktifkan akun dan tidak untuk kembali', 'warning', 'Ya, aktifkan', 'Tidak').then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    type: "POST",
+                    url: "<?= base_url('KelolaAkun/setEnable') ?>",
+                    data: {
+                        id_user: id_user
+                    },
+                    success: function(response) {
+                        if (response == 1) {
+                            showNotification('success', 'Sukses', 'Akun berhasil diaktifkan!');
+                            setTimeout(() => {
+                                location.href = '<?= base_url('KelolaAkun') ?>';
+                            }, 2000);
+                        }
+                    }
+                })
+            }
+        })
+    })
+
+    function deleteAccount(id_user) {
+        confirmAlert('Apakah anda yakin?', 'Tekan ya untuk menghapus akun dan tidak untuk kembali', 'warning', 'Ya, hapus', 'Tidak').then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    type: "POST",
+                    url: "<?= base_url('KelolaAkun/deleteAccount') ?>",
+                    data: {
+                        id: id_user
+                    },
+                    dataType: "JSON",
+                    success: function(response) {
+                        if (response == 1) {
+                            setTimeout(() => {
+                                location.href =
+                                    "<?= base_url("KelolaAkun") ?>";
+                            }, 2000);
+                            showNotification('success', 'Sukses', 'Akun berhasil dihapus!');
+                        } else {
+                            showNotification('error', 'Error', 'Akun gagal berhasil dihapus!');
+                        }
+                    }
+                });
             }
         })
     }
 
-    function showModalConfirm(id_user) {
-        $("#modal-delete-akun").modal('show');
-        $("#delete_link").attr('data-id', id_user);
-    }
-
-    function deleteAccount() {
-        var id_hapus = $("#delete_link").attr("data-id");
-
-        $.ajax({
-            type: "POST",
-            url: "<?= base_url('KelolaAkun/deleteAccount') ?>",
-            data: {
-                id: id_hapus
-            },
-            dataType: "JSON",
-            success: function(response) {
-                if (response == 1) {
-                    setTimeout(() => {
-                        location.href =
-                            "<?= base_url("KelolaAkun") ?>";
-                    }, 1000);
-                    alert('Akun berhasil dihapus!');
-                } else {
-                    alert('Akun gagal berhasil dihapus!');
-                }
-                $("#modal-delete-akun").modal('hide');
-            }
-        });
-    }
-    
     $("#btndisable").on('click', function() {
         var id_user = $("#id_user").val();
-        
-        $("#modal-disable-akun").modal('show');
-        $("#disable_link").attr('data-id', id_user);
-    })
-    
-    function disableAccount() {
-        var id_user = $("#disable_link").attr("data-id");
-        
-        $.ajax({
-            type: "POST",
-            url: "<?= base_url('KelolaAkun/setDisable') ?>",
-            data: {
-                id_user: id_user
-            },
-            success: function(response) {
-                if (response == 1) {
-                    alert('Akun berhasil ditangguhkan!');
-                    setTimeout(() => {
-                        location.href = '<?= base_url('KelolaAkun') ?>';
-                    }, 2000);
-                }
+
+        confirmAlert('Apakah anda yakin?', 'Tekan ya untuk menangguhkan akun dan tidak untuk kembali', 'warning', 'Ya, tangguhkan', 'Tidak').then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    type: "POST",
+                    url: "<?= base_url('KelolaAkun/setDisable') ?>",
+                    data: {
+                        id_user: id_user
+                    },
+                    success: function(response) {
+                        if (response == 1) {
+                            showNotification('success', 'Sukses', 'Akun berhasil ditangguhkan!');
+                            setTimeout(() => {
+                                location.href = '<?= base_url('KelolaAkun') ?>';
+                            }, 2000);
+                        }
+                    }
+                })
             }
         })
-    }
+    })
 
     $("#btnsaveuser").on('click', function() {
         var nama = $("#nama").val();
@@ -132,37 +122,39 @@
         var konfirPassword = $("#konfirPassword").val();
 
         if (nama == '') {
-            alert('Nama tidak boleh kosong!');
+            showNotification('warning', 'Warning', 'Nama tidak boleh kosong!');
             return false;
         }
 
         if (username == '') {
-            alert('Username tidak boleh kosong!');
+            showNotification('warning', 'Warning', 'Username tidak boleh kosong!');
             return false;
         }
 
         if (role == '') {
-            alert('Role tidak boleh kosong!');
+            showNotification('warning', 'Warning', 'Role tidak boleh kosong!');
             return false;
         }
 
-        if (status == '') {
-            alert('Status tidak boleh kosong!');
-            return false;
+        if (role == 1) {
+            if (status == '') {
+                showNotification('warning', 'Warning', 'Status tidak boleh kosong!');
+                return false;
+            }
         }
-
+        
         if (password == '') {
-            alert('Password tidak boleh kosong!');
+            showNotification('warning', 'Warning', 'Nama tidak boleh kosong!');
             return false;
         }
 
         if (konfirPassword == '') {
-            alert('Password tidak boleh kosong!');
+            showNotification('warning', 'Warning', 'Password tidak boleh kosong!');
             return false;
         }
 
         if (password != konfirPassword) {
-            alert('Konfirmasi password tidak sesuai!');
+            showNotification('warning', 'Warning', 'Konfirmasi password tidak sesuai!');
             return false;
         }
 
@@ -179,7 +171,7 @@
             dataType: "JSON",
             success: function(response) {
                 if (response == 1) {
-                    alert('Akun baru berhasil didaftarkan!');
+                    showNotification('success', 'Success', 'Akun baru berhasil dibuat!');
                     setTimeout(() => {
                         location.href = '<?= base_url('KelolaAkun') ?>';
                     }, 2000);
@@ -193,12 +185,12 @@
         var username = $("#username").val();
 
         if (nama == '') {
-            alert('Nama tidak boleh kosong!');
+            showNotification('warning', 'Warning', 'Nama tidak boleh kosong!');
             return false;
         }
 
         if (username == '') {
-            alert('Username tidak boleh kosong!');
+            showNotification('warning', 'Warning', 'Username tidak boleh kosong!');
             return false;
         }
 
@@ -212,7 +204,7 @@
             dataType: "JSON",
             success: function(response) {
                 if (response == 1) {
-                    alert('Profile berhasil diperbaharui!');
+                    showNotification('success', 'Success', 'Profil berhasil diperbaharui!');
                     setTimeout(() => {
                         location.href = '<?= base_url('KelolaAkun/profile') ?>';
                     }, 2000);
@@ -226,8 +218,23 @@
         var pwBaru = $("#pwBaru").val();
         var pwKonfir = $("#konfirPW").val();
 
+        if (pwLama == '') {
+            showNotification('warning', 'Warning', 'Password lama tidak boleh kosong!');
+            return false;
+        }
+
+        if (pwBaru == '') {
+            showNotification('warning', 'Warning', 'Password baru tidak boleh kosong!');
+            return false;
+        }
+        
+        if (pwKonfir == '') {
+            showNotification('warning', 'Warning', 'Konfirmasi password tidak boleh kosong!');
+            return false;
+        }
+
         if (pwBaru != pwKonfir) {
-            alert('Konfirmasi password tidak sesuai!');
+            showNotification('warning', 'Warning', 'Konfirmasi password tidak sesuai!');
             return false;
         }
 
@@ -241,7 +248,7 @@
             dataType: "JSON",
             success: function(response) {
                 if (response == 1) {
-                    alert('Password baru berhasil disimpan!');
+                    showNotification('success', 'Success', 'Password baru berhasil disimpan!');
                     setTimeout(() => {
                         location.href = '<?= base_url('KelolaAkun/profile') ?>';
                     }, 2000);

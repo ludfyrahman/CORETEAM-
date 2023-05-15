@@ -195,7 +195,7 @@
 
 <script type="text/javascript">
     $('#btnLogOut').on('click', function() {
-        confirmAlert('Alert', 'Apakah anda yakin ingin keluar?', 'warning', 'Ya, keluar', 'Tidak').then((result) => {
+        confirmAlert('Apakah anda yakin ingin keluar?', 'Tekan ya untuk keluar dan tidak untuk kembali', 'warning', 'Ya, keluar', 'Tidak').then((result) => {
             if (result.isConfirmed) {
                 window.location.href = '<?= base_url('Auth/logout') ?>';
             }
