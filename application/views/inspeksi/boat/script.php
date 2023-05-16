@@ -28,14 +28,14 @@
 
                         var button = '';
                         if (roleUser == 2) {
-                            button = '<a href="<?= base_url('Inspeksi/InspeksiTruck/exportLaporanInspeksi/') ?>' +
+                            button = '<a href="<?= base_url('Inspeksi/InspeksiBoat/exportLaporanInspeksi/') ?>' +
                                 v.id_inspeksi + '" class="btn btn-icon btn-3 btn-success w-30" type="button" title="Export Inspeksi">' +
                                 '<span class="btn-inner--icon text-white"><i class="fa-solid fa-file-excel"></i></span></a>'
                         } else {
-                            button = '<a href="<?= base_url('Inspeksi/InspeksiTruck/editInspeksi/') ?>' +
+                            button = '<a href="<?= base_url('Inspeksi/InspeksiBoat/editInspeksi/') ?>' +
                                 v.id_inspeksi + '" class="btn btn-icon btn-3 btn-warning w-30" type="button" title="Edit Inspeksi">' +
                                 '<span class="btn-inner--icon text-white"><i class="fa-solid fa-pencil-alt"></i></span></a> ' +
-                                '<a href="<?= base_url('Inspeksi/InspeksiTruck/exportLaporanInspeksi/') ?>' +
+                                '<a href="<?= base_url('Inspeksi/InspeksiBoat/exportLaporanInspeksi/') ?>' +
                                 v.id_inspeksi + '" class="btn btn-icon btn-3 btn-success w-30" type="button" title="Export Inspeksi">' +
                                 '<span class="btn-inner--icon text-white"><i class="fa-solid fa-file-excel"></i></span></a> '
                         }
@@ -160,6 +160,7 @@
         $("#btnPrevPage").hide('slow');
         $("#btnPrevPage2").show('slow');
         $("#btnsaveinspeksi").show('slow');
+        $("#updatebtnsaveinspeksi").show('slow');
         $("#previewAttachment").show('slow');
     })
 
@@ -174,6 +175,7 @@
         $("#btnPrevPage").show('slow');
         $("#btnPrevPage2").hide('slow');
         $("#btnsaveinspeksi").hide('slow');
+        $("#updatebtnsaveinspeksi").hide('slow');
         $("#btnNextPage").hide('slow');
     })
 
@@ -266,6 +268,86 @@
                 $.ajax({
                     type: "POST",
                     url: "<?= base_url('Inspeksi/InspeksiBoat/saveInspeksi') ?>",
+                    data: form_data,
+                    contentType: false,
+                    processData: false,
+                    dataType: "JSON",
+                    success: function(response) {
+                        if (response.status == 0) {
+                            showNotification(response.type, response.msg, response.desc);
+                            setTimeout(() => {
+                                window.location.href = "<?= base_url('Inspeksi/InspeksiBoat') ?>"
+                            }, 2000);
+                        } else if (response.status == 2) {
+                            showNotification(response.type, response.msg, response.desc);
+                        } else {
+                            showNotification(response.type, response.msg, response.desc);
+                            setTimeout(() => {
+                                window.location.href = "<?= base_url('Inspeksi/InspeksiBoat') ?>"
+                            }, 2000);
+                        }
+                    }
+                })
+            }
+        })
+    });
+
+    $('#updatebtnsaveinspeksi').on('click', function() {
+        var form_data = new FormData();
+
+        // form pertama
+        var tglWaktuInspeksi = $('#tglWaktuInspeksi').val();
+        var tglWaktuInspeksiFormatted = tglWaktuInspeksi.replace(/T/, ' ').replace(/\..+/, '');
+        var shift = $('#shift').val();
+        var fireIncidentCommander = $('#fireIncidentCommander').val();
+        var ficAssistantArray = $('#ficAssistant').val();
+        var fuelLevel = $('#fuelLevel').val();
+        var id_inspeksi = $('#idInspeksi').val();
+
+        //form ketiga
+        var file = $('#attachment').prop('files')[0];
+        var remark = $('#remark').val();
+        var filePertama = $('#attachment_pertama').val();
+        if (file == undefined) {
+            file = '';
+        }
+
+        //form kedua
+        // ambil input type checkbox dengan ketentuan checked
+        var checkbox = $("tbody > tr input[type='checkbox']:checked");
+
+        // memasukkan data checkbox checked ke dalam array()
+        var arr_item = [];
+        $(checkbox).each(function() {
+            var value = $(this).val();
+            var item = $(this).attr('data-item');
+            var idInspeksiDetail = $(this).attr('data-id-inspeksi-detail');
+
+            arr_item.push({
+                id_inspeksi_detail: idInspeksiDetail,
+                id_item: item,
+                conditions: value
+            });
+        })
+
+        var json_arr = JSON.stringify(arr_item);
+        var json_arr_assistant = JSON.stringify(ficAssistantArray);
+        form_data.append('tglWaktu', tglWaktuInspeksiFormatted);
+        form_data.append('shift', shift);
+        form_data.append('commander', fireIncidentCommander);
+        form_data.append('assistant', json_arr_assistant);
+        form_data.append('fuelLevel', fuelLevel);
+        form_data.append('file', file);
+        form_data.append('filePertama', filePertama);
+        form_data.append('remark', remark);
+        form_data.append('arrItem', json_arr);
+        form_data.append('idInspeksi', id_inspeksi);
+
+        confirmAlert('Apakah anda yakin?', 'Pastikan data yang anda input benar!', 'warning', 'Ya, simpan', 'Tidak').then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    type: "POST",
+                    url: "<?= base_url('Inspeksi/InspeksiBoat/saveUpdateInspeksi') ?>",
                     data: form_data,
                     contentType: false,
                     processData: false,

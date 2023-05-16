@@ -661,13 +661,13 @@ class InspeksiTruck extends CI_Controller
 
         //Footer 
         $sheet->mergeCells('A56:H56');
-        $sheet->setCellValue('A56', 'FUEL LEVEL : ' . $dataInspeksi['fuel_level']);
+        $sheet->setCellValue('A56', 'FUEL LEVEL : ' . $dataInspeksi['fuel_level'] . '%');
         $sheet->mergeCells('C58:E58');
         $sheet->setCellValue('C58', $dataInspeksi['tgl_inspeksi']);
         $sheet->mergeCells('C59:D59');
         $sheet->setCellValue('C59', $dataInspeksi['shift']);
         $sheet->mergeCells('C60:E60');
-        $sheet->setCellValue('C60', 'ARIS ARIYANTO');
+        $sheet->setCellValue('C60', $dataInspeksi['nama']);
         $sheet->mergeCells('F58:H58');
         $sheet->setCellValue('F58', 'Acknowledge by');
         $sheet->mergeCells('F62:H62');

@@ -433,7 +433,7 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label for="tglInspeksi">Attachment <span class="text-danger">*Upload File jika ingin mengubah data sebelumnya</span></label>
+                                    <label for="attachment">Attachment <small class="text-danger">*Upload File jika ingin mengubah data sebelumnya</small></label>
                                     <input type="file" class="form-control text-sm" id="attachment" accept="image/*" onchange="tampilkanPreview(this,'preview')">
                                     <input type="hidden" class="form-control text-sm" id="attachment_pertama" value="<?= $inspeksi['attachment'] ?>">
                                 </div>
