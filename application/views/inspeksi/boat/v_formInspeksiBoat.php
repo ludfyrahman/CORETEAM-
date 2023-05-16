@@ -53,7 +53,7 @@
                                 <label for="ficAssistant">FIC Assistant</label>
                                 <select class="form-control text-sm" id="ficAssistant" aria-placeholder="true" multiple>
                                     <option value="">Pilih FIC Assistant</option>
-                                    <?php foreach ($commander as $data) { ?>
+                                    <?php foreach ($assistant as $data) { ?>
                                         <option value="<?= $data['id'] ?>"><?= $data['nama'] ?></option>
                                     <?php } ?>
                                 </select>
