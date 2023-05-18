@@ -1,4 +1,14 @@
 <script type="text/javascript">
+    $(document).keypress(function(e) {
+        if (e.keyCode == 13) {
+            login();
+        }
+    });
+
+    $("#btn-login").on("click", function() {
+        login();
+    });
+
     function showNotification(type, msg, desc) {
         toastr[type](desc, msg, {
             "closeButton": true,
@@ -8,7 +18,7 @@
         });
     }
 
-    $("#btn-login").on("click", function() {
+    function login() {
         var username = $("#username").val();
         var password = $("#password").val();
 
@@ -46,5 +56,5 @@
                 }
             }
         });
-    });
+    }
 </script>
