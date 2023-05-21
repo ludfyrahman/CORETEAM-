@@ -1,3 +1,6 @@
+<?php 
+$url = $this->uri->segment(1);
+?>
 <aside class="sidenav bg-white navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-4 " id="sidenav-main">
     <div class="sidenav-header">
         <i class="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
@@ -18,13 +21,13 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" data-bs-toggle="collapse" href="#menu-collapse" role="button" aria-expanded="false" aria-controls="menu-collapse">
+                <a class="nav-link" data-bs-toggle="collapse" href="#menu-collapse" role="button" aria-expanded="<?=  $url == 'Inspeksi' ? 'true' :'false' ?>" aria-controls="menu-collapse">
                     <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
                         <i class="ni ni-calendar-grid-58 text-success text-sm opacity-10"></i>
                     </div>
                     <span class="nav-link-text ms-1">Inspeksi</span>
                 </a>
-                <div class="collapse" id="menu-collapse">
+                <div class="collapse <?=  $url == 'Inspeksi' ? 'show' :'' ?>" id="menu-collapse">
                     <ul class="navbar-nav ps-3">
                         <li class="nav-item">
                             <a class="nav-link <?= ($this->uri->segment(2) == 'InspeksiTruck' ? 'active' : '') ?>" href="<?= base_url('Inspeksi/InspeksiTruck') ?>">
