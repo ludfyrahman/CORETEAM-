@@ -25,22 +25,7 @@
                                 </tr>
                             </thead>
                             <tbody class="text-center">
-                                <tr>
-                                    <td class="text-sm">1</td>
-                                    <td class="text-sm">FT-001</td>
-                                    <td class="text-sm">04-05-2023</td>
-                                    <td class="text-sm">Nafis</td>
-                                    <?php if ($this->session->userdata('role') != 2) { ?>
-                                        <td>
-                                            <a href="#" class="btn btn-icon btn-3 btn-warning w-30" type="button" title="Edit Inspeksi">
-                                                <span class="btn-inner--icon text-white"><i class="fa-solid fa-pencil-alt"></i></span>
-                                            </a>
-                                            <a href="#" class="btn btn-icon btn-3 btn-success w-30" type="button" title="Export Inspeksi">
-                                                <span class="btn-inner--icon text-white"><i class="fa-solid fa-file-excel"></i></span>
-                                            </a>
-                                        </td>
-                                    <?php } ?>
-                                </tr>
+
                             </tbody>
                         </table>
                     </div>
