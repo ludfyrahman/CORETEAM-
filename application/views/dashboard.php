@@ -92,7 +92,7 @@
     <div class="row mt-4">
 		<div class="col-md-12 mb-4" style="height:500px">
             <div class="card card-carousel overflow-hidden h-100 p-0">
-                <div id="carouselExampleCaptions" class="carousel slide h-100" data-bs-ride="carousel">
+                <div id="carouselExampleCaptions" class="carousel slide h-100"  data-bs-interval="15000" data-bs-ride="carousel">
                     <div class="carousel-inner border-radius-lg h-100">
                         <?php 
 						for ($i=0; $i < 10; $i++) { 
@@ -103,7 +103,13 @@
                                     <i class="ni ni-camera-compact text-dark opacity-10"></i>
                                 </div>
                                 <h5 class="title position-relative text-white mb-1" style="z-index:2"><?= APP_TITLE ?></h5>
-                                <p class='desc position-relative text-white' style="z-index:2"><?= APP_DESC ?></p>
+                                <p class='desc position-relative text-white typing' style="z-index:2;" id='desc-<?= $i ?>'></p>
+								<script>
+							window.ityped.init(document.querySelector('#desc-<?= $i ?>'),{
+								strings: ['<?=APP_DESC?>'],
+								loop: true
+							})
+						</script>
                             </div>
                         </div>
 						<div class='overlay'></div>
