@@ -18,9 +18,22 @@
                         </button>
                         <ul class="dropdown-menu px-2 py-3" aria-labelledby="dropdownMenuButton">
                             <li><a class="dropdown-item border-radius-md" href="<?= base_url('KelolaAkun/profile') ?>">My Profile</a></li>
-                            <li><button class="dropdown-item border-radius-md text-danger" id="btnLogOut" >Logout</button>
-                            </li>
+                            <li><button class="dropdown-item border-radius-md text-danger" id="btnLogOut" >Logout</button></li>
+						</ul>
+					</div>
                 </li>
+				<li class="nav-item d-xl-none ps-3 d-flex align-items-center">
+					<a href="javascript:;" class="nav-link text-white p-0" id="iconNavbarSidenav">
+						<div class="sidenav-toggler-inner">
+						<i class="sidenav-toggler-line bg-white"></i>
+						<i class="sidenav-toggler-line bg-white"></i>
+						<i class="sidenav-toggler-line bg-white"></i>
+						</div>
+					</a>
+				</li>
+				
+				
+				
             </ul>
         </div>
         </li>

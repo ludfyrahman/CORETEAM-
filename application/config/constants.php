@@ -85,4 +85,4 @@ defined('EXIT__AUTO_MIN')      or define('EXIT__AUTO_MIN', 9); // lowest automat
 defined('EXIT__AUTO_MAX')      or define('EXIT__AUTO_MAX', 125); // highest automatically-assigned error code
 define('SITE_NAME', 'CORETEAM+');
 define('APP_TITLE', 'CORETEAM+');
-define('APP_DESC', 'CORETEAM+ adalah ..........');
+define('APP_DESC', 'Core team adalah tim penanganan keadaan darurat  seperti kebakaran dan pertolongan, juga meliputi kegiatan - kegiatan lainnya seperti inspeksi alat pemadam api & program mencegah kebakaran untuk wilayah kontrak PT. POMI');
