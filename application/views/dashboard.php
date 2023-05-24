@@ -102,8 +102,8 @@
                                 <div class="icon icon-shape icon-sm bg-white text-center border-radius-md mb-3">
                                     <i class="ni ni-camera-compact text-dark opacity-10"></i>
                                 </div>
-                                <h5 class="text-white mb-1"><?= APP_TITLE ?></h5>
-                                <p><?= APP_DESC ?></p>
+                                <h5 class=" mb-1"><?= APP_TITLE ?></h5>
+                                <p style='color:#000'><?= APP_DESC ?></p>
                             </div>
                         </div>
                         <?php } ?>
