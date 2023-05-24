@@ -37,6 +37,17 @@
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.5/dist/sweetalert2.all.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.5/dist/sweetalert2.min.css" rel="stylesheet">
+	<style>
+		.overlay {
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			background-color: rgba(0, 0, 0, 0.1); /* Adjust the overlay color and opacity */
+			z-index: 1;
+		}
+	</style>
 </head>
 
 <body class="g-sidenav-show bg-gray-100">
