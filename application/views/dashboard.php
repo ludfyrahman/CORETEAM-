@@ -103,7 +103,7 @@
                                     <i class="ni ni-camera-compact text-dark opacity-10"></i>
                                 </div>
                                 <h5 class="title position-relative text-white mb-1" style="z-index:2"><?= APP_TITLE ?></h5>
-                                <p class='desc position-relative text-white' style="z-index:2"><?= APP_DESC ?></p>
+                                <p class='desc position-relative text-white typing' style="z-index:2"><?= APP_DESC ?></p>
                             </div>
                         </div>
 						<div class='overlay'></div>

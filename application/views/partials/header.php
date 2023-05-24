@@ -47,6 +47,20 @@
 			background-color: rgba(0, 0, 0, 0.1); /* Adjust the overlay color and opacity */
 			z-index: 1;
 		}
+		.typing{
+			overflow: hidden; /* Hide overflow to create typing effect */
+			animation: typing 10s steps(380, end); /* Adjust the animation duration and steps as needed */
+			white-space: nowrap; /* Prevent line breaks in the text */
+			border-right: 0.15em solid; /* Add a blinking cursor effect */
+		}
+		@keyframes typing {
+			from {
+				width: 0;
+			}
+			to {
+				width: 100%;
+			}
+		}
 	</style>
 </head>
 
