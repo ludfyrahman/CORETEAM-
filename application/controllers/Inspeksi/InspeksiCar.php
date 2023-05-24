@@ -307,7 +307,7 @@ class InspeksiCar extends CI_Controller
             'fill' => [
                 'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
                 'startColor' => [
-                    'argb' => 'ACB9CA',
+                    'argb' => 'E2EFDA',
                 ],
             ],
             'borders' => [
@@ -328,7 +328,7 @@ class InspeksiCar extends CI_Controller
             'fill' => [
                 'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
                 'startColor' => [
-                    'argb' => 'D6DCE4',
+                    'argb' => 'E2EFDA',
                 ],
             ],
             'borders' => [
@@ -375,10 +375,10 @@ class InspeksiCar extends CI_Controller
         ];
 
         // Merge Kolom
-        $sheet->mergeCells('A1:H1');
-        $sheet->setCellValue('A1', 'DAILY CAR INSPECTION SHEET');
-        $sheet->mergeCells('A2:H2');
-        $sheet->setCellValue('A2', '(SMOB-164)');
+        $sheet->mergeCells('A1:L1');
+        $sheet->setCellValue('A1', 'DAILY RESCUE CAR INSPECTION SHEET');
+        $sheet->mergeCells('A2:L2');
+        $sheet->setCellValue('A2', '(SMOB-PKUP-217)');
 
         // SUBKATEGORI 1
         $sheet->mergeCells('A3:D3');
@@ -389,73 +389,65 @@ class InspeksiCar extends CI_Controller
         $sheet->setCellValue('D4', 'N/A');
 
         //SUBKATEGORI 2
-        $sheet->mergeCells('E3:H3');
-        $sheet->setCellValue('E3', '2. TRANSMISSION & BRAKING SYSTEM');
-        $sheet->setCellValue('E4', 'Items');
-        $sheet->setCellValue('F4', 'Good');
-        $sheet->setCellValue('G4', 'Damage');
-        $sheet->setCellValue('H4', 'N/A');
+        $sheet->mergeCells('A10:D10');
+        $sheet->setCellValue('A10', '2.TRANSMISSION & BRAKING SYSTEM');
+        $sheet->setCellValue('A11', 'Items');
+        $sheet->setCellValue('B11', 'Good');
+        $sheet->setCellValue('C11', 'Damage');
+        $sheet->setCellValue('D11', 'N/A');
 
         //SUBKATEGORI 3
-        $sheet->mergeCells('A16:D16');
-        $sheet->setCellValue('A16', '3. ELECTRICAL SYSTEM');
-        $sheet->setCellValue('A17', 'Items');
-        $sheet->setCellValue('B17', 'Good');
-        $sheet->setCellValue('C17', 'Damage');
-        $sheet->setCellValue('D17', 'N/A');
+        $sheet->mergeCells('A18:D18');
+        $sheet->setCellValue('A18', '3. ELECTRICAL SYSTEM');
+        $sheet->setCellValue('A19', 'Items');
+        $sheet->setCellValue('B19', 'Good');
+        $sheet->setCellValue('C19', 'Damage');
+        $sheet->setCellValue('D19', 'N/A');
 
         //SUBKATEGORI 4
-        $sheet->mergeCells('A21:D21');
-        $sheet->setCellValue('A21', '4. RESCUE EQUIPMENTS');
-        $sheet->setCellValue('A22', 'Items');
-        $sheet->setCellValue('B22', 'Good');
-        $sheet->setCellValue('C22', 'Damage');
-        $sheet->setCellValue('D22', 'N/A');
+        $sheet->mergeCells('E3:H3');
+        $sheet->setCellValue('E3', '4. RESCUE EQUIPMENTS');
+        $sheet->setCellValue('E4', 'Items');
+        $sheet->setCellValue('F4', 'Yes');
+        $sheet->setCellValue('G4', 'No');
+        $sheet->setCellValue('H4', 'N/A');
 
         //SUBKATEGORI 5
-        $sheet->mergeCells('A26:H26');
-        $sheet->setCellValue('A26', '5. HAZMAT EQUIPMENTS');
-        $sheet->setCellValue('A27', 'Items');
-        $sheet->setCellValue('B27', 'Good');
-        $sheet->setCellValue('C27', 'Damage');
-        $sheet->setCellValue('D27', 'N/A');
-        $sheet->setCellValue('E27', 'Items');
-        $sheet->setCellValue('F27', 'Good');
-        $sheet->setCellValue('G27', 'Damage');
-        $sheet->setCellValue('H27', 'N/A');
+        $sheet->mergeCells('I3:L3');
+        $sheet->setCellValue('I3', '5. HAZMAT EQUIPMENTS');
+        $sheet->setCellValue('I4', 'Items');
+        $sheet->setCellValue('J4', 'Yes');
+        $sheet->setCellValue('K4', 'No');
+        $sheet->setCellValue('L4', 'N/A');
 
         //SUBKATEGORI 6
-        $sheet->mergeCells('A32:H32');
-        $sheet->setCellValue('A32', '6. FIREMAN TOOLS');
-        $sheet->setCellValue('A33', 'Items');
-        $sheet->setCellValue('B33', 'Good');
-        $sheet->setCellValue('C33', 'Damage');
-        $sheet->setCellValue('D33', 'N/A');
-        $sheet->setCellValue('E33', 'Items');
-        $sheet->setCellValue('F33', 'Good');
-        $sheet->setCellValue('G33', 'Damage');
-        $sheet->setCellValue('H33', 'N/A');
+        $sheet->mergeCells('I17:L17');
+        $sheet->setCellValue('I17', '6. FIREMAN TOOLS');
+        $sheet->setCellValue('I18', 'Items');
+        $sheet->setCellValue('J18', 'Yes');
+        $sheet->setCellValue('K18', 'No');
+        $sheet->setCellValue('L18', 'N/A');
 
         //SUBKATEGORI 7
-        $sheet->mergeCells('A52:H52');
-        $sheet->setCellValue('A52', '7. ATTACHMENTS');
+        $sheet->mergeCells('A28:L28');
+        $sheet->setCellValue('A28', '7. ATTACHMENTS');
 
         // Implementasi Style
         $sheet->getStyle('A1')->applyFromArray($headerArray);
         $sheet->getStyle('A2')->applyFromArray($headerArray);
         $sheet->getStyle('A3:D3')->applyFromArray($subKategoriArray);
+        $sheet->getStyle('A10:D10')->applyFromArray($subKategoriArray);
+        $sheet->getStyle('A18:D18')->applyFromArray($subKategoriArray);
         $sheet->getStyle('E3:H3')->applyFromArray($subKategoriArray);
-        $sheet->getStyle('A16:D16')->applyFromArray($subKategoriArray);
-        $sheet->getStyle('A21:D21')->applyFromArray($subKategoriArray);
-        $sheet->getStyle('A26:H26')->applyFromArray($subKategoriArray);
-        $sheet->getStyle('A32:H32')->applyFromArray($subKategoriArray);
-        $sheet->getStyle('A52:H52')->applyFromArray($subKategoriArray);
+        $sheet->getStyle('I3:L3')->applyFromArray($subKategoriArray);
+        $sheet->getStyle('I17:L17')->applyFromArray($subKategoriArray);
+        $sheet->getStyle('A28:L28')->applyFromArray($subKategoriArray);
         $sheet->getStyle('A4:D4')->applyFromArray($itemArray);
+        $sheet->getStyle('A11:D11')->applyFromArray($itemArray);
+        $sheet->getStyle('A19:D19')->applyFromArray($itemArray);
         $sheet->getStyle('E4:H4')->applyFromArray($itemArray);
-        $sheet->getStyle('A17:D17')->applyFromArray($itemArray);
-        $sheet->getStyle('A22:D22')->applyFromArray($itemArray);
-        $sheet->getStyle('A27:H27')->applyFromArray($itemArray);
-        $sheet->getStyle('A33:H33')->applyFromArray($itemArray);
+        $sheet->getStyle('I4:L4')->applyFromArray($itemArray);
+        $sheet->getStyle('I18:L18')->applyFromArray($itemArray);
 
         // Data Item SubKategori 1
         $numrow = 5;
@@ -479,28 +471,28 @@ class InspeksiCar extends CI_Controller
         }
 
         // Data Item SubKategori 2
-        $numrow = 5;
+        $numrow = 12;
         foreach ($dataSubCat2 as $value) {
-            $sheet->setCellValue('E' . $numrow, $value['item']);
+            $sheet->setCellValue('A' . $numrow, $value['item']);
 
             // 0 = checklist N/A, 1 = checklist Damage, 2 = checklist Good
             if ($value['conditions'] == '0') {
-                $sheet->setCellValue('H' . $numrow, '✔');
-            } else if ($value['conditions'] == '1') {
-                $sheet->setCellValue('G' . $numrow, '✔');
+                $sheet->setCellValue('D' . $numrow, '✔');
+            } else if ($value['conditions'] == '2') {
+                $sheet->setCellValue('C' . $numrow, '✔');
             } else {
-                $sheet->setCellValue('F' . $numrow, '✔');
+                $sheet->setCellValue('B' . $numrow, '✔');
             }
 
-            $sheet->getStyle('H' . $numrow)->applyFromArray($centerArray);
-            $sheet->getStyle('G' . $numrow)->applyFromArray($centerArray);
-            $sheet->getStyle('F' . $numrow)->applyFromArray($centerArray);
+            $sheet->getStyle('D' . $numrow)->applyFromArray($centerArray);
+            $sheet->getStyle('C' . $numrow)->applyFromArray($centerArray);
+            $sheet->getStyle('B' . $numrow)->applyFromArray($centerArray);
 
             $numrow++;
         }
 
         // Data Item SubKategori 3
-        $numrow = 18;
+        $numrow = 20;
         foreach ($dataSubCat3 as $value) {
             $sheet->setCellValue('A' . $numrow, $value['item']);
 
@@ -521,185 +513,139 @@ class InspeksiCar extends CI_Controller
         }
 
         // Data Item SubKategori 4
-        $numrow = 23;
+        $numrow = 5;
         foreach ($dataSubCat4 as $value) {
-            $sheet->setCellValue('A' . $numrow, $value['item']);
+            $sheet->setCellValue('E' . $numrow, $value['item']);
 
             // 0 = checklist N/A, 1 = checklist Damage, 2 = checklist Good
             if ($value['conditions'] == '0') {
-                $sheet->setCellValue('D' . $numrow, '✔');
+                $sheet->setCellValue('H' . $numrow, '✔');
             } else if ($value['conditions'] == '1') {
-                $sheet->setCellValue('C' . $numrow, '✔');
+                $sheet->setCellValue('G' . $numrow, '✔');
             } else {
-                $sheet->setCellValue('B' . $numrow, '✔');
+                $sheet->setCellValue('F' . $numrow, '✔');
             }
 
-            $sheet->getStyle('D' . $numrow)->applyFromArray($centerArray);
-            $sheet->getStyle('C' . $numrow)->applyFromArray($centerArray);
-            $sheet->getStyle('B' . $numrow)->applyFromArray($centerArray);
+            $sheet->getStyle('H' . $numrow)->applyFromArray($centerArray);
+            $sheet->getStyle('G' . $numrow)->applyFromArray($centerArray);
+            $sheet->getStyle('F' . $numrow)->applyFromArray($centerArray);
 
             $numrow++;
         }
 
         // Data Item SubKategori 5
-        $numrow = 28;
-        foreach ($dataSubCat5 as $key => $value) {
-            if ($key <= 3) {
-                $sheet->setCellValue('A' . $numrow, $value['item']);
+        $numrow = 5;
+        foreach ($dataSubCat5 as $value) {
+            $sheet->setCellValue('I' . $numrow, $value['item']);
 
-                // 0 = checklist N/A, 1 = checklist Damage, 2 = checklist Good
-                if ($value['conditions'] == '0') {
-                    $sheet->setCellValue('D' . $numrow, '✔');
-                } else if ($value['conditions'] == '1') {
-                    $sheet->setCellValue('C' . $numrow, '✔');
-                } else {
-                    $sheet->setCellValue('B' . $numrow, '✔');
-                }
-
-                $sheet->getStyle('D' . $numrow)->applyFromArray($centerArray);
-                $sheet->getStyle('C' . $numrow)->applyFromArray($centerArray);
-                $sheet->getStyle('B' . $numrow)->applyFromArray($centerArray);
-
-                $numrow++;
-
-                if ($key == 3) {
-                    $numrow = 28;
-                }
+            // 0 = checklist N/A, 1 = checklist Damage, 2 = checklist Good
+            if ($value['conditions'] == '0') {
+                $sheet->setCellValue('L' . $numrow, '✔');
+            } else if ($value['conditions'] == '1') {
+                $sheet->setCellValue('K' . $numrow, '✔');
             } else {
-                $sheet->setCellValue('E' . $numrow, $value['item']);
-
-                // 0 = checklist N/A, 1 = checklist Damage, 2 = checklist Good
-                if ($value['conditions'] == '0') {
-                    $sheet->setCellValue('H' . $numrow, '✔');
-                } else if ($value['conditions'] == '1') {
-                    $sheet->setCellValue('G' . $numrow, '✔');
-                } else {
-                    $sheet->setCellValue('F' . $numrow, '✔');
-                }
-
-                $sheet->getStyle('H' . $numrow)->applyFromArray($centerArray);
-                $sheet->getStyle('G' . $numrow)->applyFromArray($centerArray);
-                $sheet->getStyle('F' . $numrow)->applyFromArray($centerArray);
-
-                $numrow++;
+                $sheet->setCellValue('J' . $numrow, '✔');
             }
+
+            $sheet->getStyle('L' . $numrow)->applyFromArray($centerArray);
+            $sheet->getStyle('K' . $numrow)->applyFromArray($centerArray);
+            $sheet->getStyle('J' . $numrow)->applyFromArray($centerArray);
+
+            $numrow++;
         }
 
         // Data Item SubKategori 6
-        $numrow = 34;
-        foreach ($dataSubCat6 as $key => $value) {
-            if ($key <= 17) {
-                $sheet->setCellValue('A' . $numrow, $value['item']);
+        $numrow = 19;
+        foreach ($dataSubCat6 as $value) {
+            $sheet->setCellValue('I' . $numrow, $value['item']);
 
-                // 0 = checklist N/A, 1 = checklist Damage, 2 = checklist Good
-                if ($value['conditions'] == '0') {
-                    $sheet->setCellValue('D' . $numrow, '✔');
-                } else if ($value['conditions'] == '1') {
-                    $sheet->setCellValue('C' . $numrow, '✔');
-                } else {
-                    $sheet->setCellValue('B' . $numrow, '✔');
-                }
-
-                $sheet->getStyle('D' . $numrow)->applyFromArray($centerArray);
-                $sheet->getStyle('C' . $numrow)->applyFromArray($centerArray);
-                $sheet->getStyle('B' . $numrow)->applyFromArray($centerArray);
-
-                $numrow++;
-
-                if ($key == 17) {
-                    $numrow = 34;
-                }
+            // 0 = checklist N/A, 1 = checklist Damage, 2 = checklist Good
+            if ($value['conditions'] == '0') {
+                $sheet->setCellValue('L' . $numrow, '✔');
+            } else if ($value['conditions'] == '1') {
+                $sheet->setCellValue('K' . $numrow, '✔');
             } else {
-                $sheet->setCellValue('E' . $numrow, $value['item']);
-
-                // 0 = checklist N/A, 1 = checklist Damage, 2 = checklist Good
-                if ($value['conditions'] == '0') {
-                    $sheet->setCellValue('H' . $numrow, '✔');
-                } else if ($value['conditions'] == '1') {
-                    $sheet->setCellValue('G' . $numrow, '✔');
-                } else {
-                    $sheet->setCellValue('F' . $numrow, '✔');
-                }
-
-                $sheet->getStyle('H' . $numrow)->applyFromArray($centerArray);
-                $sheet->getStyle('G' . $numrow)->applyFromArray($centerArray);
-                $sheet->getStyle('F' . $numrow)->applyFromArray($centerArray);
-
-                $numrow++;
+                $sheet->setCellValue('J' . $numrow, '✔');
             }
+
+            $sheet->getStyle('L' . $numrow)->applyFromArray($centerArray);
+            $sheet->getStyle('K' . $numrow)->applyFromArray($centerArray);
+            $sheet->getStyle('J' . $numrow)->applyFromArray($centerArray);
+
+            $numrow++;
         }
 
         // Data Item SubKategori 7
         //merge Kolom Horizontal
-        $sheet->mergeCells('A53:F55');
-        $sheet->setCellValue('A53', $dataInspeksi['remark']);
-        $sheet->getStyle('A53:F55')->applyFromArray($leftArray);
+        $sheet->mergeCells('A29:J31');
+        $sheet->setCellValue('A29', $dataInspeksi['remark']);
+        $sheet->getStyle('A29:J31')->applyFromArray($leftArray);
 
         $drawing = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
-        $sheet->mergeCells('G53:H55');
+        $sheet->mergeCells('K29:L31');
         $drawing->setPath('./uploads/' . $dataInspeksi['attachment']);
-        $drawing->setCoordinates('G53');
+        $drawing->setCoordinates('K29');
         $drawing->setWidth(120); // Set lebar gambar dalam satuan pixel
         $drawing->setHeight(50); // Set tinggi gambar dalam satuan pixel
         $drawing->setOffsetX(10); // Set offset gambar pada sumbu X
         $drawing->setOffsetY(5); // Set offset gambar pada sumbu Y
-        $sheet->getColumnDimension('G')->setAutoSize(true);
+        $sheet->getColumnDimension('K')->setAutoSize(true);
         $drawing->getShadow()->setVisible(true);
-        $sheet->getStyle('G53:H55')->applyFromArray($centerArray);
+        $sheet->getStyle('K29:L31')->applyFromArray($centerArray);
         $drawing->setWorksheet($sheet);
 
         //Style Data Item
-        $sheet->getStyle('A5:D15')->applyFromArray($borderThinArray);
-        $sheet->getStyle('E5:H25')->applyFromArray($borderThinArray);
-        $sheet->getStyle('A18:D20')->applyFromArray($borderThinArray);
-        $sheet->getStyle('A23:D25')->applyFromArray($borderThinArray);
-        $sheet->getStyle('A28:H31')->applyFromArray($borderThinArray);
-        $sheet->getStyle('A34:H51')->applyFromArray($borderThinArray);
-        $sheet->getStyle('A53:H55')->applyFromArray($borderThinArray);
+        $sheet->getStyle('A5:D9')->applyFromArray($borderThinArray);
+        $sheet->getStyle('A12:D17')->applyFromArray($borderThinArray);
+        $sheet->getStyle('A20:D27')->applyFromArray($borderThinArray);
+        $sheet->getStyle('E5:H27')->applyFromArray($borderThinArray);
+        $sheet->getStyle('I5:L16')->applyFromArray($borderThinArray);
+        $sheet->getStyle('I19:L27')->applyFromArray($borderThinArray);
+        $sheet->getStyle('A29:L31')->applyFromArray($borderThinArray);
 
         //Footer 
-        $sheet->mergeCells('A56:H56');
-        $sheet->setCellValue('A56', 'FUEL LEVEL : ' . $dataInspeksi['fuel_level'] . '%');
-        $sheet->mergeCells('C58:E58');
-        $sheet->setCellValue('C58', $dataInspeksi['tgl_inspeksi']);
-        $sheet->mergeCells('C59:D59');
-        $sheet->setCellValue('C59', $dataInspeksi['shift']);
-        $sheet->mergeCells('C60:E60');
-        $sheet->setCellValue('C60', $dataInspeksi['nama']);
-        $sheet->mergeCells('F58:H58');
-        $sheet->setCellValue('F58', 'Acknowledge by');
-        $sheet->mergeCells('F62:H62');
-        $sheet->setCellValue('F62', 'HERU PURWANTO');
-        $sheet->mergeCells('F63:H63');
-        $sheet->setCellValue('F63', 'CT SUPERVISOR');
+        $sheet->mergeCells('A32:L32');
+        $sheet->setCellValue('A32', 'FUEL LEVEL : ' . $dataInspeksi['fuel_level'] . '%');
+        $sheet->mergeCells('C34:E34');
+        $sheet->setCellValue('C34', $dataInspeksi['tgl_inspeksi']);
+        $sheet->mergeCells('C35:E35');
+        $sheet->setCellValue('C35', $dataInspeksi['shift']);
+        $sheet->mergeCells('C36:E36');
+        $sheet->setCellValue('C36', $dataInspeksi['nama']);
+        $sheet->mergeCells('J34:L34');
+        $sheet->setCellValue('J34', 'Acknowledge by');
+        $sheet->mergeCells('J38:L38');
+        $sheet->setCellValue('J38', 'HERU PURWANTO');
+        $sheet->mergeCells('J39:L39');
+        $sheet->setCellValue('J39', 'CT SUPERVISOR');
 
-        $sheet->setCellValue('A58', 'TANGGAL');
-        $sheet->setCellValue('A59', 'SHIFT');
-        $sheet->setCellValue('A60', 'FIRE INCIDENT COMMANDER');
-        $sheet->setCellValue('A61', 'FIC ASSISTANT');
-        $sheet->setCellValue('B58', ':');
-        $sheet->setCellValue('B59', ':');
-        $sheet->setCellValue('B60', ':');
+        $sheet->setCellValue('A34', 'TANGGAL');
+        $sheet->setCellValue('A35', 'SHIFT');
+        $sheet->setCellValue('A36', 'FIRE INCIDENT COMMANDER');
+        $sheet->setCellValue('A37', 'FIC ASSISTANT');
+        $sheet->setCellValue('B34', ':');
+        $sheet->setCellValue('B35', ':');
+        $sheet->setCellValue('B36', ':');
 
         // style kolom
-        $sheet->getStyle('A56:H56')->applyFromArray($boldArray);
-        $sheet->getStyle('C58:E58')->applyFromArray($boldArray);
-        $sheet->getStyle('C59:E59')->applyFromArray($boldArray);
-        $sheet->getStyle('C60:E60')->applyFromArray($boldArray);
-        $sheet->getStyle('F58:H58')->applyFromArray($headerArray);
-        $sheet->getStyle('F62:H62')->applyFromArray($headerArray);
-        $sheet->getStyle('F63:H63')->applyFromArray($centerArray);
-        $sheet->getStyle('A58')->applyFromArray($boldArray);
-        $sheet->getStyle('A59')->applyFromArray($boldArray);
-        $sheet->getStyle('A60')->applyFromArray($boldArray);
-        $sheet->getStyle('A61')->applyFromArray($boldArray);
-        $sheet->getStyle('B58')->applyFromArray($headerArray);
-        $sheet->getStyle('B59')->applyFromArray($headerArray);
-        $sheet->getStyle('B60')->applyFromArray($headerArray);
-        $sheet->getStyle('F62:H62')->applyFromArray($borderThinBottomArray);
+        $sheet->getStyle('A32:L32')->applyFromArray($boldArray);
+        $sheet->getStyle('C34:E34')->applyFromArray($boldArray);
+        $sheet->getStyle('C35:E35')->applyFromArray($boldArray);
+        $sheet->getStyle('C36:E36')->applyFromArray($boldArray);
+        $sheet->getStyle('J34:L34')->applyFromArray($headerArray);
+        $sheet->getStyle('J38:L38')->applyFromArray($headerArray);
+        $sheet->getStyle('J39:L39')->applyFromArray($centerArray);
+        $sheet->getStyle('A34')->applyFromArray($boldArray);
+        $sheet->getStyle('A35')->applyFromArray($boldArray);
+        $sheet->getStyle('A36')->applyFromArray($boldArray);
+        $sheet->getStyle('A37')->applyFromArray($boldArray);
+        $sheet->getStyle('B34')->applyFromArray($headerArray);
+        $sheet->getStyle('B35')->applyFromArray($headerArray);
+        $sheet->getStyle('B36')->applyFromArray($headerArray);
+        $sheet->getStyle('J38:L38')->applyFromArray($borderThinBottomArray);
 
         // panggil laporanDetailSingle
-        $num = 61;
+        $num = 37;
         foreach ($dataAssistant as $value) {
             $sheet->setCellValue('B' . $num, ':');
             $sheet->mergeCells('C' . $num . ':' . 'E' . $num);
@@ -712,7 +658,7 @@ class InspeksiCar extends CI_Controller
 
         // Proses file excel
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        header('Content-Disposition: attachment; filename="Report Car check.xlsx"'); // Set nama file excel nya
+        header('Content-Disposition: attachment; filename="Report Resque Car Check.xlsx"'); // Set nama file excel nya
         header('Cache-Control: max-age=0');
 
         $writer = new Xlsx($spreadsheet);
