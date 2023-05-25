@@ -80,6 +80,15 @@ class KelolaAkun extends CI_Controller
 
         echo 1;
     }
+    
+    public function resetPassword() {
+        $id_user = $this->input->post('id_user');
+        $password   = password_hash('coreteam', PASSWORD_DEFAULT);
+        
+        $this->M_KelolaAkun->resetPassword($id_user, $password);
+
+        echo 1;
+    }
 
     public function deleteAccount() {
         $id_user = $this->input->post('id');
