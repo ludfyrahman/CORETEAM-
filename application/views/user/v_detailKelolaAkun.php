@@ -2,8 +2,12 @@
     <div class="row">
         <div class="col-lg-12">
             <div id="previewGeneralInspeksi" class="card mb-4">
-                <div class="card-header pb-4 bg-white">
-                    <h5>Detail akun</h5>
+                <div class="card-header pb-4 bg-white d-flex justify-content-between">
+                    <h5 class="mb-0">Detail akun</h5>
+                    <button class="btn btn-icon btn-3 btn-info mb-0 ms-2 float-end" type="button" id="resetPassword">
+                        <span class="btn-inner--icon text-white"><i class="fa-solid fa-key"></i></span>
+                        <span class="btn-inner--text text-white">Reset password</span>
+                    </button>
                 </div>
 
                 <div class="card-body p-4">

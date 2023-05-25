@@ -94,6 +94,24 @@ class M_KelolaAkun extends CI_Model
 
         return $queryupdate;
     }
+   
+    public function resetPassword($id_user, $password) {
+        $this->db->set('password', $password);
+        $this->db->set('updated_at', date('Y-m-d H:i:s'));
+        $this->db->where('id_user', $id_user);
+
+        $this->db->update('user');
+
+        $affectedrows = $this->db->affected_rows();
+
+        if ($affectedrows > 0) {
+            $queryupdate = 1;
+        } else {
+            $queryupdate = 0;
+        }
+
+        return $queryupdate;
+    }
     
     public function deleteAccount($id) {
         $this->db->where('id_user', $id);

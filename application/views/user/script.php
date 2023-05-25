@@ -113,6 +113,30 @@
         })
     })
 
+    $("#resetPassword").on('click', function() {
+        var id_user = $("#id_user").val();
+
+        confirmAlert('Apakah anda yakin?', 'Tekan ya untuk me-reset password akun dan tidak untuk kembali', 'warning', 'Ya, reset', 'Tidak').then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    type: "POST",
+                    url: "<?= base_url('KelolaAkun/resetPassword') ?>",
+                    data: {
+                        id_user: id_user
+                    },
+                    success: function(response) {
+                        if (response == 1) {
+                            showNotification('success', 'Sukses', 'Password akun berhasil di-reset!');
+                            setTimeout(() => {
+                                location.href = '<?= base_url('KelolaAkun') ?>';
+                            }, 2000);
+                        }
+                    }
+                })
+            }
+        })
+    })
+
     $("#btnsaveuser").on('click', function() {
         var nama = $("#nama").val();
         var username = $("#username").val();
