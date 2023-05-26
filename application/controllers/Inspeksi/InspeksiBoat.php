@@ -57,49 +57,86 @@ class InspeksiBoat extends CI_Controller
         $fuelLevel      = $this->input->post('fuelLevel');
         $arrItem        = $this->input->post('arrItem');
         $remark         = $this->input->post('remark');
-        $file           = $_FILES['file']['name'];
         $date_now       = date('Y-m-d H:i:s');
         $id_user        = $this->session->userdata('id_user');
 
-        $config['file_name']       = $file;
-        $config['max_size']        = '2048';
-        $config['allowed_types']   = 'jpg|jpeg|png';
-        $config['source_image']    = $_FILES['file']['tmp_name'];
-        $config['upload_path']     = './uploads/';
+        if (isset($_FILES['file']['name']) && !empty($_FILES['file']['name'])) {
+            $file = $_FILES['file']['name'];
+        } else {
+            $file = '';
+        }
 
-        $this->load->library('upload', $config);
-        $this->upload->initialize($config);
+        // get jumlah data
+        $kodeInspeksi = $this->M_InspeksiBoat->getKodeInspeksi();
 
-        if ($this->upload->do_upload('file')) {
-            $uploadImage = $this->upload->data();
+        $angka = $kodeInspeksi['jml'] + 1;
+        if ($angka >= 0 and $angka < 10) {
+            $kodeFile = 'FT' . "-000000" . $angka;
+        } else if ($angka >= 10 and $angka < 100) {
+            $kodeFile = 'FT' . "-00000" . $angka;
+        } else if ($angka >= 100 and $angka < 1000) {
+            $kodeFile = 'FT' . "-0000" . $angka;
+        } else if ($angka >= 1000 and $angka < 10000) {
+            $kodeFile = 'FT' . "-000" . $angka;
+        } else if ($angka >= 10000 and $angka < 100000) {
+            $kodeFile = 'FT' . "-00" . $angka;
+        } else if ($angka >= 100000 and $angka < 1000000) {
+            $kodeFile = 'FT' . "-0" . $angka;
+        } else if ($angka >= 1000000) {
+            $kodeFile = 'FT' . "-" . $angka;
+        }
 
-            // get jumlah data
-            $kodeInspeksi = $this->M_InspeksiBoat->getKodeInspeksi();
+        // get id category truck
+        $idCatRescueBoat = $this->M_InspeksiBoat->getIDCatRescueBoat();
 
-            $angka = $kodeInspeksi['jml'] + 1;
-            if ($angka >= 0 and $angka < 10) {
-                $kodeFile = 'FT' . "-000000" . $angka;
-            } else if ($angka >= 10 and $angka < 100) {
-                $kodeFile = 'FT' . "-00000" . $angka;
-            } else if ($angka >= 100 and $angka < 1000) {
-                $kodeFile = 'FT' . "-0000" . $angka;
-            } else if ($angka >= 1000 and $angka < 10000) {
-                $kodeFile = 'FT' . "-000" . $angka;
-            } else if ($angka >= 10000 and $angka < 100000) {
-                $kodeFile = 'FT' . "-00" . $angka;
-            } else if ($angka >= 100000 and $angka < 1000000) {
-                $kodeFile = 'FT' . "-0" . $angka;
-            } else if ($angka >= 1000000) {
-                $kodeFile = 'FT' . "-" . $angka;
+        if ($file != '') {
+            $config['file_name']       = $file;
+            $config['max_size']        = '2048';
+            $config['allowed_types']   = 'jpg|jpeg|png';
+            $config['source_image']    = $_FILES['file']['tmp_name'];
+            $config['upload_path']     = './uploads/';
+
+            $this->load->library('upload', $config);
+            $this->upload->initialize($config);
+
+            if ($this->upload->do_upload('file')) {
+                $uploadImage = $this->upload->data();
+
+                $this->db->trans_begin();
+
+                // insert ke table inspeksi
+                $this->M_InspeksiBoat->insertInspeksi($id_user, $tglWaktu, $shift, $commander, $fuelLevel, $kodeFile, $uploadImage['file_name'], $remark, $date_now, $idCatRescueBoat['id_category']);
+
+                // get id_inspeksi di tabel inspeksi
+                $id = $this->M_InspeksiBoat->getIDInspeksi();
+
+                // insert ke table inspeksi_detail
+                $data_item = json_decode($arrItem);
+                foreach ($data_item as $row) {
+                    $this->M_InspeksiBoat->insertInspeksiDetail($id['id_inspeksi'], $row->id_item, $row->conditions);
+                }
+
+                // insert ke table fic_assistant
+                $data_assistant = json_decode($arrAssistant);
+                foreach ($data_assistant as $row) {
+                    $this->M_InspeksiBoat->insertFICAssistant($id['id_inspeksi'], $row);
+                }
+
+                if ($this->db->trans_status() === FALSE) {
+                    $this->db->trans_rollback();
+                    echo json_encode(array('status' => 0, 'type' => 'error', 'msg' => 'Error', 'desc' => 'Gagal Menyimpan Data Inspeksi'));
+                } else {
+                    $this->db->trans_commit();
+                    echo json_encode(array('status' => 1, 'type' => 'success', 'msg' => 'Sukses', 'desc' => 'Data Berhasil Disimpan'));
+                }
+            } else {
+                echo json_encode(array('status' => 2, 'type' => 'error', 'msg' => 'Sukses', 'desc' => $this->upload->display_errors()));
             }
-
-            // get id category truck
-            $idCatRescueBoat = $this->M_InspeksiBoat->getIDCatRescueBoat();
-
+        } else {
             $this->db->trans_begin();
 
             // insert ke table inspeksi
-            $insert = $this->M_InspeksiBoat->insertInspeksi($id_user, $tglWaktu, $shift, $commander, $fuelLevel, $kodeFile, $uploadImage['file_name'], $remark, $date_now, $idCatRescueBoat['id_category']);
+            $this->M_InspeksiBoat->insertInspeksi($id_user, $tglWaktu, $shift, $commander, $fuelLevel, $kodeFile, $file, $remark, $date_now, $idCatRescueBoat['id_category']);
 
             // get id_inspeksi di tabel inspeksi
             $id = $this->M_InspeksiBoat->getIDInspeksi();
@@ -107,13 +144,13 @@ class InspeksiBoat extends CI_Controller
             // insert ke table inspeksi_detail
             $data_item = json_decode($arrItem);
             foreach ($data_item as $row) {
-                $insert = $this->M_InspeksiBoat->insertInspeksiDetail($id['id_inspeksi'], $row->id_item, $row->conditions);
+                $this->M_InspeksiBoat->insertInspeksiDetail($id['id_inspeksi'], $row->id_item, $row->conditions);
             }
 
             // insert ke table fic_assistant
             $data_assistant = json_decode($arrAssistant);
             foreach ($data_assistant as $row) {
-                $insert = $this->M_InspeksiBoat->insertFICAssistant($id['id_inspeksi'], $row);
+                $this->M_InspeksiBoat->insertFICAssistant($id['id_inspeksi'], $row);
             }
 
             if ($this->db->trans_status() === FALSE) {
@@ -123,8 +160,6 @@ class InspeksiBoat extends CI_Controller
                 $this->db->trans_commit();
                 echo json_encode(array('status' => 1, 'type' => 'success', 'msg' => 'Sukses', 'desc' => 'Data Berhasil Disimpan'));
             }
-        } else {
-            echo json_encode(array('status' => 2, 'type' => 'error', 'msg' => 'Sukses', 'desc' => $this->upload->display_errors()));
         }
     }
 
@@ -342,6 +377,12 @@ class InspeksiBoat extends CI_Controller
         ];
 
         $borderThinArray = [
+            'alignment' => [
+                'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_LEFT,
+                'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+                'textRotation' => 0,
+                'wrapText'     => true,
+            ],
             'borders' => [
                 'allBorders' => [
                     'borderStyle' => PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
@@ -373,8 +414,10 @@ class InspeksiBoat extends CI_Controller
         $sheet->setCellValue('E5', 'Yes');
         $sheet->setCellValue('F5', 'No');
         $sheet->setCellValue('G5', 'N/A');
-        $sheet->mergeCells('A16:G16');
-        $sheet->setCellValue('A16', 'ATTACHMENT');
+
+        $col = 6 + count($dataSubKategoriBoat);
+        $sheet->mergeCells('A' . $col . ':G' . $col . '');
+        $sheet->setCellValue('A' . $col, 'ATTACHMENT');
 
         // Data Item
         $numrow = 6;
@@ -392,6 +435,7 @@ class InspeksiBoat extends CI_Controller
                 $sheet->setCellValue('E' . $numrow, '✔');
             }
 
+
             $sheet->getStyle('G' . $numrow)->applyFromArray($centerArray);
             $sheet->getStyle('F' . $numrow)->applyFromArray($centerArray);
             $sheet->getStyle('E' . $numrow)->applyFromArray($centerArray);
@@ -399,10 +443,13 @@ class InspeksiBoat extends CI_Controller
             $numrow++;
         }
 
+        $colAF = $numrow + 1;
+        $colEG = $colAF + 2;
+
         // Attachment
-        $sheet->mergeCells('A17:E19');
-        $sheet->setCellValue('A17', $dataInspeksi['remark']);
-        $sheet->getStyle('A17:E19')->applyFromArray($leftArray);
+        $sheet->mergeCells('A' . $colAF . ':E' . $colEG . '');
+        $sheet->setCellValue('A' . $colAF, $dataInspeksi['remark']);
+        $sheet->getStyle('A' . $colAF . ':E' . $colEG . '')->applyFromArray($leftArray);
 
         $drawing = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
         //gambar header
@@ -413,18 +460,25 @@ class InspeksiBoat extends CI_Controller
         $drawing->getShadow()->setVisible(true);
         $drawing->setWorksheet($sheet);
 
-        $drawing1 = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
-        // gambar item
-        $sheet->mergeCells('F17:G19');
-        $drawing1->setPath('./uploads/' . $dataInspeksi['attachment']);
-        $drawing1->setCoordinates('F17');
-        $drawing1->setWidth(120); // Set lebar gambar dalam satuan pixel
-        $drawing1->setHeight(50); // Set tinggi gambar dalam satuan pixel
-        $drawing1->setOffsetX(10); // Set offset gambar pada sumbu X
-        $drawing1->setOffsetY(5); // Set offset gambar pada sumbu Y
-        $drawing1->getShadow()->setVisible(true);
-        $sheet->getStyle('F17:G19')->applyFromArray($centerArray);
-        $drawing1->setWorksheet($sheet);
+        if ($dataInspeksi['attachment'] != '') {
+            // Jika kolom gambar tidak kosong, lakukan penggabungan sel dan tampilkan gambar
+            $drawing1 = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
+            // gambar item
+            $sheet->mergeCells('F' . $colAF . ':G' . $colEG . '');
+            $drawing1->setPath('./uploads/' . $dataInspeksi['attachment']);
+            $drawing1->setCoordinates('F' . $colAF);
+            $drawing1->setWidth(120); // Set lebar gambar dalam satuan pixel
+            $drawing1->setHeight(50); // Set tinggi gambar dalam satuan pixel
+            $drawing1->setOffsetX(10); // Set offset gambar pada sumbu X
+            $drawing1->setOffsetY(5); // Set offset gambar pada sumbu Y
+            $drawing1->getShadow()->setVisible(true);
+            $sheet->getStyle('F' . $colAF . ':G' . $colEG . '')->applyFromArray($centerArray);
+            $drawing1->setWorksheet($sheet);
+        } else {
+            // Jika kolom gambar kosong, lakukan penggabungan sel tanpa menampilkan gambar
+            $sheet->mergeCells('F' . $colAF . ':G' . $colEG . '');
+            $sheet->getStyle('F' . $colAF . ':G' . $colEG . '')->applyFromArray($centerArray);
+        }
 
         //implementasi style header
         $sheet->getStyle('A2')->applyFromArray($headerArray);
@@ -433,49 +487,65 @@ class InspeksiBoat extends CI_Controller
         $sheet->getStyle('D4:D5')->applyFromArray($subKategoriArray);
         $sheet->getStyle('E4:G4')->applyFromArray($subKategoriArray);
         $sheet->getStyle('E5:G5')->applyFromArray($subKategoriArray);
-        $sheet->getStyle('A16:G16')->applyFromArray($subKategoriArray);
+        $sheet->getStyle('A' . $col . ':G' . $col . '')->applyFromArray($subKategoriArray);
 
         //implementasi style item
-        $sheet->getStyle('A6:G15')->applyFromArray($borderThinArray);
-        $sheet->getStyle('A17:G19')->applyFromArray($borderThinArray);
+        $sheet->getStyle('A6:G' . $numrow)->applyFromArray($borderThinArray);
+        $sheet->getStyle('A' . $colAF . ':G' . $colEG . '')->applyFromArray($borderThinArray);
+        // $alignment = $sheet->getStyle('A6:G' . $numrow)->getAlignment();
+        // $alignment->setWrapText(true);
 
         //Footer 
-        $sheet->mergeCells('A20:G20');
-        $sheet->setCellValue('A20', 'FUEL LEVEL : ' . $dataInspeksi['fuel_level'] . '%');
-        $sheet->mergeCells('E22:G22');
-        $sheet->setCellValue('E22', 'Acknowledge by');
-        $sheet->mergeCells('E26:G26');
-        $sheet->setCellValue('E26', 'HERU PURWANTO');
-        $sheet->mergeCells('E27:G27');
-        $sheet->setCellValue('E27', 'CT SUPERVISOR');
+        $fuel = $colEG + 1;
+        $sheet->mergeCells('A' . $fuel . ':G' . $fuel . '');
+        // $sheet->mergeCells('A20:G20');
+        $sheet->setCellValue('A' . $fuel, 'FUEL LEVEL : ' . $dataInspeksi['fuel_level'] . '%');
 
-        $sheet->setCellValue('A22', 'TANGGAL');
-        $sheet->setCellValue('A23', 'SHIFT');
-        $sheet->setCellValue('A24', 'FIRE INCIDENT COMMANDER');
-        $sheet->setCellValue('A25', 'FIC ASSISTANT');
-        $sheet->setCellValue('B22', ':');
-        $sheet->setCellValue('B23', ':');
-        $sheet->setCellValue('B24', ':');
-        $sheet->setCellValue('C22', $dataInspeksi['tgl_inspeksi']);
-        $sheet->setCellValue('C23', $dataInspeksi['shift']);
-        $sheet->setCellValue('C24', $dataInspeksi['nama']);
+        $tgl = $fuel + 2;
+        $sheet->mergeCells('E' . $tgl . ':G' . $tgl . '');
+        // $sheet->mergeCells('E22:G22');
+        $sheet->setCellValue('E' . $tgl, 'Acknowledge by');
+
+        $ttd = $tgl + 4;
+        $sheet->mergeCells('E' . $ttd . ':G' . $ttd . '');
+        // $sheet->mergeCells('E26:G26');
+        $sheet->setCellValue('E' . $ttd, 'HERU PURWANTO');
+
+        $ct = $ttd + 1;
+        $sheet->mergeCells('E' . $ct . ':G' . $ct . '');
+        // $sheet->mergeCells('E27:G27');
+        $sheet->setCellValue('E' . $ct, 'CT SUPERVISOR');
+
+        $sheet->setCellValue('A' . $tgl, 'TANGGAL');
+
+        $shift = $tgl + 1;
+        $sheet->setCellValue('A' . $shift, 'SHIFT');
+
+        $fic = $shift + 1;
+        $sheet->setCellValue('A' . $fic, 'FIRE INCIDENT COMMANDER');
+
+        $ficA = $fic + 1;
+        $sheet->setCellValue('A' . $ficA, 'FIC ASSISTANT');
+        $sheet->setCellValue('B' . $tgl, ':');
+        $sheet->setCellValue('B' . $shift, ':');
+        $sheet->setCellValue('B' . $fic, ':');
+        $sheet->setCellValue('C' . $tgl, $dataInspeksi['tgl_inspeksi']);
+        $sheet->setCellValue('C' . $shift, $dataInspeksi['shift']);
+        $sheet->setCellValue('C' . $fic, $dataInspeksi['nama']);
 
         // style kolom
-        $sheet->getStyle('A20:G20')->applyFromArray($boldArray);
-        $sheet->getStyle('C22:C24')->applyFromArray($boldArray);
-        $sheet->getStyle('C34:E34')->applyFromArray($boldArray);
-        $sheet->getStyle('C35:E35')->applyFromArray($boldArray);
-        $sheet->getStyle('C36:E36')->applyFromArray($boldArray);
-        $sheet->getStyle('E22:G22')->applyFromArray($headerArray);
-        $sheet->getStyle('E26:G26')->applyFromArray($headerArray);
-        $sheet->getStyle('E27:G27')->applyFromArray($centerArray);
-        $sheet->getStyle('A22:A25')->applyFromArray($boldArray);
-        $sheet->getStyle('B22:B24')->applyFromArray($headerArray);
-        $sheet->getStyle('E26:G26')->applyFromArray($borderThinBottomArray);
+        $sheet->getStyle('A' . $fuel . ':G' . $fuel . '')->applyFromArray($boldArray);
+        $sheet->getStyle('C' . $tgl . ':C' . $fic . '')->applyFromArray($boldArray);
+        $sheet->getStyle('E' . $tgl . ':G' . $tgl . '')->applyFromArray($headerArray);
+        $sheet->getStyle('E' . $ttd . ':G' . $ttd . '')->applyFromArray($headerArray);
+        $sheet->getStyle('E' . $ct . ':G' . $ct . '')->applyFromArray($centerArray);
+        $sheet->getStyle('A' . $tgl . ':A' . $ficA . '')->applyFromArray($boldArray);
+        $sheet->getStyle('B' . $tgl . ':B' . $fic . '')->applyFromArray($headerArray);
+        $sheet->getStyle('E' . $ttd . ':G' . $ttd . '')->applyFromArray($borderThinBottomArray);
         $sheet->getColumnDimension('C')->setWidth(20);
 
         // Kolom Assistant
-        $num = 25;
+        $num = $ficA;
         foreach ($dataAssistant as $value) {
             $sheet->setCellValue('B' . $num, ':');
             $sheet->mergeCells('C' . $num);
