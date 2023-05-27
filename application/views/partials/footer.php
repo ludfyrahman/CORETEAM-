@@ -93,45 +93,87 @@
 <script src="<?= base_url('assets/js/plugins/chartjs.min.js') ?>"></script>
 <script>
 
-const ctx = document.getElementById('chart-line').getContext('2d');
-const array = ['green','yellow', 'blue'];
-const chartData = {
-  labels: <?php echo json_encode($data[5])?>,
-  datasets: [
-	<?php 
-		foreach ($data[4] as $key => $d) {
-	?>
-    {
-      label: '<?=$d['label']?>',
-      data: <?= json_encode($d['data']) ?>,
-      borderColor: array[<?= $key?>],
-      fill: false,
-    },
-    <?php } ?>
-  ],
-};
+var data = {
+            labels: ['Category 1', 'Category 2', 'Category 3'],
+            datasets: [
+                {
+                    label: 'Group 1',
+                    backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                    data: [10, 20, 30]
+                },
+                {
+                    label: 'Group 2',
+                    backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                    data: [15, 25, 35]
+                },
+                {
+                    label: 'Group 3',
+                    backgroundColor: 'rgba(75, 192, 192, 0.5)',
+                    data: [20, 30, 40]
+                }
+            ]
+        };
 
-const chartOptions = {
-  responsive: true,
-  height: 400,
-  scales: {
-    x: {
-      display: true,
-    },
-    y: {
-	ticks: {
-        stepSize: 1, // Set the step size to 1 for integer values
-      },
-      display: true,
-    },
-  },
-};
+        // Chart configuration
+        var config = {
+            type: 'bar',
+            data: data,
+            options: {
+                responsive: true,
+                scales: {
+                    x: {
+                        stacked: false
+                    },
+                    y: {
+                        stacked: false
+                    }
+                }
+            }
+        };
 
-new Chart(ctx, {
-  type: 'line',
-  data: chartData,
-  options: chartOptions,
-});
+        // Create the chart
+        var ctx = document.getElementById('bar-chart').getContext('2d');
+        new Chart(ctx, config);
+
+		const ctxL = document.getElementById('chart-line').getContext('2d');
+		const array = ['green','yellow', 'blue'];
+		const chartData = {
+		labels: <?php echo json_encode($data[5])?>,
+		datasets: [
+			<?php 
+				foreach ($data[4] as $key => $d) {
+			?>
+			{
+			label: '<?=$d['label']?>',
+			data: <?= json_encode($d['data']) ?>,
+			borderColor: array[<?= $key?>],
+			fill: false,
+			},
+			<?php } ?>
+		],
+		};
+
+		const chartOptions = {
+		responsive: true,
+		height: 400,
+		scales: {
+			x: {
+			display: true,
+			},
+			y: {
+			ticks: {
+				stepSize: 1, // Set the step size to 1 for integer values
+			},
+			display: true,
+			},
+		},
+		};
+
+		new Chart(ctxL, {
+		type: 'line',
+		data: chartData,
+		options: chartOptions,
+		});
 
 </script>
 <script>

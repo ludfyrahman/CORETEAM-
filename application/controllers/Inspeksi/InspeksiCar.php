@@ -2,6 +2,8 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Worksheet\PageSetup;
+
 class InspeksiCar extends CI_Controller
 {
     public function __construct()
@@ -474,8 +476,8 @@ class InspeksiCar extends CI_Controller
         // Data Item SubKategori 2
         $numrow = 12;
         foreach ($dataSubCat2 as $value) {
-			
-            $sheet->setCellValue('A' . $numrow, $value['item']);
+			$sheet->setCellValue('A' . $numrow, $value['item']);
+			$sheet->getColumnDimension('A')->setAutoSize(true);
 
             // 0 = checklist N/A, 1 = checklist Damage, 2 = checklist Good
             if ($value['conditions'] == '0') {
@@ -497,7 +499,7 @@ class InspeksiCar extends CI_Controller
         $numrow = 20;
         foreach ($dataSubCat3 as $value) {
             $sheet->setCellValue('A' . $numrow, $value['item']);
-
+			$sheet->getColumnDimension('A')->setAutoSize(true);
             // 0 = checklist N/A, 1 = checklist Damage, 2 = checklist Good
             if ($value['conditions'] == '0') {
                 $sheet->setCellValue('D' . $numrow, '✔');
@@ -517,8 +519,8 @@ class InspeksiCar extends CI_Controller
         // Data Item SubKategori 4
         $numrow = 5;
         foreach ($dataSubCat4 as $value) {
+			$sheet->setCellValue('E' . $numrow, $value['item']);
 			$sheet->getColumnDimension('E')->setAutoSize(true);
-            $sheet->setCellValue('E' . $numrow, $value['item']);
 
             // 0 = checklist N/A, 1 = checklist Damage, 2 = checklist Good
             if ($value['conditions'] == '0') {
@@ -539,8 +541,8 @@ class InspeksiCar extends CI_Controller
         // Data Item SubKategori 5
         $numrow = 5;
         foreach ($dataSubCat5 as $value) {
+			$sheet->setCellValue('I' . $numrow, $value['item']);
 			$sheet->getColumnDimension('I')->setAutoSize(true);
-            $sheet->setCellValue('I' . $numrow, $value['item']);
 
             // 0 = checklist N/A, 1 = checklist Damage, 2 = checklist Good
             if ($value['conditions'] == '0') {
@@ -561,8 +563,8 @@ class InspeksiCar extends CI_Controller
         // Data Item SubKategori 6
         $numrow = 19;
         foreach ($dataSubCat6 as $value) {
+			$sheet->setCellValue('I' . $numrow, $value['item']);
 			$sheet->getColumnDimension('I')->setAutoSize(true);
-            $sheet->setCellValue('I' . $numrow, $value['item']);
 
             // 0 = checklist N/A, 1 = checklist Damage, 2 = checklist Good
             if ($value['conditions'] == '0') {
@@ -660,6 +662,17 @@ class InspeksiCar extends CI_Controller
             $sheet->getStyle('C' . $num . ':' . 'E' . $num)->applyFromArray($boldArray);
             $num++;
         }
+
+		$sheet->getPageSetup()->setPaperSize(PageSetup::PAPERSIZE_A4);
+        // Mengatur margin menjadi 0.5 untuk semua sisi 
+        $sheet->getPageMargins()->setTop(0.5);
+        $sheet->getPageMargins()->setRight(0.5);
+        $sheet->getPageMargins()->setLeft(0.5);
+        $sheet->getPageMargins()->setBottom(0.5);
+        $sheet->getPageMargins()->setHeader(0.5);
+        $sheet->getPageMargins()->setFooter(0.5);
+        // Mengatur agar lembar cetakan masuk dalam satu halaman 
+        $sheet->getPageSetup()->setFitToPage(true);
 
         // Proses file excel
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
