@@ -3,6 +3,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Worksheet\PageSetup;
+
 
 class InspeksiBoat extends CI_Controller
 {
@@ -377,12 +379,6 @@ class InspeksiBoat extends CI_Controller
         ];
 
         $borderThinArray = [
-            'alignment' => [
-                'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_LEFT,
-                'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
-                'textRotation' => 0,
-                'wrapText'     => true,
-            ],
             'borders' => [
                 'allBorders' => [
                     'borderStyle' => PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
@@ -411,8 +407,8 @@ class InspeksiBoat extends CI_Controller
         $sheet->setCellValue('D4', 'QTY');
         $sheet->mergeCells('E4:G4');
         $sheet->setCellValue('E4', 'CONDITION');
-        $sheet->setCellValue('E5', 'Yes');
-        $sheet->setCellValue('F5', 'No');
+        $sheet->setCellValue('E5', 'Good');
+        $sheet->setCellValue('F5', 'Damage');
         $sheet->setCellValue('G5', 'N/A');
 
         $col = 6 + count($dataSubKategoriBoat);
@@ -423,6 +419,7 @@ class InspeksiBoat extends CI_Controller
         $numrow = 6;
         foreach ($dataSubKategoriBoat as $value) {
             $sheet->mergeCells('A' . $numrow . ':' . 'C' . $numrow);
+            $sheet->getColumnDimension('A')->setAutoSize(true);
             $sheet->setCellValue('A' . $numrow, $value['item']);
             $sheet->setCellValue('D' . $numrow, $value['qty']);
 
@@ -492,8 +489,6 @@ class InspeksiBoat extends CI_Controller
         //implementasi style item
         $sheet->getStyle('A6:G' . $numrow)->applyFromArray($borderThinArray);
         $sheet->getStyle('A' . $colAF . ':G' . $colEG . '')->applyFromArray($borderThinArray);
-        // $alignment = $sheet->getStyle('A6:G' . $numrow)->getAlignment();
-        // $alignment->setWrapText(true);
 
         //Footer 
         $fuel = $colEG + 1;
@@ -555,6 +550,18 @@ class InspeksiBoat extends CI_Controller
             $sheet->getStyle('C' . $num)->applyFromArray($boldArray);
             $num++;
         }
+
+        // Mengatur ukuran kertas menjadi A4 
+        $sheet->getPageSetup()->setPaperSize(PageSetup::PAPERSIZE_A4);
+        // Mengatur margin menjadi 0.5 untuk semua sisi 
+        $sheet->getPageMargins()->setTop(0.5);
+        $sheet->getPageMargins()->setRight(0.5);
+        $sheet->getPageMargins()->setLeft(0.5);
+        $sheet->getPageMargins()->setBottom(0.5);
+        $sheet->getPageMargins()->setHeader(0.5);
+        $sheet->getPageMargins()->setFooter(0.5);
+        // Mengatur agar lembar cetakan masuk dalam satu halaman 
+        $sheet->getPageSetup()->setFitToPage(true);
 
         // Proses file excel
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
