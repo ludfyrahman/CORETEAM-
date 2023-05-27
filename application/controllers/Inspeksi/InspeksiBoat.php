@@ -417,11 +417,14 @@ class InspeksiBoat extends CI_Controller
 
         // Data Item
         $numrow = 6;
+		$maxLength = 0;
         foreach ($dataSubKategoriBoat as $value) {
+			$length = (int)(strlen($value['item']));
+			$maxLength = $length > $maxLength ? $length : $maxLength;
             $sheet->mergeCells('A' . $numrow . ':' . 'C' . $numrow);
-            $sheet->getColumnDimension('A')->setAutoSize(true);
             $sheet->setCellValue('A' . $numrow, $value['item']);
             $sheet->setCellValue('D' . $numrow, $value['qty']);
+            
 
             // 0 = checklist N/A, 1 = checklist Damage, 2 = checklist Good
             if ($value['conditions'] == 0) {
@@ -439,6 +442,8 @@ class InspeksiBoat extends CI_Controller
 
             $numrow++;
         }
+
+		$sheet->getColumnDimension('A')->setwidth($maxLength * 1.5);
 
         $colAF = $numrow + 1;
         $colEG = $colAF + 2;
