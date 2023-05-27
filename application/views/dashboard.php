@@ -90,14 +90,14 @@
         </div>
     </div>
     <div class="row mt-4">
-        <div class="col-md-12 mb-4" style="height:500px">
+        <div class="col-md-12 mb-4" style="height:750px">
             <div class="card card-carousel overflow-hidden h-100 p-0">
-                <div id="carouselExampleCaptions" class="carousel slide h-100"  data-bs-interval="15000" data-bs-ride="carousel">
+                <div id="carouselExampleCaptions" class="carousel slide h-100"  data-bs-interval="5000" data-bs-ride="carousel">
                     <div class="carousel-inner border-radius-lg h-100">
                         <?php
                         for ($i = 0; $i < 10; $i++) {
                         ?>
-                            <div class="carousel-item h-100 <?= $i == 0 ? 'active' : '' ?>" style="background-image: url('<?= base_url('assets/img/sliders/slide' . ($i + 1) . '.jpeg') ?>'); background-size: cover;">
+                            <div class="carousel-item h-100 <?= $i == 0 ? 'active' : '' ?>" style="background-image: url('<?= base_url('assets/img/sliders/slide' . ($i + 1) . '.jpeg') ?>'); background-size: auto;background-repeat: no-repeat;">
                                 <div class="carousel-caption d-none d-md-block bottom-0 text-start start-0 ms-5">
                                     <div class="icon icon-shape icon-sm bg-white text-center border-radius-md mb-3">
                                         <i class="ni ni-camera-compact text-dark opacity-10"></i>

@@ -452,6 +452,7 @@ class InspeksiCar extends CI_Controller
         // Data Item SubKategori 1
         $numrow = 5;
         foreach ($dataSubCat1 as $value) {
+			$sheet->getColumnDimension('A')->setAutoSize(true);
             $sheet->setCellValue('A' . $numrow, $value['item']);
 
             // 0 = checklist N/A, 1 = checklist Damage, 2 = checklist Good
@@ -473,6 +474,7 @@ class InspeksiCar extends CI_Controller
         // Data Item SubKategori 2
         $numrow = 12;
         foreach ($dataSubCat2 as $value) {
+			
             $sheet->setCellValue('A' . $numrow, $value['item']);
 
             // 0 = checklist N/A, 1 = checklist Damage, 2 = checklist Good
@@ -515,6 +517,7 @@ class InspeksiCar extends CI_Controller
         // Data Item SubKategori 4
         $numrow = 5;
         foreach ($dataSubCat4 as $value) {
+			$sheet->getColumnDimension('E')->setAutoSize(true);
             $sheet->setCellValue('E' . $numrow, $value['item']);
 
             // 0 = checklist N/A, 1 = checklist Damage, 2 = checklist Good
@@ -536,6 +539,7 @@ class InspeksiCar extends CI_Controller
         // Data Item SubKategori 5
         $numrow = 5;
         foreach ($dataSubCat5 as $value) {
+			$sheet->getColumnDimension('I')->setAutoSize(true);
             $sheet->setCellValue('I' . $numrow, $value['item']);
 
             // 0 = checklist N/A, 1 = checklist Damage, 2 = checklist Good
@@ -557,6 +561,7 @@ class InspeksiCar extends CI_Controller
         // Data Item SubKategori 6
         $numrow = 19;
         foreach ($dataSubCat6 as $value) {
+			$sheet->getColumnDimension('I')->setAutoSize(true);
             $sheet->setCellValue('I' . $numrow, $value['item']);
 
             // 0 = checklist N/A, 1 = checklist Damage, 2 = checklist Good

@@ -347,7 +347,7 @@ class M_InspeksiBoat extends CI_Model
                                     WHERE a.id_inspeksi = '$id_inspeksi' AND d.subcategory = 'SUBCATEGORY RESCUE BOAT'");
 
         if ($query->num_rows() == 0) {
-            $query = 0;
+            $query = [];
         } else {
             $query = $query->result_array();
         };
