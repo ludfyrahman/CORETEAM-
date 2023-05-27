@@ -204,7 +204,7 @@ class M_InspeksiTruck extends CI_Model
 
   public function getKodeInspeksi()
   {
-    $query = $this->db->query("SELECT COUNT(*) as jml FROM inspeksi");
+    $query = $this->db->query("SELECT COUNT(*) as jml FROM inspeksi WHERE id_category = 1");
 
     if ($query->num_rows() == 0) {
       $query = 0;
@@ -230,14 +230,20 @@ class M_InspeksiTruck extends CI_Model
 
   public function insertInspeksi($id_user, $tglWaktu, $shift, $commander, $fuelLevel, $kodeFile, $uploadImage, $remark, $date_now, $idCategory)
   {
+    if ($uploadImage != null && $uploadImage != '') {
+      $this->db->set('attachment', $uploadImage);
+    }
+
+    if ($remark != null && $remark != '') {
+      $this->db->set('remark', $remark);
+    }
+
     $this->db->set('inspected_by', $id_user);
     $this->db->set('tgl_inspeksi', $tglWaktu);
     $this->db->set('shift', $shift);
     $this->db->set('fire_incident_commander', $commander);
     $this->db->set('fuel_level', $fuelLevel);
     $this->db->set('kode_inspeksi', $kodeFile);
-    $this->db->set('attachment', $uploadImage);
-    $this->db->set('remark', $remark);
     $this->db->set('created_at', $date_now);
     $this->db->set('id_category', $idCategory);
     $this->db->insert('inspeksi');

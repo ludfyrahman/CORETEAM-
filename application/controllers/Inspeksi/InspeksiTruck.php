@@ -3,6 +3,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Worksheet\PageSetup;
 
 class InspeksiTruck extends CI_Controller
 {
@@ -90,22 +91,78 @@ class InspeksiTruck extends CI_Controller
         $fuelLevel = $this->input->post('fuelLevel');
         $arrItem = $this->input->post('arrItem');
         $remark = $this->input->post('remark');
-        $file = $_FILES['file']['name'];
+        // $file = $_FILES['file']['name'];
+        $file = $this->input->post('file');
         $date_now = date('Y-m-d H:i:s');
         $id_user = $this->session->userdata('id_user');
 
-        $config['file_name']       = $file;
-        $config['max_size']        = '2048';
-        $config['allowed_types']   = 'jpg|jpeg|png';
-        $config['source_image']    = $_FILES['file']['tmp_name'];
-        $config['upload_path']     = './uploads/';
+        if ($file != 'undefined') {
+            $config['file_name']       = $_FILES['file']['name'];
+            $config['max_size']        = '2048';
+            $config['allowed_types']   = 'jpg|jpeg|png';
+            $config['source_image']    = $_FILES['file']['tmp_name'];
+            $config['upload_path']     = './uploads/';
 
-        $this->load->library('upload', $config);
-        $this->upload->initialize($config);
+            $this->load->library('upload', $config);
+            $this->upload->initialize($config);
 
-        if ($this->upload->do_upload('file')) {
-            $uploadImage = $this->upload->data();
+            if ($this->upload->do_upload('file')) {
+                $uploadImage = $this->upload->data();
 
+                // get jumlah data
+                $kodeInspeksi = $this->M_InspeksiTruck->getKodeInspeksi();
+
+                $angka = $kodeInspeksi['jml'] + 1;
+                if ($angka >= 0 and $angka < 10) {
+                    $kodeFile = 'FT' . "-000000" . $angka;
+                } else if ($angka >= 10 and $angka < 100) {
+                    $kodeFile = 'FT' . "-00000" . $angka;
+                } else if ($angka >= 100 and $angka < 1000) {
+                    $kodeFile = 'FT' . "-0000" . $angka;
+                } else if ($angka >= 1000 and $angka < 10000) {
+                    $kodeFile = 'FT' . "-000" . $angka;
+                } else if ($angka >= 10000 and $angka < 100000) {
+                    $kodeFile = 'FT' . "-00" . $angka;
+                } else if ($angka >= 100000 and $angka < 1000000) {
+                    $kodeFile = 'FT' . "-0" . $angka;
+                } else if ($angka >= 1000000) {
+                    $kodeFile = 'FT' . "-" . $angka;
+                }
+
+                // get id category truck
+                $idCatFireTruck = $this->M_InspeksiTruck->getIDCatFireTruck();
+
+                $this->db->trans_begin();
+
+                // insert ke table inspeksi
+                $insert = $this->M_InspeksiTruck->insertInspeksi($id_user, $tglWaktu, $shift, $commander, $fuelLevel, $kodeFile, $uploadImage['file_name'], $remark, $date_now, $idCatFireTruck['id_category']);
+
+                // get id_inspeksi di tabel inspeksi
+                $id = $this->M_InspeksiTruck->getIDInspeksi();
+
+                // insert ke table inspeksi_detail
+                $data_item = json_decode($arrItem);
+                foreach ($data_item as $row) {
+                    $insert = $this->M_InspeksiTruck->insertInspeksiDetail($id['id_inspeksi'], $row->id_item, $row->conditions);
+                }
+
+                // insert ke table fic_assistant
+                $data_assistant = json_decode($arrAssistant);
+                foreach ($data_assistant as $row) {
+                    $insert = $this->M_InspeksiTruck->insertFICAssistant($id['id_inspeksi'], $row);
+                }
+
+                if ($this->db->trans_status() === FALSE) {
+                    $this->db->trans_rollback();
+                    echo json_encode(array('status' => 0, 'type' => 'error', 'msg' => 'Error', 'desc' => 'Gagal Menyimpan Data Inspeksi'));
+                } else {
+                    $this->db->trans_commit();
+                    echo json_encode(array('status' => 1, 'type' => 'success', 'msg' => 'Sukses', 'desc' => 'Data Berhasil Disimpan'));
+                }
+            } else {
+                echo json_encode(array('status' => 2, 'type' => 'error', 'msg' => 'Sukses', 'desc' => $this->upload->display_errors()));
+            }
+        } else {
             // get jumlah data
             $kodeInspeksi = $this->M_InspeksiTruck->getKodeInspeksi();
 
@@ -132,7 +189,7 @@ class InspeksiTruck extends CI_Controller
             $this->db->trans_begin();
 
             // insert ke table inspeksi
-            $insert = $this->M_InspeksiTruck->insertInspeksi($id_user, $tglWaktu, $shift, $commander, $fuelLevel, $kodeFile, $uploadImage['file_name'], $remark, $date_now, $idCatFireTruck['id_category']);
+            $insert = $this->M_InspeksiTruck->insertInspeksi($id_user, $tglWaktu, $shift, $commander, $fuelLevel, $kodeFile, null, $remark, $date_now, $idCatFireTruck['id_category']);
 
             // get id_inspeksi di tabel inspeksi
             $id = $this->M_InspeksiTruck->getIDInspeksi();
@@ -156,8 +213,6 @@ class InspeksiTruck extends CI_Controller
                 $this->db->trans_commit();
                 echo json_encode(array('status' => 1, 'type' => 'success', 'msg' => 'Sukses', 'desc' => 'Data Berhasil Disimpan'));
             }
-        } else {
-            echo json_encode(array('status' => 2, 'type' => 'error', 'msg' => 'Sukses', 'desc' => $this->upload->display_errors()));
         }
     }
 
@@ -198,7 +253,8 @@ class InspeksiTruck extends CI_Controller
 
                 // menghapus file lama
                 $file_path = "./uploads/" . $filePertama;
-                if (file_exists($file_path)) {
+
+                if (file_exists($file_path) && $file_path != './uploads/') {
                     unlink($file_path);
                 }
 
@@ -383,337 +439,688 @@ class InspeksiTruck extends CI_Controller
         $sheet->setCellValue('A2', '(SMOB-164)');
 
         // SUBKATEGORI 1
-        $sheet->mergeCells('A3:D3');
+        $sheet->mergeCells('A3:H3');
         $sheet->setCellValue('A3', '1. MAN CHASIS / ENGINE');
         $sheet->setCellValue('A4', 'Items');
         $sheet->setCellValue('B4', 'Good');
         $sheet->setCellValue('C4', 'Damage');
         $sheet->setCellValue('D4', 'N/A');
-
-        //SUBKATEGORI 2
-        $sheet->mergeCells('E3:H3');
-        $sheet->setCellValue('E3', '2. MAN CABIN');
         $sheet->setCellValue('E4', 'Items');
         $sheet->setCellValue('F4', 'Good');
         $sheet->setCellValue('G4', 'Damage');
         $sheet->setCellValue('H4', 'N/A');
 
-        //SUBKATEGORI 3
-        $sheet->mergeCells('A16:D16');
-        $sheet->setCellValue('A16', '3. RUNNING TEST');
-        $sheet->setCellValue('A17', 'Items');
-        $sheet->setCellValue('B17', 'Good');
-        $sheet->setCellValue('C17', 'Damage');
-        $sheet->setCellValue('D17', 'N/A');
-
-        //SUBKATEGORI 4
-        $sheet->mergeCells('A21:D21');
-        $sheet->setCellValue('A21', '4. MAN TOOLS');
-        $sheet->setCellValue('A22', 'Items');
-        $sheet->setCellValue('B22', 'Good');
-        $sheet->setCellValue('C22', 'Damage');
-        $sheet->setCellValue('D22', 'N/A');
-
-        //SUBKATEGORI 5
-        $sheet->mergeCells('A26:H26');
-        $sheet->setCellValue('A26', '5. ZIEGLER SUPERSTUCTURE ( PUMP COMPARTMENT )');
-        $sheet->setCellValue('A27', 'Items');
-        $sheet->setCellValue('B27', 'Good');
-        $sheet->setCellValue('C27', 'Damage');
-        $sheet->setCellValue('D27', 'N/A');
-        $sheet->setCellValue('E27', 'Items');
-        $sheet->setCellValue('F27', 'Good');
-        $sheet->setCellValue('G27', 'Damage');
-        $sheet->setCellValue('H27', 'N/A');
-
-        //SUBKATEGORI 6
-        $sheet->mergeCells('A32:H32');
-        $sheet->setCellValue('A32', '6. FIREMAN TOOLS & EQUIPMENTS');
-        $sheet->setCellValue('A33', 'Items');
-        $sheet->setCellValue('B33', 'Good');
-        $sheet->setCellValue('C33', 'Damage');
-        $sheet->setCellValue('D33', 'N/A');
-        $sheet->setCellValue('E33', 'Items');
-        $sheet->setCellValue('F33', 'Good');
-        $sheet->setCellValue('G33', 'Damage');
-        $sheet->setCellValue('H33', 'N/A');
-
-        //SUBKATEGORI 7
-        $sheet->mergeCells('A52:H52');
-        $sheet->setCellValue('A52', '7. ATTACHMENTS');
-
-        // Implementasi Style
+        //Implementasi Style
         $sheet->getStyle('A1')->applyFromArray($headerArray);
         $sheet->getStyle('A2')->applyFromArray($headerArray);
-        $sheet->getStyle('A3:D3')->applyFromArray($subKategoriArray);
-        $sheet->getStyle('E3:H3')->applyFromArray($subKategoriArray);
-        $sheet->getStyle('A16:D16')->applyFromArray($subKategoriArray);
-        $sheet->getStyle('A21:D21')->applyFromArray($subKategoriArray);
-        $sheet->getStyle('A26:H26')->applyFromArray($subKategoriArray);
-        $sheet->getStyle('A32:H32')->applyFromArray($subKategoriArray);
-        $sheet->getStyle('A52:H52')->applyFromArray($subKategoriArray);
-        $sheet->getStyle('A4:D4')->applyFromArray($itemArray);
-        $sheet->getStyle('E4:H4')->applyFromArray($itemArray);
-        $sheet->getStyle('A17:D17')->applyFromArray($itemArray);
-        $sheet->getStyle('A22:D22')->applyFromArray($itemArray);
-        $sheet->getStyle('A27:H27')->applyFromArray($itemArray);
-        $sheet->getStyle('A33:H33')->applyFromArray($itemArray);
+        $sheet->getStyle('A3:H3')->applyFromArray($subKategoriArray);
+        $sheet->getStyle('A4:H4')->applyFromArray($itemArray);
+
+        // Cek Jumlah Data Item SubKategori 1
+        $jumlahDataSubCat1 = COUNT($dataSubCat1);
+
+        $kolom = '';
+        if ($jumlahDataSubCat1 % 2 == 0) { // tidak ada sisa
+            $pecahJumlaSubCat1 = $jumlahDataSubCat1 / 2;
+        } else { //ada sisa
+            $pecahJumlaSubCat1 = ceil($jumlahDataSubCat1 / 2);
+            $kolom = 'kosong'; // kondisi buat kolom kosong untuk data ganjil
+        }
+
+        // max lebar kolom
+        $maxLengthA = 0;
+        $maxLengthE = 0;
 
         // Data Item SubKategori 1
-        $numrow = 5;
-        foreach ($dataSubCat1 as $value) {
-            $sheet->setCellValue('A' . $numrow, $value['item']);
-			$sheet->getColumnDimension('A')->setAutoSize(true);
-            // 0 = checklist N/A, 1 = checklist Damage, 2 = checklist Good
-            if ($value['conditions'] == '0') {
-                $sheet->setCellValue('D' . $numrow, '✔');
-            } else if ($value['conditions'] == '1') {
-                $sheet->setCellValue('C' . $numrow, '✔');
+        $numRowItem1 = 5;
+        foreach ($dataSubCat1 as $key => $value) {
+
+            if ($key + 1 <= $pecahJumlaSubCat1) {
+                $sheet->setCellValue('A' . $numRowItem1, $value['item']);
+
+                // 0 = checklist N/A, 1 = checklist Damage, 2 = checklist Good
+                if ($value['conditions'] == '0') {
+                    $sheet->setCellValue('D' . $numRowItem1, '✔');
+                } else if ($value['conditions'] == '1') {
+                    $sheet->setCellValue('C' . $numRowItem1, '✔');
+                } else {
+                    $sheet->setCellValue('B' . $numRowItem1, '✔');
+                }
+
+                $length = (int)(strlen($value['item']));
+                $maxLengthA = $length > $maxLengthA ? $length : $maxLengthA;
             } else {
-                $sheet->setCellValue('B' . $numrow, '✔');
+                if ($key + 1 == $pecahJumlaSubCat1 + 1) {
+                    $numRowItem1 = 5;
+                }
+
+                $sheet->setCellValue('E' . $numRowItem1, $value['item']);
+
+                // 0 = checklist N/A, 1 = checklist Damage, 2 = checklist Good
+                if ($value['conditions'] == '0') {
+                    $sheet->setCellValue('H' . $numRowItem1, '✔');
+                } else if ($value['conditions'] == '1') {
+                    $sheet->setCellValue('G' . $numRowItem1, '✔');
+                } else {
+                    $sheet->setCellValue('F' . $numRowItem1, '✔');
+                }
+
+                if ($kolom != '') {
+                    if ($key + 1 == $jumlahDataSubCat1) {
+                        $empty = $numRowItem1 + 1;
+                        $sheet->setCellValue('E' . $empty, '');
+
+                        // 0 = checklist N/A, 1 = checklist Damage, 2 = checklist Good
+                        if ($value['conditions'] == '0') {
+                            $sheet->setCellValue('H' . $empty, '');
+                        } else if ($value['conditions'] == '1') {
+                            $sheet->setCellValue('G' . $empty, '');
+                        } else {
+                            $sheet->setCellValue('F' . $empty, '');
+                        }
+
+                        $numRowItem1++;
+                    }
+                }
+
+                $length = (int)(strlen($value['item']));
+                $maxLengthE = $length > $maxLengthE ? $length : $maxLengthE;
             }
 
-            $sheet->getStyle('D' . $numrow)->applyFromArray($centerArray);
-            $sheet->getStyle('C' . $numrow)->applyFromArray($centerArray);
-            $sheet->getStyle('B' . $numrow)->applyFromArray($centerArray);
+            //text center
+            $sheet->getStyle('B' . $numRowItem1 . ':D' . $numRowItem1)->applyFromArray($centerArray);
+            $sheet->getStyle('F' . $numRowItem1 . ':H' . $numRowItem1)->applyFromArray($centerArray);
 
-            $numrow++;
+            // style data item
+            $sheet->getStyle('A' . $numRowItem1 . ':H' . $numRowItem1)->applyFromArray($borderThinArray);
+
+            if ($key != $jumlahDataSubCat1 - 1) {
+                $numRowItem1++;
+            }
+        }
+
+        // SUBKATEGORI 2
+        $numRowSubCat2 = $numRowItem1 + 1;
+        $sheet->mergeCells('A' . $numRowSubCat2 . ':H' . $numRowSubCat2);
+        $sheet->setCellValue('A' . $numRowSubCat2, '2. MAN CABIN');
+        $sheet->getStyle('A' . $numRowSubCat2 . ':H' . $numRowSubCat2)->applyFromArray($subKategoriArray);
+
+        // header item
+        $numRowSubCat2 = $numRowSubCat2 + 1;
+        $sheet->setCellValue('A' . $numRowSubCat2, 'Items');
+        $sheet->setCellValue('B' . $numRowSubCat2, 'Good');
+        $sheet->setCellValue('C' . $numRowSubCat2, 'Damage');
+        $sheet->setCellValue('D' . $numRowSubCat2, 'N/A');
+        $sheet->setCellValue('E' . $numRowSubCat2, 'Items');
+        $sheet->setCellValue('F' . $numRowSubCat2, 'Good');
+        $sheet->setCellValue('G' . $numRowSubCat2, 'Damage');
+        $sheet->setCellValue('H' . $numRowSubCat2, 'N/A');
+        $sheet->getStyle('A' . $numRowSubCat2 . ':H' . $numRowSubCat2)->applyFromArray($itemArray);
+
+        // Cek Jumlah Data Item SubKategori 
+        $jumlahDataSubCat2 = COUNT($dataSubCat2);
+
+        $kolom = '';
+        if ($jumlahDataSubCat2 % 2 == 0) { // tidak ada sisa
+            $pecahJumlah = $jumlahDataSubCat2 / 2;
+        } else { //ada sisa
+            $pecahJumlah = ceil($jumlahDataSubCat2 / 2);
+            $kolom = 'kosong'; // kondisi buat kolom kosong untuk data ganjil
         }
 
         // Data Item SubKategori 2
-        $numrow = 5;
-        foreach ($dataSubCat2 as $value) {
-            $sheet->setCellValue('E' . $numrow, $value['item']);
-			$sheet->getColumnDimension('E')->setAutoSize(true);
-            // 0 = checklist N/A, 1 = checklist Damage, 2 = checklist Good
-            if ($value['conditions'] == '0') {
-                $sheet->setCellValue('H' . $numrow, '✔');
-            } else if ($value['conditions'] == '1') {
-                $sheet->setCellValue('G' . $numrow, '✔');
+        $numRowItem2 = $numRowSubCat2 + 1;
+        foreach ($dataSubCat2 as $key => $value) {
+            if ($key + 1 <= $pecahJumlah) {
+                $sheet->setCellValue('A' . $numRowItem2, $value['item']);
+
+                // 0 = checklist N/A, 1 = checklist Damage, 2 = checklist Good
+                if ($value['conditions'] == '0') {
+                    $sheet->setCellValue('D' . $numRowItem2, '✔');
+                } else if ($value['conditions'] == '1') {
+                    $sheet->setCellValue('C' . $numRowItem2, '✔');
+                } else {
+                    $sheet->setCellValue('B' . $numRowItem2, '✔');
+                }
+
+                $length = (int)(strlen($value['item']));
+                $maxLengthA = $length > $maxLengthA ? $length : $maxLengthA;
             } else {
-                $sheet->setCellValue('F' . $numrow, '✔');
+                if ($key + 1 == $pecahJumlah + 1) {
+                    $numRowItem2 = $numRowSubCat2 + 1;
+                }
+
+                $sheet->setCellValue('E' . $numRowItem2, $value['item']);
+
+                // 0 = checklist N/A, 1 = checklist Damage, 2 = checklist Good
+                if ($value['conditions'] == '0') {
+                    $sheet->setCellValue('H' . $numRowItem2, '✔');
+                } else if ($value['conditions'] == '1') {
+                    $sheet->setCellValue('G' . $numRowItem2, '✔');
+                } else {
+                    $sheet->setCellValue('F' . $numRowItem2, '✔');
+                }
+
+                if ($kolom != '') {
+                    if ($key + 1 == $jumlahDataSubCat2) {
+                        $empty = $numRowItem2 + 1;
+                        $sheet->setCellValue('E' . $empty, '');
+
+                        // 0 = checklist N/A, 1 = checklist Damage, 2 = checklist Good
+                        if ($value['conditions'] == '0') {
+                            $sheet->setCellValue('H' . $empty, '');
+                        } else if ($value['conditions'] == '1') {
+                            $sheet->setCellValue('G' . $empty, '');
+                        } else {
+                            $sheet->setCellValue('F' . $empty, '');
+                        }
+
+                        $numRowItem2++;
+                    }
+                }
+
+                $length = (int)(strlen($value['item']));
+                $maxLengthE = $length > $maxLengthE ? $length : $maxLengthE;
             }
 
-            $sheet->getStyle('H' . $numrow)->applyFromArray($centerArray);
-            $sheet->getStyle('G' . $numrow)->applyFromArray($centerArray);
-            $sheet->getStyle('F' . $numrow)->applyFromArray($centerArray);
+            //text center
+            $sheet->getStyle('B' . $numRowItem2 . ':D' . $numRowItem2)->applyFromArray($centerArray);
+            $sheet->getStyle('F' . $numRowItem2 . ':H' . $numRowItem2)->applyFromArray($centerArray);
 
-            $numrow++;
+            // style data item
+            $sheet->getStyle('A' . $numRowItem2 . ':H' . $numRowItem2)->applyFromArray($borderThinArray);
+
+            if ($key != $jumlahDataSubCat2 - 1) {
+                $numRowItem2++;
+            }
+        }
+
+        // SUBKATEGORI 3
+        $numRowSubCat3 = $numRowItem2 + 1;
+        $sheet->mergeCells('A' . $numRowSubCat3 . ':H' . $numRowSubCat3);
+        $sheet->setCellValue('A' . $numRowSubCat3, '3. RUNNING TEST');
+        $sheet->getStyle('A' . $numRowSubCat3 . ':H' . $numRowSubCat3)->applyFromArray($subKategoriArray);
+
+        // header item
+        $numRowSubCat3 = $numRowSubCat3 + 1;
+        $sheet->setCellValue('A' . $numRowSubCat3, 'Items');
+        $sheet->setCellValue('B' . $numRowSubCat3, 'Good');
+        $sheet->setCellValue('C' . $numRowSubCat3, 'Damage');
+        $sheet->setCellValue('D' . $numRowSubCat3, 'N/A');
+        $sheet->setCellValue('E' . $numRowSubCat3, 'Items');
+        $sheet->setCellValue('F' . $numRowSubCat3, 'Good');
+        $sheet->setCellValue('G' . $numRowSubCat3, 'Damage');
+        $sheet->setCellValue('H' . $numRowSubCat3, 'N/A');
+        $sheet->getStyle('A' . $numRowSubCat3 . ':H' . $numRowSubCat3)->applyFromArray($itemArray);
+
+        // Cek Jumlah Data Item SubKategori 
+        $jumlahDataSubCat3 = COUNT($dataSubCat3);
+
+        $kolom = '';
+        if ($jumlahDataSubCat3 % 2 == 0) { // tidak ada sisa
+            $pecahJumlah = $jumlahDataSubCat3 / 2;
+        } else { //ada sisa
+            $pecahJumlah = ceil($jumlahDataSubCat3 / 2);
+            $kolom = 'kosong'; // kondisi buat kolom kosong untuk data ganjil
         }
 
         // Data Item SubKategori 3
-        $numrow = 18;
-        foreach ($dataSubCat3 as $value) {
-            $sheet->setCellValue('A' . $numrow, $value['item']);
-			$sheet->getColumnDimension('A')->setAutoSize(true);
-            // 0 = checklist N/A, 1 = checklist Damage, 2 = checklist Good
-            if ($value['conditions'] == '0') {
-                $sheet->setCellValue('D' . $numrow, '✔');
-            } else if ($value['conditions'] == '1') {
-                $sheet->setCellValue('C' . $numrow, '✔');
+        $numRowItem3 = $numRowSubCat3 + 1;
+        foreach ($dataSubCat3 as $key => $value) {
+            if ($key + 1 <= $pecahJumlah) {
+                $sheet->setCellValue('A' . $numRowItem3, $value['item']);
+
+                // 0 = checklist N/A, 1 = checklist Damage, 2 = checklist Good
+                if ($value['conditions'] == '0') {
+                    $sheet->setCellValue('D' . $numRowItem3, '✔');
+                } else if ($value['conditions'] == '1') {
+                    $sheet->setCellValue('C' . $numRowItem3, '✔');
+                } else {
+                    $sheet->setCellValue('B' . $numRowItem3, '✔');
+                }
+
+                $length = (int)(strlen($value['item']));
+                $maxLengthA = $length > $maxLengthA ? $length : $maxLengthA;
             } else {
-                $sheet->setCellValue('B' . $numrow, '✔');
+                if ($key + 1 == $pecahJumlah + 1) {
+                    $numRowItem3 = $numRowSubCat3 + 1;
+                }
+
+                $sheet->setCellValue('E' . $numRowItem3, $value['item']);
+
+                // 0 = checklist N/A, 1 = checklist Damage, 2 = checklist Good
+                if ($value['conditions'] == '0') {
+                    $sheet->setCellValue('H' . $numRowItem3, '✔');
+                } else if ($value['conditions'] == '1') {
+                    $sheet->setCellValue('G' . $numRowItem3, '✔');
+                } else {
+                    $sheet->setCellValue('F' . $numRowItem3, '✔');
+                }
+
+                if ($kolom != '') {
+                    if ($key + 1 == $jumlahDataSubCat3) {
+                        $empty = $numRowItem3 + 1;
+                        $sheet->setCellValue('E' . $empty, '');
+
+                        // 0 = checklist N/A, 1 = checklist Damage, 2 = checklist Good
+                        if ($value['conditions'] == '0') {
+                            $sheet->setCellValue('H' . $empty, '');
+                        } else if ($value['conditions'] == '1') {
+                            $sheet->setCellValue('G' . $empty, '');
+                        } else {
+                            $sheet->setCellValue('F' . $empty, '');
+                        }
+
+                        $numRowItem3++;
+                    }
+                }
+
+                $length = (int)(strlen($value['item']));
+                $maxLengthE = $length > $maxLengthE ? $length : $maxLengthE;
             }
 
-            $sheet->getStyle('D' . $numrow)->applyFromArray($centerArray);
-            $sheet->getStyle('C' . $numrow)->applyFromArray($centerArray);
-            $sheet->getStyle('B' . $numrow)->applyFromArray($centerArray);
+            //text center
+            $sheet->getStyle('B' . $numRowItem3 . ':D' . $numRowItem3)->applyFromArray($centerArray);
+            $sheet->getStyle('F' . $numRowItem3 . ':H' . $numRowItem3)->applyFromArray($centerArray);
 
-            $numrow++;
+            // style data item
+            $sheet->getStyle('A' . $numRowItem3 . ':H' . $numRowItem3)->applyFromArray($borderThinArray);
+
+            if ($key != $jumlahDataSubCat3 - 1) {
+                $numRowItem3++;
+            }
+        }
+
+        // SUBKATEGORI 4
+        $numRowSubCat4 = $numRowItem3 + 1;
+        $sheet->mergeCells('A' . $numRowSubCat4 . ':H' . $numRowSubCat4);
+        $sheet->setCellValue('A' . $numRowSubCat4, '4. MAN TOOLS');
+        $sheet->getStyle('A' . $numRowSubCat4 . ':H' . $numRowSubCat4)->applyFromArray($subKategoriArray);
+
+        // header item
+        $numRowSubCat4 = $numRowSubCat4 + 1;
+        $sheet->setCellValue('A' . $numRowSubCat4, 'Items');
+        $sheet->setCellValue('B' . $numRowSubCat4, 'Good');
+        $sheet->setCellValue('C' . $numRowSubCat4, 'Damage');
+        $sheet->setCellValue('D' . $numRowSubCat4, 'N/A');
+        $sheet->setCellValue('E' . $numRowSubCat4, 'Items');
+        $sheet->setCellValue('F' . $numRowSubCat4, 'Good');
+        $sheet->setCellValue('G' . $numRowSubCat4, 'Damage');
+        $sheet->setCellValue('H' . $numRowSubCat4, 'N/A');
+        $sheet->getStyle('A' . $numRowSubCat4 . ':H' . $numRowSubCat4)->applyFromArray($itemArray);
+
+        // Cek Jumlah Data Item SubKategori 
+        $jumlahDataSubCat4 = COUNT($dataSubCat4);
+
+        $kolom = '';
+        if ($jumlahDataSubCat4 % 2 == 0) { // tidak ada sisa
+            $pecahJumlah = $jumlahDataSubCat4 / 2;
+        } else { //ada sisa
+            $pecahJumlah = ceil($jumlahDataSubCat4 / 2);
+            $kolom = 'kosong'; // kondisi buat kolom kosong untuk data ganjil
         }
 
         // Data Item SubKategori 4
-        $numrow = 23;
-        foreach ($dataSubCat4 as $value) {
-            $sheet->setCellValue('A' . $numrow, $value['item']);
-			$sheet->getColumnDimension('A')->setAutoSize(true);
-            // 0 = checklist N/A, 1 = checklist Damage, 2 = checklist Good
-            if ($value['conditions'] == '0') {
-                $sheet->setCellValue('D' . $numrow, '✔');
-            } else if ($value['conditions'] == '1') {
-                $sheet->setCellValue('C' . $numrow, '✔');
+        $numRowItem4 = $numRowSubCat4 + 1;
+        foreach ($dataSubCat4 as $key => $value) {
+            if ($key + 1 <= $pecahJumlah) {
+                $sheet->setCellValue('A' . $numRowItem4, $value['item']);
+
+                // 0 = checklist N/A, 1 = checklist Damage, 2 = checklist Good
+                if ($value['conditions'] == '0') {
+                    $sheet->setCellValue('D' . $numRowItem4, '✔');
+                } else if ($value['conditions'] == '1') {
+                    $sheet->setCellValue('C' . $numRowItem4, '✔');
+                } else {
+                    $sheet->setCellValue('B' . $numRowItem4, '✔');
+                }
+
+                $length = (int)(strlen($value['item']));
+                $maxLengthA = $length > $maxLengthA ? $length : $maxLengthA;
             } else {
-                $sheet->setCellValue('B' . $numrow, '✔');
+                if ($key + 1 == $pecahJumlah + 1) {
+                    $numRowItem4 = $numRowSubCat4 + 1;
+                }
+
+                $sheet->setCellValue('E' . $numRowItem4, $value['item']);
+
+                // 0 = checklist N/A, 1 = checklist Damage, 2 = checklist Good
+                if ($value['conditions'] == '0') {
+                    $sheet->setCellValue('H' . $numRowItem4, '✔');
+                } else if ($value['conditions'] == '1') {
+                    $sheet->setCellValue('G' . $numRowItem4, '✔');
+                } else {
+                    $sheet->setCellValue('F' . $numRowItem4, '✔');
+                }
+
+                if ($kolom != '') {
+                    if ($key + 1 == $jumlahDataSubCat4) {
+                        $empty = $numRowItem4 + 1;
+                        $sheet->setCellValue('E' . $empty, '');
+
+                        // 0 = checklist N/A, 1 = checklist Damage, 2 = checklist Good
+                        if ($value['conditions'] == '0') {
+                            $sheet->setCellValue('H' . $empty, '');
+                        } else if ($value['conditions'] == '1') {
+                            $sheet->setCellValue('G' . $empty, '');
+                        } else {
+                            $sheet->setCellValue('F' . $empty, '');
+                        }
+
+                        $numRowItem4++;
+                    }
+                }
+
+                $length = (int)(strlen($value['item']));
+                $maxLengthE = $length > $maxLengthE ? $length : $maxLengthE;
             }
 
-            $sheet->getStyle('D' . $numrow)->applyFromArray($centerArray);
-            $sheet->getStyle('C' . $numrow)->applyFromArray($centerArray);
-            $sheet->getStyle('B' . $numrow)->applyFromArray($centerArray);
+            //text center
+            $sheet->getStyle('B' . $numRowItem4 . ':D' . $numRowItem4)->applyFromArray($centerArray);
+            $sheet->getStyle('F' . $numRowItem4 . ':H' . $numRowItem4)->applyFromArray($centerArray);
 
-            $numrow++;
+            // style data item
+            $sheet->getStyle('A' . $numRowItem4 . ':H' . $numRowItem4)->applyFromArray($borderThinArray);
+
+            if ($key != $jumlahDataSubCat4 - 1) {
+                $numRowItem4++;
+            }
+        }
+
+        // SUBKATEGORI 5
+        $numRowSubCat5 = $numRowItem4 + 1;
+        $sheet->mergeCells('A' . $numRowSubCat5 . ':H' . $numRowSubCat5);
+        $sheet->setCellValue('A' . $numRowSubCat5, '5. ZIEGLER SUPERSTUCTURE ( PUMP COMPARTMENT )');
+        $sheet->getStyle('A' . $numRowSubCat5 . ':H' . $numRowSubCat5)->applyFromArray($subKategoriArray);
+
+        // header item
+        $numRowSubCat5 = $numRowSubCat5 + 1;
+        $sheet->setCellValue('A' . $numRowSubCat5, 'Items');
+        $sheet->setCellValue('B' . $numRowSubCat5, 'Good');
+        $sheet->setCellValue('C' . $numRowSubCat5, 'Damage');
+        $sheet->setCellValue('D' . $numRowSubCat5, 'N/A');
+        $sheet->setCellValue('E' . $numRowSubCat5, 'Items');
+        $sheet->setCellValue('F' . $numRowSubCat5, 'Good');
+        $sheet->setCellValue('G' . $numRowSubCat5, 'Damage');
+        $sheet->setCellValue('H' . $numRowSubCat5, 'N/A');
+        $sheet->getStyle('A' . $numRowSubCat5 . ':H' . $numRowSubCat5)->applyFromArray($itemArray);
+
+        // Cek Jumlah Data Item SubKategori 
+        $jumlahDataSubCat5 = COUNT($dataSubCat5);
+
+        $kolom = '';
+        if ($jumlahDataSubCat5 % 2 == 0) { // tidak ada sisa
+            $pecahJumlah = $jumlahDataSubCat5 / 2;
+        } else { //ada sisa
+            $pecahJumlah = ceil($jumlahDataSubCat5 / 2);
+            $kolom = 'kosong'; // kondisi buat kolom kosong untuk data ganjil
         }
 
         // Data Item SubKategori 5
-        $numrow = 28;
+        $numRowItem5 = $numRowSubCat5 + 1;
         foreach ($dataSubCat5 as $key => $value) {
-            if ($key <= 3) {
-                $sheet->setCellValue('A' . $numrow, $value['item']);
-				$sheet->getColumnDimension('A')->setAutoSize(true);
+            if ($key + 1 <= $pecahJumlah) {
+                $sheet->setCellValue('A' . $numRowItem5, $value['item']);
+
                 // 0 = checklist N/A, 1 = checklist Damage, 2 = checklist Good
                 if ($value['conditions'] == '0') {
-                    $sheet->setCellValue('D' . $numrow, '✔');
+                    $sheet->setCellValue('D' . $numRowItem5, '✔');
                 } else if ($value['conditions'] == '1') {
-                    $sheet->setCellValue('C' . $numrow, '✔');
+                    $sheet->setCellValue('C' . $numRowItem5, '✔');
                 } else {
-                    $sheet->setCellValue('B' . $numrow, '✔');
+                    $sheet->setCellValue('B' . $numRowItem5, '✔');
                 }
 
-                $sheet->getStyle('D' . $numrow)->applyFromArray($centerArray);
-                $sheet->getStyle('C' . $numrow)->applyFromArray($centerArray);
-                $sheet->getStyle('B' . $numrow)->applyFromArray($centerArray);
-
-                $numrow++;
-
-                if ($key == 3) {
-                    $numrow = 28;
-                }
+                $length = (int)(strlen($value['item']));
+                $maxLengthA = $length > $maxLengthA ? $length : $maxLengthA;
             } else {
-                $sheet->setCellValue('E' . $numrow, $value['item']);
-				$sheet->getColumnDimension('E')->setAutoSize(true);
+                if ($key + 1 == $pecahJumlah + 1) {
+                    $numRowItem5 = $numRowSubCat5 + 1;
+                }
+
+                $sheet->setCellValue('E' . $numRowItem5, $value['item']);
 
                 // 0 = checklist N/A, 1 = checklist Damage, 2 = checklist Good
                 if ($value['conditions'] == '0') {
-                    $sheet->setCellValue('H' . $numrow, '✔');
+                    $sheet->setCellValue('H' . $numRowItem5, '✔');
                 } else if ($value['conditions'] == '1') {
-                    $sheet->setCellValue('G' . $numrow, '✔');
+                    $sheet->setCellValue('G' . $numRowItem5, '✔');
                 } else {
-                    $sheet->setCellValue('F' . $numrow, '✔');
+                    $sheet->setCellValue('F' . $numRowItem5, '✔');
                 }
 
-                $sheet->getStyle('H' . $numrow)->applyFromArray($centerArray);
-                $sheet->getStyle('G' . $numrow)->applyFromArray($centerArray);
-                $sheet->getStyle('F' . $numrow)->applyFromArray($centerArray);
+                if ($kolom != '') {
+                    if ($key + 1 == $jumlahDataSubCat5) {
+                        $empty = $numRowItem5 + 1;
+                        $sheet->setCellValue('E' . $empty, '');
 
-                $numrow++;
+                        // 0 = checklist N/A, 1 = checklist Damage, 2 = checklist Good
+                        if ($value['conditions'] == '0') {
+                            $sheet->setCellValue('H' . $empty, '');
+                        } else if ($value['conditions'] == '1') {
+                            $sheet->setCellValue('G' . $empty, '');
+                        } else {
+                            $sheet->setCellValue('F' . $empty, '');
+                        }
+
+                        $numRowItem5++;
+                    }
+                }
+
+                $length = (int)(strlen($value['item']));
+                $maxLengthE = $length > $maxLengthE ? $length : $maxLengthE;
             }
+
+            //text center
+            $sheet->getStyle('B' . $numRowItem5 . ':D' . $numRowItem5)->applyFromArray($centerArray);
+            $sheet->getStyle('F' . $numRowItem5 . ':H' . $numRowItem5)->applyFromArray($centerArray);
+
+            // style data item
+            $sheet->getStyle('A' . $numRowItem5 . ':H' . $numRowItem5)->applyFromArray($borderThinArray);
+
+            if ($key != $jumlahDataSubCat5 - 1) {
+                $numRowItem5++;
+            }
+        }
+
+        // SUBKATEGORI 6
+        $numRowSubCat6 = $numRowItem5 + 1;
+        $sheet->mergeCells('A' . $numRowSubCat6 . ':H' . $numRowSubCat6);
+        $sheet->setCellValue('A' . $numRowSubCat6, '6. FIREMAN TOOLS & EQUIPMENTS');
+        $sheet->getStyle('A' . $numRowSubCat6 . ':H' . $numRowSubCat6)->applyFromArray($subKategoriArray);
+
+        // header item
+        $numRowSubCat6 = $numRowSubCat6 + 1;
+        $sheet->setCellValue('A' . $numRowSubCat6, 'Items');
+        $sheet->setCellValue('B' . $numRowSubCat6, 'Good');
+        $sheet->setCellValue('C' . $numRowSubCat6, 'Damage');
+        $sheet->setCellValue('D' . $numRowSubCat6, 'N/A');
+        $sheet->setCellValue('E' . $numRowSubCat6, 'Items');
+        $sheet->setCellValue('F' . $numRowSubCat6, 'Good');
+        $sheet->setCellValue('G' . $numRowSubCat6, 'Damage');
+        $sheet->setCellValue('H' . $numRowSubCat6, 'N/A');
+        $sheet->getStyle('A' . $numRowSubCat6 . ':H' . $numRowSubCat6)->applyFromArray($itemArray);
+
+        // Cek Jumlah Data Item SubKategori 
+        $jumlahDataSubCat6 = COUNT($dataSubCat6);
+
+        $kolom = '';
+        if ($jumlahDataSubCat6 % 2 == 0) { // tidak ada sisa
+            $pecahJumlah = $jumlahDataSubCat6 / 2;
+        } else { //ada sisa
+            $pecahJumlah = ceil($jumlahDataSubCat6 / 2);
+            $kolom = 'kosong'; // kondisi buat kolom kosong untuk data ganjil
         }
 
         // Data Item SubKategori 6
-        $numrow = 34;
+        $numRowItem6 = $numRowSubCat6 + 1;
         foreach ($dataSubCat6 as $key => $value) {
-            if ($key <= 17) {
-                $sheet->setCellValue('A' . $numrow, $value['item']);
-				$sheet->getColumnDimension('A')->setAutoSize(true);
+            if ($key + 1 <= $pecahJumlah) {
+                $sheet->setCellValue('A' . $numRowItem6, $value['item']);
 
                 // 0 = checklist N/A, 1 = checklist Damage, 2 = checklist Good
                 if ($value['conditions'] == '0') {
-                    $sheet->setCellValue('D' . $numrow, '✔');
+                    $sheet->setCellValue('D' . $numRowItem6, '✔');
                 } else if ($value['conditions'] == '1') {
-                    $sheet->setCellValue('C' . $numrow, '✔');
+                    $sheet->setCellValue('C' . $numRowItem6, '✔');
                 } else {
-                    $sheet->setCellValue('B' . $numrow, '✔');
+                    $sheet->setCellValue('B' . $numRowItem6, '✔');
                 }
 
-                $sheet->getStyle('D' . $numrow)->applyFromArray($centerArray);
-                $sheet->getStyle('C' . $numrow)->applyFromArray($centerArray);
-                $sheet->getStyle('B' . $numrow)->applyFromArray($centerArray);
-
-                $numrow++;
-
-                if ($key == 17) {
-                    $numrow = 34;
-                }
+                $length = (int)(strlen($value['item']));
+                $maxLengthA = $length > $maxLengthA ? $length : $maxLengthA;
             } else {
-                $sheet->setCellValue('E' . $numrow, $value['item']);
-				$sheet->getColumnDimension('E')->setAutoSize(true);
+                if ($key + 1 == $pecahJumlah + 1) {
+                    $numRowItem6 = $numRowSubCat6 + 1;
+                }
+
+                $sheet->setCellValue('E' . $numRowItem6, $value['item']);
 
                 // 0 = checklist N/A, 1 = checklist Damage, 2 = checklist Good
                 if ($value['conditions'] == '0') {
-                    $sheet->setCellValue('H' . $numrow, '✔');
+                    $sheet->setCellValue('H' . $numRowItem6, '✔');
                 } else if ($value['conditions'] == '1') {
-                    $sheet->setCellValue('G' . $numrow, '✔');
+                    $sheet->setCellValue('G' . $numRowItem6, '✔');
                 } else {
-                    $sheet->setCellValue('F' . $numrow, '✔');
+                    $sheet->setCellValue('F' . $numRowItem6, '✔');
                 }
 
-                $sheet->getStyle('H' . $numrow)->applyFromArray($centerArray);
-                $sheet->getStyle('G' . $numrow)->applyFromArray($centerArray);
-                $sheet->getStyle('F' . $numrow)->applyFromArray($centerArray);
+                if ($kolom != '') {
+                    if ($key + 1 == $jumlahDataSubCat6) {
+                        $empty = $numRowItem6 + 1;
+                        $sheet->setCellValue('E' . $empty, '');
 
-                $numrow++;
+                        // 0 = checklist N/A, 1 = checklist Damage, 2 = checklist Good
+                        if ($value['conditions'] == '0') {
+                            $sheet->setCellValue('H' . $empty, '');
+                        } else if ($value['conditions'] == '1') {
+                            $sheet->setCellValue('G' . $empty, '');
+                        } else {
+                            $sheet->setCellValue('F' . $empty, '');
+                        }
+
+                        $numRowItem6++;
+                    }
+                }
+
+                $length = (int)(strlen($value['item']));
+                $maxLengthE = $length > $maxLengthE ? $length : $maxLengthE;
+            }
+
+            //text center
+            $sheet->getStyle('B' . $numRowItem6 . ':D' . $numRowItem6)->applyFromArray($centerArray);
+            $sheet->getStyle('F' . $numRowItem6 . ':H' . $numRowItem6)->applyFromArray($centerArray);
+
+            // style data item
+            $sheet->getStyle('A' . $numRowItem6 . ':H' . $numRowItem6)->applyFromArray($borderThinArray);
+
+            if ($key != $jumlahDataSubCat6 - 1) {
+                $numRowItem6++;
             }
         }
 
+        $sheet->getColumnDimension('A')->setwidth($maxLengthA);
+        $sheet->getColumnDimension('E')->setwidth($maxLengthE);
+
+        // SUBKATEGORI 7
+        $numRowSubCat7 = $numRowItem6 + 1;
+        $sheet->mergeCells('A' . $numRowSubCat7 . ':H' . $numRowSubCat7);
+        $sheet->setCellValue('A' . $numRowSubCat7, '7. ATTACHMENTS');
+        $sheet->getStyle('A' . $numRowSubCat7 . ':H' . $numRowSubCat7)->applyFromArray($subKategoriArray);
+
         // Data Item SubKategori 7
+        $numRowSubCat7 = $numRowSubCat7 + 1;
         //merge Kolom Horizontal
-        $sheet->mergeCells('A53:F55');
-        $sheet->setCellValue('A53', $dataInspeksi['remark']);
-        $sheet->getStyle('A53:F55')->applyFromArray($leftArray);
+        $sheet->mergeCells('A' . $numRowSubCat7 . ':F' . ($numRowSubCat7 + 2));
+        $sheet->setCellValue('A' . $numRowSubCat7, $dataInspeksi['remark']);
+        $sheet->getStyle('A' . $numRowSubCat7 . ':F' . ($numRowSubCat7 + 2))->applyFromArray($leftArray);
 
-        $drawing = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
-        $sheet->mergeCells('G53:H55');
-        $drawing->setPath('./uploads/' . $dataInspeksi['attachment']);
-        $drawing->setCoordinates('G53');
-        $drawing->setWidth(120); // Set lebar gambar dalam satuan pixel
-        $drawing->setHeight(50); // Set tinggi gambar dalam satuan pixel
-        $drawing->setOffsetX(10); // Set offset gambar pada sumbu X
-        $drawing->setOffsetY(5); // Set offset gambar pada sumbu Y
-        $sheet->getColumnDimension('G')->setAutoSize(true);
-        $drawing->getShadow()->setVisible(true);
-        $sheet->getStyle('G53:H55')->applyFromArray($centerArray);
-        $drawing->setWorksheet($sheet);
+        if ($dataInspeksi['attachment'] != '') {
+            $drawing = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
+            $drawing->setPath('./uploads/' . $dataInspeksi['attachment']);
+            $drawing->setCoordinates('G' . $numRowSubCat7);
+            $drawing->setWidth(120); // Set lebar gambar dalam satuan pixel
+            $drawing->setHeight(50); // Set tinggi gambar dalam satuan pixel
+            $drawing->setOffsetX(10); // Set offset gambar pada sumbu X
+            $drawing->setOffsetY(5); // Set offset gambar pada sumbu Y
+            $sheet->getColumnDimension('G')->setAutoSize(true);
+            $drawing->getShadow()->setVisible(true);
+            $drawing->setWorksheet($sheet);
+        }
 
-        //Style Data Item
-        $sheet->getStyle('A5:D15')->applyFromArray($borderThinArray);
-        $sheet->getStyle('E5:H25')->applyFromArray($borderThinArray);
-        $sheet->getStyle('A18:D20')->applyFromArray($borderThinArray);
-        $sheet->getStyle('A23:D25')->applyFromArray($borderThinArray);
-        $sheet->getStyle('A28:H31')->applyFromArray($borderThinArray);
-        $sheet->getStyle('A34:H51')->applyFromArray($borderThinArray);
-        $sheet->getStyle('A53:H55')->applyFromArray($borderThinArray);
+        $sheet->mergeCells('G' . $numRowSubCat7 . ':H' . ($numRowSubCat7 + 2));
+        $sheet->getStyle('G' . $numRowSubCat7 . ':H' . ($numRowSubCat7 + 2))->applyFromArray($centerArray);
+        $sheet->getStyle('A' . $numRowSubCat7 . ':H' . ($numRowSubCat7 + 2))->applyFromArray($borderThinArray);
 
         //Footer 
-        $sheet->mergeCells('A56:H56');
-        $sheet->setCellValue('A56', 'FUEL LEVEL : ' . $dataInspeksi['fuel_level'] . '%');
-        $sheet->mergeCells('C58:E58');
-        $sheet->setCellValue('C58', $dataInspeksi['tgl_inspeksi']);
-        $sheet->mergeCells('C59:D59');
-        $sheet->setCellValue('C59', $dataInspeksi['shift']);
-        $sheet->mergeCells('C60:E60');
-        $sheet->setCellValue('C60', $dataInspeksi['nama']);
-        $sheet->mergeCells('F58:H58');
-        $sheet->setCellValue('F58', 'Acknowledge by');
-        $sheet->mergeCells('F62:H62');
-        $sheet->setCellValue('F62', 'HERU PURWANTO');
-        $sheet->mergeCells('F63:H63');
-        $sheet->setCellValue('F63', 'CT SUPERVISOR');
+        $numRowFooter = $numRowSubCat7 + 3;
+        $sheet->mergeCells('A' . $numRowFooter . ':H' . $numRowFooter);
+        $sheet->setCellValue('A' . $numRowFooter, 'FUEL LEVEL : ' . $dataInspeksi['fuel_level'] . '%');
+        $sheet->getStyle('A' . $numRowFooter . ':H' . $numRowFooter)->applyFromArray($boldArray);
 
-        $sheet->setCellValue('A58', 'TANGGAL');
-        $sheet->setCellValue('A59', 'SHIFT');
-        $sheet->setCellValue('A60', 'FIRE INCIDENT COMMANDER');
-        $sheet->setCellValue('A61', 'FIC ASSISTANT');
-        $sheet->setCellValue('B58', ':');
-        $sheet->setCellValue('B59', ':');
-        $sheet->setCellValue('B60', ':');
+        $numRowFooter = $numRowFooter + 2;
+        $sheet->setCellValue('A' . $numRowFooter, 'TANGGAL');
+        $sheet->getStyle('A' . $numRowFooter)->applyFromArray($boldArray);
+        $sheet->setCellValue('B' . $numRowFooter, ':');
+        $sheet->getStyle('B' . $numRowFooter)->applyFromArray($headerArray);
+        $sheet->mergeCells('C' . $numRowFooter . ':E' . $numRowFooter);
+        $sheet->setCellValue('C' . $numRowFooter, $dataInspeksi['tgl_inspeksi']);
+        $sheet->getStyle('C' . $numRowFooter . ':E' . $numRowFooter)->applyFromArray($boldArray);
+        $sheet->mergeCells('F' . $numRowFooter . ':H' . $numRowFooter);
+        $sheet->setCellValue('F' . $numRowFooter, 'Acknowledge by');
+        $sheet->getStyle('F' . $numRowFooter . ':H' . $numRowFooter)->applyFromArray($headerArray);
 
-        // style kolom
-        $sheet->getStyle('A56:H56')->applyFromArray($boldArray);
-        $sheet->getStyle('C58:E58')->applyFromArray($boldArray);
-        $sheet->getStyle('C59:E59')->applyFromArray($boldArray);
-        $sheet->getStyle('C60:E60')->applyFromArray($boldArray);
-        $sheet->getStyle('F58:H58')->applyFromArray($headerArray);
-        $sheet->getStyle('F62:H62')->applyFromArray($headerArray);
-        $sheet->getStyle('F63:H63')->applyFromArray($centerArray);
-        $sheet->getStyle('A58')->applyFromArray($boldArray);
-        $sheet->getStyle('A59')->applyFromArray($boldArray);
-        $sheet->getStyle('A60')->applyFromArray($boldArray);
-        $sheet->getStyle('A61')->applyFromArray($boldArray);
-        $sheet->getStyle('B58')->applyFromArray($headerArray);
-        $sheet->getStyle('B59')->applyFromArray($headerArray);
-        $sheet->getStyle('B60')->applyFromArray($headerArray);
-        $sheet->getStyle('F62:H62')->applyFromArray($borderThinBottomArray);
+        $numRowFooter = $numRowFooter + 1;
+        $sheet->setCellValue('A' . $numRowFooter, 'SHIFT');
+        $sheet->getStyle('A' . $numRowFooter)->applyFromArray($boldArray);
+        $sheet->setCellValue('B' . $numRowFooter, ':');
+        $sheet->getStyle('B' . $numRowFooter)->applyFromArray($headerArray);
+        $sheet->mergeCells('C' . $numRowFooter . ':E' . $numRowFooter);
+        $sheet->setCellValue('C' . $numRowFooter, $dataInspeksi['shift']);
+        $sheet->getStyle('C' . $numRowFooter . ':E' . $numRowFooter)->applyFromArray($boldArray);
 
-        // panggil laporanDetailSingle
-        $num = 61;
+        $numRowFooter = $numRowFooter + 1;
+        $sheet->setCellValue('A' . $numRowFooter, 'FIRE INCIDENT COMMANDER');
+        $sheet->getStyle('A' . $numRowFooter)->applyFromArray($boldArray);
+        $sheet->setCellValue('B' . $numRowFooter, ':');
+        $sheet->getStyle('B' . $numRowFooter)->applyFromArray($headerArray);
+        $sheet->mergeCells('C' . $numRowFooter . ':E' . $numRowFooter);
+        $sheet->setCellValue('C' . $numRowFooter, $dataInspeksi['nama']);
+        $sheet->getStyle('C' . $numRowFooter . ':E' . $numRowFooter)->applyFromArray($boldArray);
+
+        $numRowFooter = $numRowFooter + 1;
+        $sheet->setCellValue('A' . $numRowFooter, 'FIC ASSISTANT');
+        $sheet->getStyle('A' . $numRowFooter)->applyFromArray($boldArray);
+        $sheet->mergeCells('F' . ($numRowFooter + 1) . ':H' . ($numRowFooter + 1));
+        $sheet->setCellValue('F' . ($numRowFooter + 1), 'HERU PURWANTO');
+        $sheet->getStyle('F' . ($numRowFooter + 1) . ':H' . ($numRowFooter + 1))->applyFromArray($headerArray);
+        $sheet->getStyle('F' . ($numRowFooter + 1) . ':H' . ($numRowFooter + 1))->applyFromArray($borderThinBottomArray);
+        $sheet->mergeCells('F' . ($numRowFooter + 2) . ':H' . ($numRowFooter + 2));
+        $sheet->setCellValue('F' . ($numRowFooter + 2), 'CT SUPERVISOR');
+        $sheet->getStyle('F' . ($numRowFooter + 2) . ':H' . ($numRowFooter + 2))->applyFromArray($centerArray);
+
+        // Data FIC Assistant
         foreach ($dataAssistant as $value) {
-            $sheet->setCellValue('B' . $num, ':');
-            $sheet->mergeCells('C' . $num . ':' . 'E' . $num);
-            $sheet->setCellValue('C' . $num, $value['nama']);
+            $sheet->setCellValue('B' . $numRowFooter, ':');
+            $sheet->mergeCells('C' . $numRowFooter . ':' . 'E' . $numRowFooter);
+            $sheet->setCellValue('C' . $numRowFooter, $value['nama']);
 
-            $sheet->getStyle('B' . $num)->applyFromArray($headerArray);
-            $sheet->getStyle('C' . $num . ':' . 'E' . $num)->applyFromArray($boldArray);
-            $num++;
+            $sheet->getStyle('B' . $numRowFooter)->applyFromArray($headerArray);
+            $sheet->getStyle('C' . $numRowFooter . ':' . 'E' . $numRowFooter)->applyFromArray($boldArray);
+            $numRowFooter++;
         }
+
+        // Mengatur ukuran kertas menjadi A4 
+        $sheet->getPageSetup()->setPaperSize(PageSetup::PAPERSIZE_A4);
+        // Mengatur margin menjadi 0.5 untuk semua sisi 
+        $sheet->getPageMargins()->setTop(0.5);
+        $sheet->getPageMargins()->setRight(0.5);
+        $sheet->getPageMargins()->setLeft(0.5);
+        $sheet->getPageMargins()->setBottom(0.5);
+        $sheet->getPageMargins()->setHeader(0.5);
+        $sheet->getPageMargins()->setFooter(0.5);
+        // Mengatur agar lembar cetakan masuk dalam satu halaman 
+        $sheet->getPageSetup()->setFitToPage(true);
 
         // Proses file excel
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
