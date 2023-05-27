@@ -443,7 +443,7 @@ class InspeksiBoat extends CI_Controller
             $numrow++;
         }
 
-		$sheet->getColumnDimension('A')->setwidth($maxLength * 1.5);
+		$sheet->getColumnDimension('A')->setwidth($maxLength);
 
         $colAF = $numrow + 1;
         $colEG = $colAF + 2;

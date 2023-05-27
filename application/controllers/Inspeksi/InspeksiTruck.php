@@ -463,7 +463,7 @@ class InspeksiTruck extends CI_Controller
         $numrow = 5;
         foreach ($dataSubCat1 as $value) {
             $sheet->setCellValue('A' . $numrow, $value['item']);
-
+			$sheet->getColumnDimension('A')->setAutoSize(true);
             // 0 = checklist N/A, 1 = checklist Damage, 2 = checklist Good
             if ($value['conditions'] == '0') {
                 $sheet->setCellValue('D' . $numrow, '✔');
@@ -484,7 +484,7 @@ class InspeksiTruck extends CI_Controller
         $numrow = 5;
         foreach ($dataSubCat2 as $value) {
             $sheet->setCellValue('E' . $numrow, $value['item']);
-
+			$sheet->getColumnDimension('E')->setAutoSize(true);
             // 0 = checklist N/A, 1 = checklist Damage, 2 = checklist Good
             if ($value['conditions'] == '0') {
                 $sheet->setCellValue('H' . $numrow, '✔');
@@ -505,7 +505,7 @@ class InspeksiTruck extends CI_Controller
         $numrow = 18;
         foreach ($dataSubCat3 as $value) {
             $sheet->setCellValue('A' . $numrow, $value['item']);
-
+			$sheet->getColumnDimension('A')->setAutoSize(true);
             // 0 = checklist N/A, 1 = checklist Damage, 2 = checklist Good
             if ($value['conditions'] == '0') {
                 $sheet->setCellValue('D' . $numrow, '✔');
@@ -526,7 +526,7 @@ class InspeksiTruck extends CI_Controller
         $numrow = 23;
         foreach ($dataSubCat4 as $value) {
             $sheet->setCellValue('A' . $numrow, $value['item']);
-
+			$sheet->getColumnDimension('A')->setAutoSize(true);
             // 0 = checklist N/A, 1 = checklist Damage, 2 = checklist Good
             if ($value['conditions'] == '0') {
                 $sheet->setCellValue('D' . $numrow, '✔');
@@ -548,7 +548,7 @@ class InspeksiTruck extends CI_Controller
         foreach ($dataSubCat5 as $key => $value) {
             if ($key <= 3) {
                 $sheet->setCellValue('A' . $numrow, $value['item']);
-
+				$sheet->getColumnDimension('A')->setAutoSize(true);
                 // 0 = checklist N/A, 1 = checklist Damage, 2 = checklist Good
                 if ($value['conditions'] == '0') {
                     $sheet->setCellValue('D' . $numrow, '✔');
@@ -569,6 +569,7 @@ class InspeksiTruck extends CI_Controller
                 }
             } else {
                 $sheet->setCellValue('E' . $numrow, $value['item']);
+				$sheet->getColumnDimension('E')->setAutoSize(true);
 
                 // 0 = checklist N/A, 1 = checklist Damage, 2 = checklist Good
                 if ($value['conditions'] == '0') {
@@ -592,6 +593,7 @@ class InspeksiTruck extends CI_Controller
         foreach ($dataSubCat6 as $key => $value) {
             if ($key <= 17) {
                 $sheet->setCellValue('A' . $numrow, $value['item']);
+				$sheet->getColumnDimension('A')->setAutoSize(true);
 
                 // 0 = checklist N/A, 1 = checklist Damage, 2 = checklist Good
                 if ($value['conditions'] == '0') {
@@ -613,6 +615,7 @@ class InspeksiTruck extends CI_Controller
                 }
             } else {
                 $sheet->setCellValue('E' . $numrow, $value['item']);
+				$sheet->getColumnDimension('E')->setAutoSize(true);
 
                 // 0 = checklist N/A, 1 = checklist Damage, 2 = checklist Good
                 if ($value['conditions'] == '0') {
