@@ -94,7 +94,7 @@ class M_InspeksiBoat extends CI_Model
 
     public function getKodeInspeksi()
     {
-        $query = $this->db->query("SELECT COUNT(*) as jml FROM inspeksi");
+        $query = $this->db->query("SELECT COUNT(*) as jml FROM inspeksi WHERE id_category = 3");
 
         if ($query->num_rows() == 0) {
             $query = 0;

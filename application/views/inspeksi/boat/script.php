@@ -230,12 +230,13 @@
 
         //form ketiga
         var file = $('#attachment').prop('files')[0];
-        var remark = $('#remark').val();
-
-        if (file == '' || remark == '') {
-            showNotification('warning', 'Warning', 'Form Attachment ada yang kosong');
-            return false;
+        
+        if (file == undefined || file == 'undefined') {
+            var file = '';
+        } else {
+            return file;
         }
+        var remark = $('#remark').val();
 
         // ambil input type checkbox dengan ketentuan checked
         var checkbox = $("tbody > tr input[type='checkbox']:checked");
