@@ -119,7 +119,10 @@ var data = {
                         stacked: false
                     },
                     y: {
-                        stacked: false
+                        stacked: false,
+						ticks: {
+							stepSize: 1, // Set the step size to 1 for integer values
+						},
                     }
                 }
             }
@@ -129,45 +132,6 @@ var data = {
         var ctx = document.getElementById('bar-chart').getContext('2d');
         new Chart(ctx, config);
 
-		const ctxL = document.getElementById('chart-line').getContext('2d');
-		const array = ['green','yellow', 'blue'];
-		const chartData = {
-		labels: <?php echo json_encode($data[5])?>,
-		datasets: [
-			<?php 
-				foreach ($data[4] as $key => $d) {
-			?>
-			{
-			label: '<?=$d['label']?>',
-			data: <?= json_encode($d['data']) ?>,
-			borderColor: array[<?= $key?>],
-			fill: false,
-			},
-			<?php } ?>
-		],
-		};
-
-		const chartOptions = {
-		responsive: true,
-		height: 400,
-		scales: {
-			x: {
-			display: true,
-			},
-			y: {
-			ticks: {
-				stepSize: 1, // Set the step size to 1 for integer values
-			},
-			display: true,
-			},
-		},
-		};
-
-		new Chart(ctxL, {
-		type: 'line',
-		data: chartData,
-		options: chartOptions,
-		});
 
 </script>
 <script>
