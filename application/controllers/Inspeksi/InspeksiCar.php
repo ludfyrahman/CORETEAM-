@@ -206,7 +206,6 @@ class InspeksiCar extends CI_Controller
 
         if ($file != '') {
             $config['file_name']       = $file;
-            $config['max_size']        = '2048';
             $config['allowed_types']   = 'jpg|jpeg|png';
             $config['source_image']    = $_FILES['file']['tmp_name'];
             $config['upload_path']     = './uploads/';
@@ -216,7 +215,20 @@ class InspeksiCar extends CI_Controller
 
             if ($this->upload->do_upload('file')) {
                 $uploadImage = $this->upload->data();
-
+				$filePath = $uploadImage['full_path'];
+				$imageTemp = $config['source_image']; 
+				$imageSize = convert_filesize($uploadImage['file_size']); 
+				
+				// Compress size and upload image 
+				$compressedImage = compressImage($imageTemp, $uploadImage['full_path'], 75); 
+				
+				if($compressedImage){ 
+					$compressedImageSize = filesize($compressedImage); 
+					$compressedImageSize = convert_filesize($compressedImageSize); 
+					
+				}else{ 
+					echo json_encode(array('status' => 2, 'type' => 'error', 'msg' => 'Gagal Compress file', 'desc' => 'Gagal Kompress Gambar'));
+				} 
                 $this->db->trans_begin();
 
                 // menghapus file lama
