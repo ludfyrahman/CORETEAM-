@@ -231,10 +231,8 @@
         //form ketiga
         var file = $('#attachment').prop('files')[0];
         
-        if (file == undefined || file == 'undefined') {
-            var file = '';
-        } else {
-            return file;
+        if (file == undefined) {
+            file = '';
         }
         var remark = $('#remark').val();
 
