@@ -93,7 +93,6 @@ class InspeksiBoat extends CI_Controller
 
         if ($file != '') {
             $config['file_name']       = $file;
-            $config['max_size']        = '2048';
             $config['allowed_types']   = 'jpg|jpeg|png';
             $config['source_image']    = $_FILES['file']['tmp_name'];
             $config['upload_path']     = './uploads/';
