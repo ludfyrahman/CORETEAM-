@@ -239,9 +239,8 @@
         var file = $('#attachment').prop('files')[0];
         var remark = $('#remark').val();
 
-        if (file == '' || remark == '') {
-            showNotification('warning', 'Warning', 'Form Attachment ada yang kosong');
-            return false;
+        if (file == undefined) {
+            file = '';
         }
 
         // ambil input type checkbox dengan ketentuan checked
@@ -315,7 +314,7 @@
         var file = $('#attachment').prop('files')[0];
         var remark = $('#remark').val();
         var filePertama = $('#attachment_pertama').val();
-        if (file == undefined) {
+		if (file == undefined || file == 'undefined') {
             file = '';
         }
 

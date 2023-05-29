@@ -94,73 +94,76 @@ class InspeksiCar extends CI_Controller
         $file = $_FILES['file']['name'];
         $date_now = date('Y-m-d H:i:s');
         $id_user = $this->session->userdata('id_user');
+		$kodeInspeksi = $this->M_InspeksiCar->getKodeInspeksi();
 
-        $config['file_name']       = $file;
-        $config['max_size']        = '2048';
-        $config['allowed_types']   = 'jpg|jpeg|png';
-        $config['source_image']    = $_FILES['file']['tmp_name'];
-        $config['upload_path']     = './uploads/';
+		$angka = $kodeInspeksi['jml'] + 1;
+		if ($angka >= 0 and $angka < 10) {
+			$kodeFile = 'FT' . "-000000" . $angka;
+		} else if ($angka >= 10 and $angka < 100) {
+			$kodeFile = 'FT' . "-00000" . $angka;
+		} else if ($angka >= 100 and $angka < 1000) {
+			$kodeFile = 'FT' . "-0000" . $angka;
+		} else if ($angka >= 1000 and $angka < 10000) {
+			$kodeFile = 'FT' . "-000" . $angka;
+		} else if ($angka >= 10000 and $angka < 100000) {
+			$kodeFile = 'FT' . "-00" . $angka;
+		} else if ($angka >= 100000 and $angka < 1000000) {
+			$kodeFile = 'FT' . "-0" . $angka;
+		} else if ($angka >= 1000000) {
+			$kodeFile = 'FT' . "-" . $angka;
+		}
+		$idCatCar = $this->M_InspeksiCar->getIDCatCar();
+		$uploadImage = ['file_name' => null];
+		if ($file != 'undefined') {
+			
+			$config['file_name']       = $file;
+			
+			$config['allowed_types']   = 'jpg|jpeg|png';
+			$config['source_image']    = $_FILES['file']['tmp_name'];
+			$config['upload_path']     = './uploads/';
 
-        $this->load->library('upload', $config);
-        $this->upload->initialize($config);
+			$this->load->library('upload', $config);
+			$this->upload->initialize($config);
+			
+			if ($this->upload->do_upload('file')) {
+				$uploadImage = $this->upload->data();
+				
+			}else{
+				echo json_encode(array('status' => 2, 'type' => 'error', 'msg' => 'Sukses', 'desc' => $this->upload->display_errors()));
+			}
+			
+		}
+		$this->db->trans_begin();
 
-        if ($this->upload->do_upload('file')) {
-            $uploadImage = $this->upload->data();
+		// insert ke table inspeksi
+		$insert = $this->M_InspeksiCar->insertInspeksi($id_user, $tglWaktu, $shift, $commander, $fuelLevel, $kodeFile, $uploadImage['file_name'], $remark, $date_now, $idCatCar['id_category']);
 
-            // get jumlah data
-            $kodeInspeksi = $this->M_InspeksiCar->getKodeInspeksi();
+		// get id_inspeksi di tabel inspeksi
+		$id = $this->M_InspeksiCar->getIDInspeksi();
 
-            $angka = $kodeInspeksi['jml'] + 1;
-            if ($angka >= 0 and $angka < 10) {
-                $kodeFile = 'FT' . "-000000" . $angka;
-            } else if ($angka >= 10 and $angka < 100) {
-                $kodeFile = 'FT' . "-00000" . $angka;
-            } else if ($angka >= 100 and $angka < 1000) {
-                $kodeFile = 'FT' . "-0000" . $angka;
-            } else if ($angka >= 1000 and $angka < 10000) {
-                $kodeFile = 'FT' . "-000" . $angka;
-            } else if ($angka >= 10000 and $angka < 100000) {
-                $kodeFile = 'FT' . "-00" . $angka;
-            } else if ($angka >= 100000 and $angka < 1000000) {
-                $kodeFile = 'FT' . "-0" . $angka;
-            } else if ($angka >= 1000000) {
-                $kodeFile = 'FT' . "-" . $angka;
-            }
+		// insert ke table inspeksi_detail
+		$data_item = json_decode($arrItem);
+		foreach ($data_item as $row) {
+			$insert = $this->M_InspeksiCar->insertInspeksiDetail($id['id_inspeksi'], $row->id_item, $row->conditions);
+		}
 
-            // get id category truck
-            $idCatCar = $this->M_InspeksiCar->getIDCatCar();
+		// insert ke table fic_assistant
+		$data_assistant = json_decode($arrAssistant);
+		foreach ($data_assistant as $row) {
+			$insert = $this->M_InspeksiCar->insertFICAssistant($id['id_inspeksi'], $row);
+		}
 
-            $this->db->trans_begin();
-
-            // insert ke table inspeksi
-            $insert = $this->M_InspeksiCar->insertInspeksi($id_user, $tglWaktu, $shift, $commander, $fuelLevel, $kodeFile, $uploadImage['file_name'], $remark, $date_now, $idCatCar['id_category']);
-
-            // get id_inspeksi di tabel inspeksi
-            $id = $this->M_InspeksiCar->getIDInspeksi();
-
-            // insert ke table inspeksi_detail
-            $data_item = json_decode($arrItem);
-            foreach ($data_item as $row) {
-                $insert = $this->M_InspeksiCar->insertInspeksiDetail($id['id_inspeksi'], $row->id_item, $row->conditions);
-            }
-
-            // insert ke table fic_assistant
-            $data_assistant = json_decode($arrAssistant);
-            foreach ($data_assistant as $row) {
-                $insert = $this->M_InspeksiCar->insertFICAssistant($id['id_inspeksi'], $row);
-            }
-
-            if ($this->db->trans_status() === FALSE) {
-                $this->db->trans_rollback();
-                echo json_encode(array('status' => 0, 'type' => 'error', 'msg' => 'Error', 'desc' => 'Gagal Menyimpan Data Inspeksi'));
-            } else {
-                $this->db->trans_commit();
-                echo json_encode(array('status' => 1, 'type' => 'success', 'msg' => 'Sukses', 'desc' => 'Data Berhasil Disimpan'));
-            }
-        } else {
-            echo json_encode(array('status' => 2, 'type' => 'error', 'msg' => 'Sukses', 'desc' => $this->upload->display_errors()));
-        }
+		if ($this->db->trans_status() === FALSE) {
+			$this->db->trans_rollback();
+			echo json_encode(array('status' => 0, 'type' => 'error', 'msg' => 'Error', 'desc' => 'Gagal Menyimpan Data Inspeksi'));
+		} else {
+			$this->db->trans_commit();
+			echo json_encode(array('status' => 1, 'type' => 'success', 'msg' => 'Sukses', 'desc' => 'Data Berhasil Disimpan'));
+		}
+        
     }
+
+
 
 	public function getInspeksi()
     {
