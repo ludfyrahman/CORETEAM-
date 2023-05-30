@@ -371,23 +371,19 @@ class M_InspeksiTruck extends CI_Model
 
   public function getInspeksi()
   {
-    if ($this->session->userdata('role') == '1') {
-      $inspectedBy = "AND a.inspected_by = '" . $this->session->userdata('id_user') . "'";
-    } else {
-      $inspectedBy = '';
-    }
 
     $query = $this->db->query("SELECT
-    a.id_inspeksi,
-    a.kode_inspeksi,
-    DATE_FORMAT(a.tgl_inspeksi, '%d-%m-%Y (%H:%i:%s)') as tgl_inspeksi,
-    b.nama
-  FROM inspeksi a
-  LEFT JOIN user b
-    ON a.inspected_by = b.id_user
-  LEFT JOIN category c
-    ON a.id_category = c.id_category
-  WHERE c.category = 'Fire Truck' $inspectedBy");
+                                  a.id_inspeksi,
+                                  a.kode_inspeksi,
+                                  a.inspected_by,
+                                  DATE_FORMAT(a.tgl_inspeksi, '%d-%m-%Y (%H:%i:%s)') as tgl_inspeksi,
+                                  b.nama
+                                FROM inspeksi a
+                                LEFT JOIN user b
+                                  ON a.inspected_by = b.id_user
+                                LEFT JOIN category c
+                                  ON a.id_category = c.id_category
+                                WHERE c.category = 'Fire Truck'");
 
     if ($query->num_rows() == 0) {
       $query = 0;

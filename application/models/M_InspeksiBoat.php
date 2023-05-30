@@ -40,6 +40,7 @@ class M_InspeksiBoat extends CI_Model
         $query = $this->db->query("SELECT
                                         a.id_item,
                                         a.item,
+                                        a.qty,
                                         b.subcategory,
                                         c.category
                                     FROM item a
@@ -169,15 +170,10 @@ class M_InspeksiBoat extends CI_Model
 
     public function getInspeksi()
     {
-        if ($this->session->userdata('role') == '1') {
-            $inspectedBy = "AND a.inspected_by = '" . $this->session->userdata('id_user') . "'";
-        } else {
-            $inspectedBy = '';
-        }
-
         $query = $this->db->query("SELECT
                                         a.id_inspeksi,
                                         a.kode_inspeksi,
+                                        a.inspected_by,
                                         DATE_FORMAT(a.tgl_inspeksi, '%d-%m-%Y (%H:%i:%s)') as tgl_inspeksi,
                                         b.nama
                                     FROM inspeksi a
@@ -185,7 +181,7 @@ class M_InspeksiBoat extends CI_Model
                                         ON a.inspected_by = b.id_user
                                     LEFT JOIN category c
                                         ON a.id_category = c.id_category
-                                    WHERE c.category = 'Rescue Boat' $inspectedBy");
+                                    WHERE c.category = 'Rescue Boat'");
 
         if ($query->num_rows() == 0) {
             $query = 0;

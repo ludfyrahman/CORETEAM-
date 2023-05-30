@@ -120,7 +120,7 @@
                                         }
                                     } ?>
                                     <tr>
-                                        <td class="text-sm"><?= $value['item'] ?></td>
+                                        <td class="text-sm"><?= $value['item'] . ', ' . $value  ['qty'] ?></td>
                                         <?php if ($conditions == '2') { ?>
                                             <td><input type="checkbox" <?= $checked ?> class="form-check-input" data-id-inspeksi-detail="<?= $idInspeksiDetail ?>" data-subcategory="<?= $value['subcategory'] ?>" data-item="<?= $value['id_item'] ?>" id="chk-all-good-cat1[]" value="2"></td>
                                             <td><input type="checkbox" class="form-check-input" data-id-inspeksi-detail="<?= $idInspeksiDetail ?>" data-subcategory="<?= $value['subcategory'] ?>" data-item="<?= $value['id_item'] ?>" id="chk-all-damage-cat1[]" value="1"></td>
@@ -182,7 +182,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <div class="input-group">
-                                    <img id="preview" style="border-radius: 5px;" src="<?= base_url('./uploads/' . $inspeksi['attachment']) ?>" alt="" width="200px" />
+                                        <img id="preview" style="border-radius: 5px;" src="<?= base_url('./uploads/' . $inspeksi['attachment']) ?>" alt="" width="200px" />
                                         <br>
                                     </div>
                                 </div>

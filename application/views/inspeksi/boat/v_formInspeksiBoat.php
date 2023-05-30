@@ -65,7 +65,7 @@
                             <div class="form-group">
                                 <label for="fuelLevel">Fuel Level</label>
                                 <div class="input-group input-group-alternative mb-4">
-                                    <input class="form-control" placeholder="Fuel level..." type="number" id="fuelLevel">
+                                    <input class="form-control" placeholder="Fuel level..." type="number" id="fuelLevel" min="0" max="100">
                                     <span class="input-group-text"><i class="fa-solid fa-percent"></i></span>
                                 </div>
                             </div>
@@ -89,7 +89,7 @@
                         <table id="table1" class="table table-stripped" style="width:100%">
                             <thead class="text-center">
                                 <tr>
-                                <th class="text-xs font-weight-bolder">Item</th>
+                                    <th class="text-xs font-weight-bolder">Item</th>
                                     <th class="text-xs font-weight-bolder ps-2 pb-1"><input id="good-cat1" type="checkbox" class="form-check-input me-2" onchange="checkAllItem(this, 'chk-all-good-cat1[]', 'chk-all-damage-cat1[]', 'chk-all-none-cat1[]')"> <label for="good-cat1">Good</label></th>
                                     <th class="text-center text-xs font-weight-bolder ps-2 pb-1"><input type="checkbox" id="damage-cat1" class="form-check-input me-2" onchange="checkAllItem(this, 'chk-all-damage-cat1[]', 'chk-all-good-cat1[]', 'chk-all-none-cat1[]')"> <label for="damage-cat1">Damage</label> </th>
                                     <th class="text-center text-xs font-weight-bolder ps-2 pb-1"><input type="checkbox" id="none-cat1" class="form-check-input me-2" onchange="checkAllItem(this, 'chk-all-none-cat1[]', 'chk-all-good-cat1[]', 'chk-all-damage-cat1[]' )"> <label for="none-cat1">N/A</label></th>
@@ -98,7 +98,7 @@
                             <tbody class="text-center">
                                 <?php foreach ($item as $data) { ?>
                                     <tr>
-                                    <td class="text-sm"><?= $data['item'] ?></td>
+                                        <td class="text-sm"><?= $data['item'] . ', ' . $data['qty'] ?></td>
                                         <td><input type="checkbox" class="form-check-input" data-subcategory="<?= $data['subcategory'] ?>" data-item="<?= $data['id_item'] ?>" id="chk-all-good-cat1[]" value="2"></td>
                                         <td><input type="checkbox" class="form-check-input" data-subcategory="<?= $data['subcategory'] ?>" data-item="<?= $data['id_item'] ?>" id="chk-all-damage-cat1[]" value="1"></td>
                                         <td><input type="checkbox" class="form-check-input" data-subcategory="<?= $data['subcategory'] ?>" data-item="<?= $data['id_item'] ?>" id="chk-all-none-cat1[]" value="0"></td>
@@ -115,7 +115,7 @@
         <?php foreach ($countsub as $value) { ?>
             <input type="hidden" class="subCat" data-subcategory="<?= $value['subcategory'] ?>" value="<?= $value['total'] ?>">
         <?php }  ?>
-        
+
         <div class="col-12">
             <button class="btn btn-icon btn-3 btn-danger mb-0" type="button" id="btnPrevPage" style="display: none;">
                 <span class="btn-inner--icon"><i class="ni ni-bold-left"></i></span>

@@ -16,7 +16,7 @@ class InspeksiTruck extends CI_Controller
 
     public function index()
     {
-        $data['mainurl'] = 'Inspeksi Truck';
+        $data['mainurl'] = 'Fire Truck';
         $this->load->view('partials/header');
         $this->load->view('partials/sidebar');
         $this->load->view('partials/navbar', $data);
@@ -27,7 +27,7 @@ class InspeksiTruck extends CI_Controller
 
     public function createInspeksi()
     {
-        $data['mainurl'] = 'Add Inspeksi Truck';
+        $data['mainurl'] = 'Fire Truck';
         $data['commander'] = $this->M_InspeksiTruck->getFireIncidentCommander();
         $data['assistant'] = $this->M_InspeksiTruck->getFICAssistant();
         $data['subcat1'] = $this->M_InspeksiTruck->getKategoriManChasisEngine();
@@ -48,7 +48,7 @@ class InspeksiTruck extends CI_Controller
 
     public function editInspeksi($id_inspeksi)
     {
-        $data['mainurl'] = 'Add Inspeksi Truck';
+        $data['mainurl'] = 'Fire Truck';
         $data['commander'] = $this->M_InspeksiTruck->getFireIncidentCommander();
         $data['assistant'] = $this->M_InspeksiTruck->getFICAssistant();
         $data['subcat1'] = $this->M_InspeksiTruck->getKategoriManChasisEngine();

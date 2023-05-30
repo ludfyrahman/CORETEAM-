@@ -46,8 +46,10 @@
                                             <?php
                                             if ($data['status'] == '0') {
                                                 echo 'FIC Assistant';
-                                            } else {
+                                            } else if ($data['status'] == '1') {
                                                 echo 'FIC Commander';
+                                            } else {
+                                                echo 'Lainnya';
                                             }
                                             ?>
                                         </td>

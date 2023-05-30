@@ -49,6 +49,8 @@
                                             echo 'FIC Assistant';
                                         } else if ($detail['status'] == 1) {
                                             echo 'FIC Commander';
+                                        } else if ($detail['status'] == 2) {
+                                            echo 'Lainnya';
                                         }
                                         ?>
                                     </td>
