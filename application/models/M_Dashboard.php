@@ -21,7 +21,7 @@ class M_Dashboard extends CI_Model
 		// query for get all category
 		$categories = $this->db->get('category')->result_array();
 		// query for get all data in chart
-		$lists = $this->db->query("SELECT u.nama,COUNT(*) as jumlah,u.id_user FROM inspeksi i JOIN user u on i.inspected_by=u.id_user where  date(tgl_inspeksi)  = date(NOW()) GROUP BY inspected_by")->result_array();
+		$lists = $this->db->query("SELECT u.nama,COUNT(*) as jumlah,u.id_user FROM inspeksi i JOIN user u on i.inspected_by=u.id_user GROUP BY inspected_by")->result_array();
 		// define color for chart
 		$category_color = ['rgba(167,225,185,0.5)', 'rgba(54, 162, 235, 0.5)', 'rgba(192, 75, 140, 0.5)'];
 		$labels = [];
@@ -35,7 +35,7 @@ class M_Dashboard extends CI_Model
 				// loop for get all data in chart
 				foreach ($lists as $childKey => $l) {
 					// query for get calculate data per use
-					$li = $this->db->query("SELECT u.nama,COUNT(*) as jumlah FROM inspeksi i JOIN user u on i.inspected_by=u.id_user where inspected_by='$l[id_user]' and id_category='$cat[id_category]' and  date(tgl_inspeksi)  = date(NOW()) GROUP BY inspected_by")->row_array();
+					$li = $this->db->query("SELECT u.nama,COUNT(*) as jumlah FROM inspeksi i JOIN user u on i.inspected_by=u.id_user where inspected_by='$l[id_user]' and id_category='$cat[id_category]'  GROUP BY inspected_by")->row_array();
 					$data[] = $li['jumlah'] ?? 0;
 				}
 			// define attribute for chart

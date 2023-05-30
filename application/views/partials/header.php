@@ -48,6 +48,10 @@
 			background-color: rgba(0, 0, 0, 0.1); /* Adjust the overlay color and opacity */
 			z-index: 1;
 		}
+		.text-black{
+			color: black !important;
+			text-decoration: none !important;
+		}
 		
 	</style>
 </head>

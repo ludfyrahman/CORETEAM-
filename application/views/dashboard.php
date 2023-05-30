@@ -1,6 +1,6 @@
 <div class="container-fluid py-4">
     <div class="row">
-        <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+        <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4 d-none">
             <div class="card">
                 <div class="card-body p-3">
                     <div class="row">
@@ -22,71 +22,77 @@
                 </div>
             </div>
         </div>
-        <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
-            <div class="card">
-                <div class="card-body p-3">
-                    <div class="row">
-                        <div class="col-8">
-                            <div class="numbers">
-                                <p class="text-sm mb-0 text-uppercase font-weight-bold">Inspeksi Mobil</p>
-                                <h5 class="font-weight-bolder">
-                                    <?= number_format($data[1]) ?>
-                                </h5>
+        <div class="col-xl-4 col-sm-6 mb-xl-0 mb-4">
+            <a href="<?= base_url('Inspeksi/InspeksiCar') ?>">
+				<div class="card">
+					<div class="card-body p-3">
+						<div class="row">
+							<div class="col-8">
+								<div class="numbers">
+									<p class="text-sm mb-0 text-uppercase font-weight-bold text-black">Rescue Car</p>
+									<h5 class="font-weight-bolder d-none">
+										<?= number_format($data[1]) ?>
+									</h5>
 
-                            </div>
-                        </div>
-                        <div class="col-4 text-end">
-                            <div class="icon icon-shape bg-gradient-danger shadow-danger text-center rounded-circle">
-                                <i class="ni ni-ambulance text-lg opacity-10" aria-hidden="true"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+								</div>
+							</div>
+							<div class="col-4 text-end">
+								<div class="icon icon-shape bg-gradient-danger shadow-danger text-center rounded-circle">
+									<i class="fa-solid fa-car text-lg opacity-10" aria-hidden="true"></i>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</a>
         </div>
-        <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
-            <div class="card">
-                <div class="card-body p-3">
-                    <div class="row">
-                        <div class="col-8">
-                            <div class="numbers">
-                                <p class="text-sm mb-0 text-uppercase font-weight-bold">Inspeksi Truk</p>
-                                <h5 class="font-weight-bolder">
-                                    <?= number_format($data[2]) ?>
-                                </h5>
+        <div class="col-xl-4 col-sm-6 mb-xl-0 mb-4">
+			<a href="<?= base_url('Inspeksi/InspeksiTruck') ?>">
+				<div class="card">
+					<div class="card-body p-3">
+						<div class="row">
+							<div class="col-8">
+								<div class="numbers">
+									<p class="text-sm mb-0 text-uppercase font-weight-bold text-black">Fire Truck</p>
+									<h5 class="font-weight-bolder d-none">
+										<?= number_format($data[2]) ?>
+									</h5>
 
-                            </div>
-                        </div>
-                        <div class="col-4 text-end">
-                            <div class="icon icon-shape bg-gradient-success shadow-success text-center rounded-circle">
-                                <i class="ni ni-paper-diploma text-lg opacity-10" aria-hidden="true"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+								</div>
+							</div>
+							<div class="col-4 text-end">
+								<div class="icon icon-shape bg-gradient-success shadow-success text-center rounded-circle">
+									<i class="fa-solid fa-truck text-lg opacity-10" aria-hidden="true"></i>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</a>
         </div>
-        <div class="col-xl-3 col-sm-6">
-            <div class="card">
-                <div class="card-body p-3">
-                    <div class="row">
-                        <div class="col-8">
-                            <div class="numbers">
-                                <p class="text-sm mb-0 text-uppercase font-weight-bold">Inspeksi Boat</p>
-                                <h5 class="font-weight-bolder">
-                                    <?= number_format($data[3]) ?>
-                                </h5>
+        <div class="col-xl-4 col-sm-6">
+			<a href="<?= base_url('Inspeksi/InspeksiBoat') ?>">
+				<div class="card">
+					<div class="card-body p-3">
+						<div class="row">
+							<div class="col-8">
+								<div class="numbers">
+									<p class="text-sm mb-0 text-uppercase font-weight-bold text-black">Rescue Boat</p>
+									<h5 class="font-weight-bolder d-none">
+										<?= number_format($data[3]) ?>
+									</h5>
 
-                            </div>
-                        </div>
-                        <div class="col-4 text-end">
-                            <div class="icon icon-shape bg-gradient-warning shadow-warning text-center rounded-circle">
-                                <i class="ni ni-tablet-button text-lg opacity-10" aria-hidden="true"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+								</div>
+							</div>
+							<div class="col-4 text-end">
+								<div class="icon icon-shape bg-gradient-warning shadow-warning text-center rounded-circle">
+									<i class="fa-solid fa-ship text-lg opacity-10" aria-hidden="true"></i>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				</a>
         </div>
     </div>
     <div class="row mt-4">
