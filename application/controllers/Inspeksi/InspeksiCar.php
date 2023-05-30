@@ -141,8 +141,6 @@ class InspeksiCar extends CI_Controller
 				}else{ 
 					echo json_encode(array('status' => 2, 'type' => 'error', 'msg' => 'Gagal Compress file', 'desc' => 'Gagal Kompress Gambar'));
 				} 
-			}else{
-				echo json_encode(array('status' => 2, 'type' => 'error', 'msg' => 'Sukses', 'desc' => $this->upload->display_errors()));
 			}
 			
 		}
@@ -262,9 +260,7 @@ class InspeksiCar extends CI_Controller
                     $this->db->trans_commit();
                     echo json_encode(array('status' => 1, 'type' => 'success', 'msg' => 'Sukses', 'desc' => 'Data Berhasil Disimpan'));
                 }
-            } else {
-                echo json_encode(array('status' => 2, 'type' => 'error', 'msg' => 'Sukses', 'desc' => $this->upload->display_errors()));
-            }
+            } 
         } else {
             $this->db->trans_begin();
 
@@ -406,9 +402,9 @@ class InspeksiCar extends CI_Controller
         ];
 
         // Merge Kolom
-        $sheet->mergeCells('A1:L1');
+        $sheet->mergeCells('A1:H1');
         $sheet->setCellValue('A1', 'DAILY RESCUE CAR INSPECTION SHEET');
-        $sheet->mergeCells('A2:L2');
+        $sheet->mergeCells('A2:H2');
         $sheet->setCellValue('A2', '(SMOB-PKUP-217)');
 
         // SUBKATEGORI 1
