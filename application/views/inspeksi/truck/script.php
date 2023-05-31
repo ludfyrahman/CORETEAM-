@@ -25,10 +25,10 @@
                 if (response.length != 0) {
                     var no = 1;
                     $.each(response, function(i, v) {
-                        var roleUser = <?= $this->session->userdata('role'); ?>;
+                        var idUser = <?= $this->session->userdata('id_user'); ?>;
 
                         var button = '';
-                        if (roleUser == 2) {
+                        if (idUser != v.inspected_by) {
                             button = '<a href="<?= base_url('Inspeksi/InspeksiTruck/exportLaporanInspeksi/') ?>' +
                                 v.id_inspeksi + '" class="btn btn-icon btn-3 btn-success w-30" type="button" title="Export Inspeksi">' +
                                 '<span class="btn-inner--icon text-white"><i class="fa-solid fa-file-excel"></i></span></a>'

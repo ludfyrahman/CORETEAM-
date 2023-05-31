@@ -3,41 +3,41 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class M_InspeksiCar extends CI_Model
 {
-    public function __construct()
-    {
-        parent::__construct();
-        $this->load->database();
-		$this->category = 'Rescue Car';
-    }
-	public function getFICAssistant()
-    {
-        $query = $this->db->query("SELECT id_user as id, nama FROM user WHERE status = 0 AND is_active = 1");
+  public function __construct()
+  {
+    parent::__construct();
+    $this->load->database();
+    $this->category = 'Rescue Car';
+  }
+  public function getFICAssistant()
+  {
+    $query = $this->db->query("SELECT id_user as id, nama FROM user WHERE status = 0 AND is_active = 1");
 
-        if ($query->num_rows() == 0) {
-            $query = [];
-        } else {
-            $query = $query->result_array();
-        }
-
-        return $query;
+    if ($query->num_rows() == 0) {
+      $query = [];
+    } else {
+      $query = $query->result_array();
     }
-	public function getInspeksiAssistant($id_inspeksi)
-	{
-		$query = $this->db->query("SELECT b.nama, a.fic_assistant FROM fic_assistant a
+
+    return $query;
+  }
+  public function getInspeksiAssistant($id_inspeksi)
+  {
+    $query = $this->db->query("SELECT b.nama, a.fic_assistant FROM fic_assistant a
 		LEFT JOIN user b ON a.fic_assistant = b.id_user
 		WHERE id_inspeksi = '$id_inspeksi'");
 
-		if ($query->num_rows() == 0) {
-		$query = 0;
-		} else {
-		$query = $query->result_array();
-		};
+    if ($query->num_rows() == 0) {
+      $query = 0;
+    } else {
+      $query = $query->result_array();
+    };
 
-		return $query;
-	}
-	public function getInspeksiByIDInspeksi($id_inspeksi)
-	{
-		$query = $this->db->query("SELECT
+    return $query;
+  }
+  public function getInspeksiByIDInspeksi($id_inspeksi)
+  {
+    $query = $this->db->query("SELECT
 		DATE_FORMAT(tgl_inspeksi, '%Y-%m-%dT%H:%i') as tgl_inspeksi,
 		shift,
 		fire_incident_commander,
@@ -47,107 +47,102 @@ class M_InspeksiCar extends CI_Model
 	FROM inspeksi 
 	WHERE id_inspeksi = '$id_inspeksi'");
 
-		if ($query->num_rows() == 0) {
-		$query = 0;
-		} else {
-		$query = $query->row_array();
-		}
+    if ($query->num_rows() == 0) {
+      $query = 0;
+    } else {
+      $query = $query->row_array();
+    }
 
-		return $query;
-	}
+    return $query;
+  }
 
-	public function getInspeksi()
-	{
-		if ($this->session->userdata('role') == '1') {
-		$inspectedBy = "AND a.inspected_by = '" . $this->session->userdata('id_user') . "'";
-		} else {
-		$inspectedBy = '';
-		}
+  public function getInspeksi()
+  {
+    $query = $this->db->query("SELECT
+                                  a.id_inspeksi,
+                                  a.kode_inspeksi,
+                                  a.inspected_by,
+                                  DATE_FORMAT(a.tgl_inspeksi, '%d-%m-%Y (%H:%i:%s)') as tgl_inspeksi,
+                                  b.nama
+                                FROM inspeksi a
+                                LEFT JOIN user b
+                                  ON a.inspected_by = b.id_user
+                                LEFT JOIN category c
+                                  ON a.id_category = c.id_category
+                                WHERE c.category = '$this->category'");
 
-		$query = $this->db->query("SELECT
-		a.id_inspeksi,
-		a.kode_inspeksi,
-		DATE_FORMAT(a.tgl_inspeksi, '%d-%m-%Y (%H:%i:%s)') as tgl_inspeksi,
-		b.nama
-	FROM inspeksi a
-	LEFT JOIN user b
-		ON a.inspected_by = b.id_user
-	LEFT JOIN category c
-		ON a.id_category = c.id_category
-	WHERE c.category = '$this->category' $inspectedBy");
+    if ($query->num_rows() == 0) {
+      $query = 0;
+    } else {
+      $query = $query->result_array();
+    }
 
-		if ($query->num_rows() == 0) {
-		$query = 0;
-		} else {
-		$query = $query->result_array();
-		}
+    return $query;
+  }
 
-		return $query;
-	}
+  public function getKodeInspeksi()
+  {
+    $query = $this->db->query("SELECT COUNT(*) as jml FROM inspeksi");
 
-	public function getKodeInspeksi()
-	{
-		$query = $this->db->query("SELECT COUNT(*) as jml FROM inspeksi");
+    if ($query->num_rows() == 0) {
+      $query = 0;
+    } else {
+      $query = $query->row_array();
+    }
 
-		if ($query->num_rows() == 0) {
-		$query = 0;
-		} else {
-		$query = $query->row_array();
-		}
+    return $query;
+  }
 
-		return $query;
-	}
+  public function getIDInspeksi()
+  {
+    $query = $this->db->query('SELECT id_inspeksi FROM inspeksi ORDER BY id_inspeksi DESC');
 
-	public function getIDInspeksi()
-	{
-		$query = $this->db->query('SELECT id_inspeksi FROM inspeksi ORDER BY id_inspeksi DESC');
+    if ($query->num_rows() == 0) {
+      $query = 0;
+    } else {
+      $query = $query->row_array();
+    }
 
-		if ($query->num_rows() == 0) {
-		$query = 0;
-		} else {
-		$query = $query->row_array();
-		}
+    return $query;
+  }
 
-		return $query;
-	}
+  public function insertInspeksiDetail($id_inspeksi, $id_item, $conditions)
+  {
+    $this->db->set('id_inspeksi', $id_inspeksi);
+    $this->db->set('id_item', $id_item);
+    $this->db->set('conditions', $conditions);
+    $this->db->insert('inspeksi_detail');
 
-	public function insertInspeksiDetail($id_inspeksi, $id_item, $conditions)
-	{
-		$this->db->set('id_inspeksi', $id_inspeksi);
-		$this->db->set('id_item', $id_item);
-		$this->db->set('conditions', $conditions);
-		$this->db->insert('inspeksi_detail');
+    $affectedrows = $this->db->affected_rows();
 
-		$affectedrows = $this->db->affected_rows();
+    if ($affectedrows > 0) {
+      $queryinsert = 1;
+    } else {
+      $queryinsert = 0;
+    }
 
-		if ($affectedrows > 0) {
-		$queryinsert = 1;
-		} else {
-		$queryinsert = 0;
-		}
+    return $queryinsert;
+  }
 
-		return $queryinsert;
-	}
+  public function updateInspeksiDetail($idInspeksiDetail, $id_item, $conditions)
+  {
+    $this->db->set('id_item', $id_item);
+    $this->db->set('conditions', $conditions);
+    $this->db->where('id_inspeksi_detail', $idInspeksiDetail);
+    $this->db->update('inspeksi_detail');
 
-	public function updateInspeksiDetail($idInspeksiDetail, $id_item, $conditions)
-	{
-		$this->db->set('id_item', $id_item);
-		$this->db->set('conditions', $conditions);
-		$this->db->where('id_inspeksi_detail', $idInspeksiDetail);
-		$this->db->update('inspeksi_detail');
+    $affectedrows = $this->db->affected_rows();
 
-		$affectedrows = $this->db->affected_rows();
+    if ($affectedrows > 0) {
+      $queryinsert = 1;
+    } else {
+      $queryinsert = 0;
+    }
 
-		if ($affectedrows > 0) {
-		$queryinsert = 1;
-		} else {
-		$queryinsert = 0;
-		}
+    return $queryinsert;
+  }
 
-		return $queryinsert;
-	}
-
-	public function updateInspeksi($id_user, $tglWaktu, $shift, $commander, $fuelLevel, $file, $remark, $date_now, $idInspeksi)
+  public function updateInspeksi($id_user, $tglWaktu, $shift, $commander, $fuelLevel, $file, $remark, $date_now, $idInspeksi)
   {
     if ($file != '') {
       $this->db->set('attachment', $file);
@@ -174,41 +169,41 @@ class M_InspeksiCar extends CI_Model
     return $queryinsert;
   }
 
-	public function insertFICAssistant($id_inspeksi, $ficAssistant)
-	{
-		$this->db->set('id_inspeksi', $id_inspeksi);
-		$this->db->set('fic_assistant', $ficAssistant);
-		$this->db->insert('fic_assistant');
+  public function insertFICAssistant($id_inspeksi, $ficAssistant)
+  {
+    $this->db->set('id_inspeksi', $id_inspeksi);
+    $this->db->set('fic_assistant', $ficAssistant);
+    $this->db->insert('fic_assistant');
 
-		$affectedrows = $this->db->affected_rows();
+    $affectedrows = $this->db->affected_rows();
 
-		if ($affectedrows > 0) {
-		$queryinsert = 1;
-		} else {
-		$queryinsert = 0;
-		}
+    if ($affectedrows > 0) {
+      $queryinsert = 1;
+    } else {
+      $queryinsert = 0;
+    }
 
-		return $queryinsert;
-	}
+    return $queryinsert;
+  }
 
-	public function updateFICAssistant($id_inspeksi, $ficAssistant)
-	{
-		$this->db->set('id_inspeksi', $id_inspeksi);
-		$this->db->set('fic_assistant', $ficAssistant);
-		$this->db->insert('fic_assistant');
+  public function updateFICAssistant($id_inspeksi, $ficAssistant)
+  {
+    $this->db->set('id_inspeksi', $id_inspeksi);
+    $this->db->set('fic_assistant', $ficAssistant);
+    $this->db->insert('fic_assistant');
 
-		$affectedrows = $this->db->affected_rows();
+    $affectedrows = $this->db->affected_rows();
 
-		if ($affectedrows > 0) {
-		$queryinsert = 1;
-		} else {
-		$queryinsert = 0;
-		}
+    if ($affectedrows > 0) {
+      $queryinsert = 1;
+    } else {
+      $queryinsert = 0;
+    }
 
-		return $queryinsert;
-	}
+    return $queryinsert;
+  }
 
-	//export excel
+  //export excel
   public function getInspeksiLaporan($id_inspeksi)
   {
     $query = $this->db->query("SELECT a.attachment, a.remark, a.fuel_level, DATE_FORMAT(a.tgl_inspeksi, '%d-%m-%Y') as tgl_inspeksi, 
@@ -229,60 +224,60 @@ class M_InspeksiCar extends CI_Model
     return $query;
   }
 
-	public function insertInspeksi($id_user, $tglWaktu, $shift, $commander, $fuelLevel, $kodeFile, $uploadImage, $remark, $date_now, $idCategory)
-	{
-		$this->db->set('inspected_by', $id_user);
-		$this->db->set('tgl_inspeksi', $tglWaktu);
-		$this->db->set('shift', $shift);
-		$this->db->set('fire_incident_commander', $commander);
-		$this->db->set('fuel_level', $fuelLevel);
-		$this->db->set('kode_inspeksi', $kodeFile);
-		$this->db->set('attachment', $uploadImage);
-		$this->db->set('remark', $remark);
-		$this->db->set('created_at', $date_now);
-		$this->db->set('id_category', $idCategory);
-		$this->db->insert('inspeksi');
+  public function insertInspeksi($id_user, $tglWaktu, $shift, $commander, $fuelLevel, $kodeFile, $uploadImage, $remark, $date_now, $idCategory)
+  {
+    $this->db->set('inspected_by', $id_user);
+    $this->db->set('tgl_inspeksi', $tglWaktu);
+    $this->db->set('shift', $shift);
+    $this->db->set('fire_incident_commander', $commander);
+    $this->db->set('fuel_level', $fuelLevel);
+    $this->db->set('kode_inspeksi', $kodeFile);
+    $this->db->set('attachment', $uploadImage);
+    $this->db->set('remark', $remark);
+    $this->db->set('created_at', $date_now);
+    $this->db->set('id_category', $idCategory);
+    $this->db->insert('inspeksi');
 
-		$affectedrows = $this->db->affected_rows();
+    $affectedrows = $this->db->affected_rows();
 
-		if ($affectedrows > 0) {
-		$queryinsert = 1;
-		} else {
-		$queryinsert = 0;
-		}
-
-		return $queryinsert;
-	}
-
-	public function getIDCatCar()
-	{
-		$query = $this->db->query("SELECT id_category FROM category WHERE category = 'Rescue Car'");
-
-		if ($query->num_rows() == 0) {
-		$query = 0;
-		} else {
-		$query = $query->row_array();
-		}
-
-		return $query;
-	}
-
-	public function getFireIncidentCommander()
-    {
-        $query = $this->db->query("SELECT id_user as id, nama FROM user WHERE status = 1 AND is_active = 1");
-
-        if ($query->num_rows() == 0) {
-            $query = [];
-        } else {
-            $query = $query->result_array();
-        }
-
-        return $query;
+    if ($affectedrows > 0) {
+      $queryinsert = 1;
+    } else {
+      $queryinsert = 0;
     }
 
-	public function getKategoriEngine()
-	{
-		$query = $this->db->query("SELECT
+    return $queryinsert;
+  }
+
+  public function getIDCatCar()
+  {
+    $query = $this->db->query("SELECT id_category FROM category WHERE category = 'Rescue Car'");
+
+    if ($query->num_rows() == 0) {
+      $query = 0;
+    } else {
+      $query = $query->row_array();
+    }
+
+    return $query;
+  }
+
+  public function getFireIncidentCommander()
+  {
+    $query = $this->db->query("SELECT id_user as id, nama FROM user WHERE status = 1 AND is_active = 1");
+
+    if ($query->num_rows() == 0) {
+      $query = [];
+    } else {
+      $query = $query->result_array();
+    }
+
+    return $query;
+  }
+
+  public function getKategoriEngine()
+  {
+    $query = $this->db->query("SELECT
 			a.id_item,
 			a.item,
 			b.subcategory,
@@ -298,16 +293,16 @@ class M_InspeksiCar extends CI_Model
 		AND b.is_active = '1'
 		AND c.is_active = '1'");
 
-		if ($query->num_rows() == 0) {
-		$query = [];
-		} else {
-		$query = $query->result_array();
-		}
+    if ($query->num_rows() == 0) {
+      $query = [];
+    } else {
+      $query = $query->result_array();
+    }
 
-		return $query;
-	}
+    return $query;
+  }
 
-	public function getKategoriTransmissionBreakingSystem()
+  public function getKategoriTransmissionBreakingSystem()
   {
     $query = $this->db->query("SELECT
         a.id_item,
@@ -559,7 +554,7 @@ class M_InspeksiCar extends CI_Model
 
     return $query;
   }
-	public function deleteInspeksiAssistant($idInspeksi)
+  public function deleteInspeksiAssistant($idInspeksi)
   {
     $this->db->where('id_inspeksi', $idInspeksi);
     $this->db->delete('fic_assistant');

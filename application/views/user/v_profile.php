@@ -52,7 +52,7 @@
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label for="example-text-input" class="form-control-label">Position</label>
-                                        <input class="form-control text-sm" type="text" value="<?= ($this->session->userdata('status') == 0 ? 'FIC Assistant' : 'FIC Commander' ) ?>" disabled>
+                                        <input class="form-control text-sm" type="text" value="<?= ($this->session->userdata('status') == 0 ? 'FIC Assistant' : ($this->session->userdata('status') == 1 ? 'FIC Commander' : 'Lainnya')) ?>" disabled>
                                     </div>
                                 </div>
                             </div>
@@ -80,7 +80,7 @@
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label for="example-text-input" class="form-control-label">Position</label>
-                                        <input id="status" class="form-control text-sm" type="text" value="<?= ($detail['status'] == 0 ? 'FIC Assistant' : 'FIC Commander' ) ?>" disabled>
+                                        <input id="status" class="form-control text-sm" type="text" <input class="form-control text-sm" type="text" value="<?= ($this->session->userdata('status') == 0 ? 'FIC Assistant' : ($this->session->userdata('status') == 1 ? 'FIC Commander' : 'Lainnya')) ?>" disabled>
                                     </div>
                                 </div>
                             </div>

@@ -17,7 +17,7 @@ class InspeksiBoat extends CI_Controller
 
     public function index()
     {
-        $data['mainurl'] = 'Inspeksi Boat';
+        $data['mainurl'] = 'Rescue Boat';
         $this->load->view('partials/header');
         $this->load->view('partials/sidebar');
         $this->load->view('partials/navbar', $data);
@@ -35,7 +35,7 @@ class InspeksiBoat extends CI_Controller
 
     public function createInspeksi()
     {
-        $data['mainurl']    = 'Add Inspeksi Boat';
+        $data['mainurl']    = 'Rescue Boat';
         $data['commander']  = $this->M_InspeksiBoat->getFireIncidentCommander();
         $data['assistant']  = $this->M_InspeksiBoat->getFICAssistant();
         $data['item']       = $this->M_InspeksiBoat->getItemRescueBoat();
@@ -179,7 +179,7 @@ class InspeksiBoat extends CI_Controller
 
     public function editInspeksi($id)
     {
-        $data['mainurl']    = 'Add Inspeksi Boat';
+        $data['mainurl']    = 'Rescue Boat';
         $data['commander']  = $this->M_InspeksiBoat->getFireIncidentCommander();
         $data['assistant']  = $this->M_InspeksiBoat->getFICAssistant();
         $data['item']       = $this->M_InspeksiBoat->getItemRescueBoat();
