@@ -102,20 +102,19 @@ class InspeksiBoat extends CI_Controller
 
             if ($this->upload->do_upload('file')) {
                 $uploadImage = $this->upload->data();
-				$filePath = $uploadImage['full_path'];
-				$imageTemp = $config['source_image']; 
-				$imageSize = convert_filesize($uploadImage['file_size']); 
-				
-				// Compress size and upload image 
-				$compressedImage = compressImage($imageTemp, $uploadImage['full_path'], 75); 
-				
-				if($compressedImage){ 
-					$compressedImageSize = filesize($compressedImage); 
-					$compressedImageSize = convert_filesize($compressedImageSize); 
-					
-				}else{ 
-					echo json_encode(array('status' => 2, 'type' => 'error', 'msg' => 'Gagal Compress file', 'desc' => 'Gagal Kompress Gambar'));
-				} 
+                $filePath = $uploadImage['full_path'];
+                $imageTemp = $config['source_image'];
+                $imageSize = convert_filesize($uploadImage['file_size']);
+
+                // Compress size and upload image 
+                $compressedImage = compressImage($imageTemp, $uploadImage['full_path'], 75);
+
+                if ($compressedImage) {
+                    $compressedImageSize = filesize($compressedImage);
+                    $compressedImageSize = convert_filesize($compressedImageSize);
+                } else {
+                    echo json_encode(array('status' => 2, 'type' => 'error', 'msg' => 'Gagal Compress file', 'desc' => 'Gagal Kompress Gambar'));
+                }
                 $this->db->trans_begin();
 
                 // insert ke table inspeksi
@@ -234,20 +233,19 @@ class InspeksiBoat extends CI_Controller
 
             if ($this->upload->do_upload('file')) {
                 $uploadImage = $this->upload->data();
-				$filePath = $uploadImage['full_path'];
-				$imageTemp = $config['source_image']; 
-				$imageSize = convert_filesize($uploadImage['file_size']); 
-				
-				// Compress size and upload image 
-				$compressedImage = compressImage($imageTemp, $uploadImage['full_path'], 75); 
-				
-				if($compressedImage){ 
-					$compressedImageSize = filesize($compressedImage); 
-					$compressedImageSize = convert_filesize($compressedImageSize); 
-					
-				}else{ 
-					echo json_encode(array('status' => 2, 'type' => 'error', 'msg' => 'Gagal Compress file', 'desc' => 'Gagal Kompress Gambar'));
-				} 
+                $filePath = $uploadImage['full_path'];
+                $imageTemp = $config['source_image'];
+                $imageSize = convert_filesize($uploadImage['file_size']);
+
+                // Compress size and upload image 
+                $compressedImage = compressImage($imageTemp, $uploadImage['full_path'], 75);
+
+                if ($compressedImage) {
+                    $compressedImageSize = filesize($compressedImage);
+                    $compressedImageSize = convert_filesize($compressedImageSize);
+                } else {
+                    echo json_encode(array('status' => 2, 'type' => 'error', 'msg' => 'Gagal Compress file', 'desc' => 'Gagal Kompress Gambar'));
+                }
                 $this->db->trans_begin();
 
                 // menghapus file lama
@@ -313,6 +311,15 @@ class InspeksiBoat extends CI_Controller
                 echo json_encode(array('status' => 1, 'type' => 'success', 'msg' => 'Sukses', 'desc' => 'Data Berhasil Disimpan'));
             }
         }
+    }
+
+    public function hapusInspeksi()
+    {
+        $id_inspeksi = $this->input->post('idInspeksi');
+
+        $delete = $this->M_InspeksiBoat->hapusInspeksi($id_inspeksi);
+
+        echo $delete;
     }
 
     public function exportLaporanInspeksi($id_inspeksi)
@@ -441,14 +448,14 @@ class InspeksiBoat extends CI_Controller
 
         // Data Item
         $numrow = 6;
-		$maxLength = 0;
+        $maxLength = 0;
         foreach ($dataSubKategoriBoat as $value) {
-			$length = (int)(strlen($value['item']));
-			$maxLength = $length > $maxLength ? $length : $maxLength;
+            $length = (int)(strlen($value['item']));
+            $maxLength = $length > $maxLength ? $length : $maxLength;
             $sheet->mergeCells('A' . $numrow . ':' . 'C' . $numrow);
             $sheet->setCellValue('A' . $numrow, $value['item']);
             $sheet->setCellValue('D' . $numrow, $value['qty']);
-            
+
 
             // 0 = checklist N/A, 1 = checklist Damage, 2 = checklist Good
             if ($value['conditions'] == 0) {
@@ -467,7 +474,7 @@ class InspeksiBoat extends CI_Controller
             $numrow++;
         }
 
-		$sheet->getColumnDimension('A')->setwidth($maxLength);
+        $sheet->getColumnDimension('A')->setwidth($maxLength);
 
         $colAF = $numrow + 1;
         $colEG = $colAF + 2;

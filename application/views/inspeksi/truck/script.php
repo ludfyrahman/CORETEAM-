@@ -26,19 +26,35 @@
                     var no = 1;
                     $.each(response, function(i, v) {
                         var idUser = <?= $this->session->userdata('id_user'); ?>;
+                        var role = <?= $this->session->userdata('role'); ?>;
 
                         var button = '';
-                        if (idUser != v.inspected_by) {
-                            button = '<a href="<?= base_url('Inspeksi/InspeksiTruck/exportLaporanInspeksi/') ?>' +
-                                v.id_inspeksi + '" class="btn btn-icon btn-3 btn-success w-30" type="button" title="Export Inspeksi">' +
-                                '<span class="btn-inner--icon text-white"><i class="fa-solid fa-file-excel"></i></span></a>'
-                        } else {
+
+                        if (role == 0) {
                             button = '<a href="<?= base_url('Inspeksi/InspeksiTruck/editInspeksi/') ?>' +
                                 v.id_inspeksi + '" class="btn btn-icon btn-3 btn-warning w-30" type="button" title="Edit Inspeksi">' +
                                 '<span class="btn-inner--icon text-white"><i class="fa-solid fa-pencil-alt"></i></span></a> ' +
                                 '<a href="<?= base_url('Inspeksi/InspeksiTruck/exportLaporanInspeksi/') ?>' +
                                 v.id_inspeksi + '" class="btn btn-icon btn-3 btn-success w-30" type="button" title="Export Inspeksi">' +
-                                '<span class="btn-inner--icon text-white"><i class="fa-solid fa-file-excel"></i></span></a> '
+                                '<span class="btn-inner--icon text-white"><i class="fa-solid fa-file-excel"></i></span></a> ' +
+                                '<button onclick="hapusInspeksi(' + v.id_inspeksi + ')" class="btn btn-danger btn-3 btn-success w-30" title="Hapus Inspeksi"><span class="btn-inner--icon text-white"><i class="fa-solid fa-trash"></i></span></button>'
+                        } else if (role == 2) {
+                            button = '<a href="<?= base_url('Inspeksi/InspeksiTruck/exportLaporanInspeksi/') ?>' +
+                                v.id_inspeksi + '" class="btn btn-icon btn-3 btn-success w-30" type="button" title="Export Inspeksi">' +
+                                '<span class="btn-inner--icon text-white"><i class="fa-solid fa-file-excel"></i></span></a>'
+                        } else {
+                            if (idUser != v.inspected_by) {
+                                button = '<a href="<?= base_url('Inspeksi/InspeksiTruck/exportLaporanInspeksi/') ?>' +
+                                    v.id_inspeksi + '" class="btn btn-icon btn-3 btn-success w-30" type="button" title="Export Inspeksi">' +
+                                    '<span class="btn-inner--icon text-white"><i class="fa-solid fa-file-excel"></i></span></a>'
+                            } else {
+                                button = '<a href="<?= base_url('Inspeksi/InspeksiTruck/editInspeksi/') ?>' +
+                                    v.id_inspeksi + '" class="btn btn-icon btn-3 btn-warning w-30" type="button" title="Edit Inspeksi">' +
+                                    '<span class="btn-inner--icon text-white"><i class="fa-solid fa-pencil-alt"></i></span></a> ' +
+                                    '<a href="<?= base_url('Inspeksi/InspeksiTruck/exportLaporanInspeksi/') ?>' +
+                                    v.id_inspeksi + '" class="btn btn-icon btn-3 btn-success w-30" type="button" title="Export Inspeksi">' +
+                                    '<span class="btn-inner--icon text-white"><i class="fa-solid fa-file-excel"></i></span></a> '
+                            }
                         }
 
                         $('#truckInspeksiTable > tbody').append(`
@@ -62,6 +78,31 @@
                             </tr>
                         `)
                 }
+            }
+        })
+    }
+
+    function hapusInspeksi(idInspeksi) {
+        confirmAlert('Apakah anda yakin?', 'Tekan ya untuk menghapus dan tidak untuk kembali!', 'warning', 'Ya, hapus', 'Tidak').then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    type: "POST",
+                    url: "<?= base_url('Inspeksi/InspeksiTruck/hapusInspeksi') ?>",
+                    data: {
+                        idInspeksi: idInspeksi
+                    },
+                    dataType: "JSON",
+                    success: function(response) {
+                        if (response == 1) {
+                            showNotification('success', 'Sukses', 'Data Berhasil Dihapus');
+                            setTimeout(() => {
+                                window.location.href = "<?= base_url('Inspeksi/InspeksiTruck') ?>"
+                            }, 2000);
+                        } else {
+                            showNotification('error', 'Gagal', 'Gagal Menghapus Data Inspeksi');
+                        }
+                    }
+                })
             }
         })
     }

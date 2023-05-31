@@ -569,4 +569,26 @@ class M_InspeksiCar extends CI_Model
 
     return $querydelete;
   }
+
+  public function hapusInspeksi($id_inspeksi)
+  {
+    $this->db->trans_begin();
+
+    $this->db->where('id_inspeksi', $id_inspeksi);
+    $this->db->delete('inspeksi_detail');
+
+    $this->db->where('id_inspeksi', $id_inspeksi);
+    $this->db->delete('fic_assistant');
+
+    $this->db->where('id_inspeksi', $id_inspeksi);
+    $this->db->delete('inspeksi');
+
+    if ($this->db->trans_status() == false) {
+      $this->db->trans_rollback();
+      return 0;
+    } else {
+      $this->db->trans_commit();
+      return 1;
+    }
+  }
 }
