@@ -73,19 +73,19 @@ class InspeksiBoat extends CI_Controller
 
         $angka = $kodeInspeksi['jml'] + 1;
         if ($angka >= 0 and $angka < 10) {
-            $kodeFile = 'FT' . "-000000" . $angka;
+            $kodeFile = 'RB' . "-000000" . $angka;
         } else if ($angka >= 10 and $angka < 100) {
-            $kodeFile = 'FT' . "-00000" . $angka;
+            $kodeFile = 'RB' . "-00000" . $angka;
         } else if ($angka >= 100 and $angka < 1000) {
-            $kodeFile = 'FT' . "-0000" . $angka;
+            $kodeFile = 'RB' . "-0000" . $angka;
         } else if ($angka >= 1000 and $angka < 10000) {
-            $kodeFile = 'FT' . "-000" . $angka;
+            $kodeFile = 'RB' . "-000" . $angka;
         } else if ($angka >= 10000 and $angka < 100000) {
-            $kodeFile = 'FT' . "-00" . $angka;
+            $kodeFile = 'RB' . "-00" . $angka;
         } else if ($angka >= 100000 and $angka < 1000000) {
-            $kodeFile = 'FT' . "-0" . $angka;
+            $kodeFile = 'RB' . "-0" . $angka;
         } else if ($angka >= 1000000) {
-            $kodeFile = 'FT' . "-" . $angka;
+            $kodeFile = 'RB' . "-" . $angka;
         }
 
         // get id category truck
