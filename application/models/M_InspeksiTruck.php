@@ -436,7 +436,7 @@ class M_InspeksiTruck extends CI_Model
     $query = $this->db->query("SELECT a.attachment, a.remark, a.fuel_level, DATE_FORMAT(a.tgl_inspeksi, '%d-%m-%Y') as tgl_inspeksi, 
     CASE
       WHEN a.shift = 0 THEN 'pagi'
-      WHEN a.shift = 1 THEN 'siang'
+      WHEN a.shift = 1 THEN 'sore'
       WHEN a.shift = 2 THEN 'malam'
     END AS shift, b.nama  FROM inspeksi a
     LEFT JOIN user b ON a.fire_incident_commander = b.id_user
