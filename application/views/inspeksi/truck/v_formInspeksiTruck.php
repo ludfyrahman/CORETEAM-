@@ -29,9 +29,9 @@
                                     <label for="shift">Pilih Shift</label>
                                     <select class="form-control text-sm" id="shift">
                                         <option value="">Pilih Shift</option>
-                                        <option value="1">Pagi</option>
-                                        <option value="2">Sore</option>
-                                        <option value="3">Malam</option>
+                                        <option value="0">Pagi</option>
+                                        <option value="1">Sore</option>
+                                        <option value="2">Malam</option>
                                     </select>
                                 </div>
                             </div>
