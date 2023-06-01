@@ -1,5 +1,6 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
+
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\Worksheet\PageSetup;
@@ -10,8 +11,8 @@ class InspeksiCar extends CI_Controller
     {
         parent::__construct();
         cek_session();
-		$this->load->model('M_InspeksiCar');
-		$this->category = 'Rescue Car';
+        $this->load->model('M_InspeksiCar');
+        $this->category = 'Rescue Car';
     }
 
     public function index()
@@ -28,9 +29,9 @@ class InspeksiCar extends CI_Controller
     public function createInspeksi()
     {
         $data['mainurl'] = 'Rescue Car';
-		$data['commander'] = $this->M_InspeksiCar->getFireIncidentCommander();
+        $data['commander'] = $this->M_InspeksiCar->getFireIncidentCommander();
         $data['assistant'] = $this->M_InspeksiCar->getFICAssistant();
-		$data['subcat1'] = $this->M_InspeksiCar->getKategoriEngine();
+        $data['subcat1'] = $this->M_InspeksiCar->getKategoriEngine();
         $data['subcat2'] = $this->M_InspeksiCar->getKategoriTransmissionBreakingSystem();
         $data['subcat3'] = $this->M_InspeksiCar->getKategoriElectricalSystem();
         $data['subcat4'] = $this->M_InspeksiCar->getKategoriRescueEquipment();
@@ -46,7 +47,7 @@ class InspeksiCar extends CI_Controller
         $this->load->view('partials/modal_source');
     }
 
-	public function editInspeksi($id_inspeksi)
+    public function editInspeksi($id_inspeksi)
     {
         $data['mainurl'] = 'Rescue Car';
         $data['commander'] = $this->M_InspeksiCar->getFireIncidentCommander();
@@ -82,7 +83,7 @@ class InspeksiCar extends CI_Controller
         $this->load->view('partials/modal_source');
     }
 
-	public function saveInspeksi()
+    public function saveInspeksi()
     {
         $tglWaktu = $this->input->post('tglWaktu');
         $shift = $this->input->post('shift');
@@ -94,89 +95,86 @@ class InspeksiCar extends CI_Controller
         $file = $_FILES['file']['name'];
         $date_now = date('Y-m-d H:i:s');
         $id_user = $this->session->userdata('id_user');
-		$kodeInspeksi = $this->M_InspeksiCar->getKodeInspeksi();
+        $kodeInspeksi = $this->M_InspeksiCar->getKodeInspeksi();
 
-		$angka = $kodeInspeksi['jml'] + 1;
-		if ($angka >= 0 and $angka < 10) {
-			$kodeFile = 'FT' . "-000000" . $angka;
-		} else if ($angka >= 10 and $angka < 100) {
-			$kodeFile = 'FT' . "-00000" . $angka;
-		} else if ($angka >= 100 and $angka < 1000) {
-			$kodeFile = 'FT' . "-0000" . $angka;
-		} else if ($angka >= 1000 and $angka < 10000) {
-			$kodeFile = 'FT' . "-000" . $angka;
-		} else if ($angka >= 10000 and $angka < 100000) {
-			$kodeFile = 'FT' . "-00" . $angka;
-		} else if ($angka >= 100000 and $angka < 1000000) {
-			$kodeFile = 'FT' . "-0" . $angka;
-		} else if ($angka >= 1000000) {
-			$kodeFile = 'FT' . "-" . $angka;
-		}
-		$idCatCar = $this->M_InspeksiCar->getIDCatCar();
-		$uploadImage = ['file_name' => null];
-		if ($file != 'undefined') {
-			
-			$config['file_name']       = $file;
-			
-			$config['allowed_types']   = 'jpg|jpeg|png';
-			$config['source_image']    = $_FILES['file']['tmp_name'];
-			$config['upload_path']     = './uploads/';
+        $angka = $kodeInspeksi['jml'] + 1;
+        if ($angka >= 0 and $angka < 10) {
+            $kodeFile = 'FT' . "-000000" . $angka;
+        } else if ($angka >= 10 and $angka < 100) {
+            $kodeFile = 'FT' . "-00000" . $angka;
+        } else if ($angka >= 100 and $angka < 1000) {
+            $kodeFile = 'FT' . "-0000" . $angka;
+        } else if ($angka >= 1000 and $angka < 10000) {
+            $kodeFile = 'FT' . "-000" . $angka;
+        } else if ($angka >= 10000 and $angka < 100000) {
+            $kodeFile = 'FT' . "-00" . $angka;
+        } else if ($angka >= 100000 and $angka < 1000000) {
+            $kodeFile = 'FT' . "-0" . $angka;
+        } else if ($angka >= 1000000) {
+            $kodeFile = 'FT' . "-" . $angka;
+        }
+        $idCatCar = $this->M_InspeksiCar->getIDCatCar();
+        $uploadImage = ['file_name' => null];
+        if ($file != 'undefined') {
 
-			$this->load->library('upload', $config);
-			$this->upload->initialize($config);
-			
-			if ($this->upload->do_upload('file')) {
-				$uploadImage = $this->upload->data();
-				$filePath = $uploadImage['full_path'];
-				$imageTemp = $config['source_image']; 
-				$imageSize = convert_filesize($uploadImage['file_size']); 
-				
-				// Compress size and upload image 
-				$compressedImage = compressImage($imageTemp, $uploadImage['full_path'], 75); 
-				
-				if($compressedImage){ 
-					$compressedImageSize = filesize($compressedImage); 
-					$compressedImageSize = convert_filesize($compressedImageSize); 
-					
-				}else{ 
-					echo json_encode(array('status' => 2, 'type' => 'error', 'msg' => 'Gagal Compress file', 'desc' => 'Gagal Kompress Gambar'));
-				} 
-			}
-			
-		}
-		$this->db->trans_begin();
+            $config['file_name']       = $file;
 
-		// insert ke table inspeksi
-		$insert = $this->M_InspeksiCar->insertInspeksi($id_user, $tglWaktu, $shift, $commander, $fuelLevel, $kodeFile, $uploadImage['file_name'], $remark, $date_now, $idCatCar['id_category']);
+            $config['allowed_types']   = 'jpg|jpeg|png';
+            $config['source_image']    = $_FILES['file']['tmp_name'];
+            $config['upload_path']     = './uploads/';
 
-		// get id_inspeksi di tabel inspeksi
-		$id = $this->M_InspeksiCar->getIDInspeksi();
+            $this->load->library('upload', $config);
+            $this->upload->initialize($config);
 
-		// insert ke table inspeksi_detail
-		$data_item = json_decode($arrItem);
-		foreach ($data_item as $row) {
-			$insert = $this->M_InspeksiCar->insertInspeksiDetail($id['id_inspeksi'], $row->id_item, $row->conditions);
-		}
+            if ($this->upload->do_upload('file')) {
+                $uploadImage = $this->upload->data();
+                $filePath = $uploadImage['full_path'];
+                $imageTemp = $config['source_image'];
+                $imageSize = convert_filesize($uploadImage['file_size']);
 
-		// insert ke table fic_assistant
-		$data_assistant = json_decode($arrAssistant);
-		foreach ($data_assistant as $row) {
-			$insert = $this->M_InspeksiCar->insertFICAssistant($id['id_inspeksi'], $row);
-		}
+                // Compress size and upload image 
+                $compressedImage = compressImage($imageTemp, $uploadImage['full_path'], 75);
 
-		if ($this->db->trans_status() === FALSE) {
-			$this->db->trans_rollback();
-			echo json_encode(array('status' => 0, 'type' => 'error', 'msg' => 'Error', 'desc' => 'Gagal Menyimpan Data Inspeksi'));
-		} else {
-			$this->db->trans_commit();
-			echo json_encode(array('status' => 1, 'type' => 'success', 'msg' => 'Sukses', 'desc' => 'Data Berhasil Disimpan'));
-		}
-        
+                if ($compressedImage) {
+                    $compressedImageSize = filesize($compressedImage);
+                    $compressedImageSize = convert_filesize($compressedImageSize);
+                } else {
+                    echo json_encode(array('status' => 2, 'type' => 'error', 'msg' => 'Gagal Compress file', 'desc' => 'Gagal Kompress Gambar'));
+                }
+            }
+        }
+        $this->db->trans_begin();
+
+        // insert ke table inspeksi
+        $insert = $this->M_InspeksiCar->insertInspeksi($id_user, $tglWaktu, $shift, $commander, $fuelLevel, $kodeFile, $uploadImage['file_name'], $remark, $date_now, $idCatCar['id_category']);
+
+        // get id_inspeksi di tabel inspeksi
+        $id = $this->M_InspeksiCar->getIDInspeksi();
+
+        // insert ke table inspeksi_detail
+        $data_item = json_decode($arrItem);
+        foreach ($data_item as $row) {
+            $insert = $this->M_InspeksiCar->insertInspeksiDetail($id['id_inspeksi'], $row->id_item, $row->conditions);
+        }
+
+        // insert ke table fic_assistant
+        $data_assistant = json_decode($arrAssistant);
+        foreach ($data_assistant as $row) {
+            $insert = $this->M_InspeksiCar->insertFICAssistant($id['id_inspeksi'], $row);
+        }
+
+        if ($this->db->trans_status() === FALSE) {
+            $this->db->trans_rollback();
+            echo json_encode(array('status' => 0, 'type' => 'error', 'msg' => 'Error', 'desc' => 'Gagal Menyimpan Data Inspeksi'));
+        } else {
+            $this->db->trans_commit();
+            echo json_encode(array('status' => 1, 'type' => 'success', 'msg' => 'Sukses', 'desc' => 'Data Berhasil Disimpan'));
+        }
     }
 
 
 
-	public function getInspeksi()
+    public function getInspeksi()
     {
         $result = $this->M_InspeksiCar->getInspeksi();
 
@@ -213,20 +211,19 @@ class InspeksiCar extends CI_Controller
 
             if ($this->upload->do_upload('file')) {
                 $uploadImage = $this->upload->data();
-				$filePath = $uploadImage['full_path'];
-				$imageTemp = $config['source_image']; 
-				$imageSize = convert_filesize($uploadImage['file_size']); 
-				
-				// Compress size and upload image 
-				$compressedImage = compressImage($imageTemp, $uploadImage['full_path'], 75); 
-				
-				if($compressedImage){ 
-					$compressedImageSize = filesize($compressedImage); 
-					$compressedImageSize = convert_filesize($compressedImageSize); 
-					
-				}else{ 
-					echo json_encode(array('status' => 2, 'type' => 'error', 'msg' => 'Gagal Compress file', 'desc' => 'Gagal Kompress Gambar'));
-				} 
+                $filePath = $uploadImage['full_path'];
+                $imageTemp = $config['source_image'];
+                $imageSize = convert_filesize($uploadImage['file_size']);
+
+                // Compress size and upload image 
+                $compressedImage = compressImage($imageTemp, $uploadImage['full_path'], 75);
+
+                if ($compressedImage) {
+                    $compressedImageSize = filesize($compressedImage);
+                    $compressedImageSize = convert_filesize($compressedImageSize);
+                } else {
+                    echo json_encode(array('status' => 2, 'type' => 'error', 'msg' => 'Gagal Compress file', 'desc' => 'Gagal Kompress Gambar'));
+                }
                 $this->db->trans_begin();
 
                 // menghapus file lama
@@ -260,7 +257,7 @@ class InspeksiCar extends CI_Controller
                     $this->db->trans_commit();
                     echo json_encode(array('status' => 1, 'type' => 'success', 'msg' => 'Sukses', 'desc' => 'Data Berhasil Disimpan'));
                 }
-            } 
+            }
         } else {
             $this->db->trans_begin();
 
@@ -292,15 +289,24 @@ class InspeksiCar extends CI_Controller
         }
     }
 
-	public function exportLaporanInspeksi($id_inspeksi)
+    public function hapusInspeksi()
     {
-		$spreadsheet = new Spreadsheet();
+        $id_inspeksi = $this->input->post('idInspeksi');
+
+        $delete = $this->M_InspeksiCar->hapusInspeksi($id_inspeksi);
+
+        echo $delete;
+    }
+
+    public function exportLaporanInspeksi($id_inspeksi)
+    {
+        $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
-		
+
         // Get Data Inspeksi
         $dataInspeksi = $this->M_InspeksiCar->getInspeksiLaporan($id_inspeksi);
-		
-		
+
+
         // Get Data Inspeksi Detail
         $dataSubCat1 = $this->M_InspeksiCar->getInspeksiDetailSubCat1($id_inspeksi);
         $dataSubCat2 = $this->M_InspeksiCar->getInspeksiDetailSubCat2($id_inspeksi);
@@ -428,9 +434,9 @@ class InspeksiCar extends CI_Controller
         // Cek Jumlah Data Item SubKategori 1
         $jumlahDataSubCat1 = COUNT($dataSubCat1);
 
-        
 
-		$kolom = '';
+
+        $kolom = '';
         if ($jumlahDataSubCat1 % 2 == 0) { // tidak ada sisa
             $pecahJumlaSubCat1 = $jumlahDataSubCat1 / 2;
         } else { //ada sisa
@@ -509,12 +515,12 @@ class InspeksiCar extends CI_Controller
                 $numRowItem1++;
             }
         }
-		
+
         // Data Item SubKategori 2
-         // SUBKATEGORI 2
-		$numRowSubCat2 = $numRowItem1 + 1;
-		$sheet->mergeCells('A' . $numRowSubCat2 . ':H' . $numRowSubCat2);
-        $sheet->setCellValue('A'.$numRowSubCat2.'', '2.TRANSMISSION & BRAKING SYSTEM');
+        // SUBKATEGORI 2
+        $numRowSubCat2 = $numRowItem1 + 1;
+        $sheet->mergeCells('A' . $numRowSubCat2 . ':H' . $numRowSubCat2);
+        $sheet->setCellValue('A' . $numRowSubCat2 . '', '2.TRANSMISSION & BRAKING SYSTEM');
         $sheet->getStyle('A' . $numRowSubCat2 . ':H' . $numRowSubCat2)->applyFromArray($subKategoriArray);
 
         // header item
@@ -609,10 +615,10 @@ class InspeksiCar extends CI_Controller
         }
 
         // Data Item SubKategori 3
-		
-		$numRowSubCat3 = $numRowItem2 + 1;
+
+        $numRowSubCat3 = $numRowItem2 + 1;
         $sheet->mergeCells('A' . $numRowSubCat3 . ':H' . $numRowSubCat3);
-        $sheet->setCellValue('A'.$numRowSubCat3.'', '3. ELECTRICAL SYSTEM');
+        $sheet->setCellValue('A' . $numRowSubCat3 . '', '3. ELECTRICAL SYSTEM');
         $sheet->getStyle('A' . $numRowSubCat3 . ':H' . $numRowSubCat3)->applyFromArray($subKategoriArray);
 
         // header item
@@ -709,7 +715,7 @@ class InspeksiCar extends CI_Controller
         // SUBKATEGORI 4
         $numRowSubCat4 = $numRowItem3 + 1;
         $sheet->mergeCells('A' . $numRowSubCat4 . ':H' . $numRowSubCat4);
-        $sheet->setCellValue('A'.$numRowSubCat4.'', '4. RESCUE EQUIPMENTS');
+        $sheet->setCellValue('A' . $numRowSubCat4 . '', '4. RESCUE EQUIPMENTS');
         $sheet->getStyle('A' . $numRowSubCat4 . ':H' . $numRowSubCat4)->applyFromArray($subKategoriArray);
 
         // header item
@@ -803,10 +809,10 @@ class InspeksiCar extends CI_Controller
         }
 
         // Data Item SubKategori 5
-		// SUBKATEGORI 5
+        // SUBKATEGORI 5
         $numRowSubCat5 = $numRowItem4 + 1;
         $sheet->mergeCells('A' . $numRowSubCat5 . ':H' . $numRowSubCat5);
-        $sheet->setCellValue('A'.$numRowSubCat5.'', '5. HAZMAT EQUIPMENTS');
+        $sheet->setCellValue('A' . $numRowSubCat5 . '', '5. HAZMAT EQUIPMENTS');
         $sheet->getStyle('A' . $numRowSubCat5 . ':H' . $numRowSubCat5)->applyFromArray($subKategoriArray);
 
         // header item
@@ -900,10 +906,10 @@ class InspeksiCar extends CI_Controller
         }
 
         // Data Item SubKategori 6
-		// SUBKATEGORI 6
+        // SUBKATEGORI 6
         $numRowSubCat6 = $numRowItem5 + 1;
         $sheet->mergeCells('A' . $numRowSubCat6 . ':H' . $numRowSubCat6);
-        $sheet->setCellValue('A'.$numRowSubCat6.'', '6. FIREMAN TOOLS');
+        $sheet->setCellValue('A' . $numRowSubCat6 . '', '6. FIREMAN TOOLS');
         $sheet->getStyle('A' . $numRowSubCat6 . ':H' . $numRowSubCat6)->applyFromArray($subKategoriArray);
 
         // header item
@@ -1100,7 +1106,7 @@ class InspeksiCar extends CI_Controller
 
         // Proses file excel
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        header('Content-Disposition: attachment; filename="Report Fire Truck check.xlsx"'); // Set nama file excel nya
+        header('Content-Disposition: attachment; filename="Report Fire Car check.xlsx"'); // Set nama file excel nya
         header('Cache-Control: max-age=0');
 
         $writer = new Xlsx($spreadsheet);

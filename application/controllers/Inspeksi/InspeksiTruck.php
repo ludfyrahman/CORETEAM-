@@ -107,20 +107,19 @@ class InspeksiTruck extends CI_Controller
 
             if ($this->upload->do_upload('file')) {
                 $uploadImage = $this->upload->data();
-				$filePath = $uploadImage['full_path'];
-				$imageTemp = $config['source_image']; 
-				$imageSize = convert_filesize($uploadImage['file_size']); 
-				
-				// Compress size and upload image 
-				$compressedImage = compressImage($imageTemp, $uploadImage['full_path'], 75); 
-				
-				if($compressedImage){ 
-					$compressedImageSize = filesize($compressedImage); 
-					$compressedImageSize = convert_filesize($compressedImageSize); 
-					
-				}else{ 
-					echo json_encode(array('status' => 2, 'type' => 'error', 'msg' => 'Gagal Compress file', 'desc' => 'Gagal Kompress Gambar'));
-				} 
+                $filePath = $uploadImage['full_path'];
+                $imageTemp = $config['source_image'];
+                $imageSize = convert_filesize($uploadImage['file_size']);
+
+                // Compress size and upload image 
+                $compressedImage = compressImage($imageTemp, $uploadImage['full_path'], 75);
+
+                if ($compressedImage) {
+                    $compressedImageSize = filesize($compressedImage);
+                    $compressedImageSize = convert_filesize($compressedImageSize);
+                } else {
+                    echo json_encode(array('status' => 2, 'type' => 'error', 'msg' => 'Gagal Compress file', 'desc' => 'Gagal Kompress Gambar'));
+                }
                 // get jumlah data
                 $kodeInspeksi = $this->M_InspeksiTruck->getKodeInspeksi();
 
@@ -259,20 +258,19 @@ class InspeksiTruck extends CI_Controller
 
             if ($this->upload->do_upload('file')) {
                 $uploadImage = $this->upload->data();
-				$filePath = $uploadImage['full_path'];
-				$imageTemp = $config['source_image']; 
-				$imageSize = convert_filesize($uploadImage['file_size']); 
-				
-				// Compress size and upload image 
-				$compressedImage = compressImage($imageTemp, $uploadImage['full_path'], 75); 
-				
-				if($compressedImage){ 
-					$compressedImageSize = filesize($compressedImage); 
-					$compressedImageSize = convert_filesize($compressedImageSize); 
-					
-				}else{ 
-					echo json_encode(array('status' => 2, 'type' => 'error', 'msg' => 'Gagal Compress file', 'desc' => 'Gagal Kompress Gambar'));
-				} 
+                $filePath = $uploadImage['full_path'];
+                $imageTemp = $config['source_image'];
+                $imageSize = convert_filesize($uploadImage['file_size']);
+
+                // Compress size and upload image 
+                $compressedImage = compressImage($imageTemp, $uploadImage['full_path'], 75);
+
+                if ($compressedImage) {
+                    $compressedImageSize = filesize($compressedImage);
+                    $compressedImageSize = convert_filesize($compressedImageSize);
+                } else {
+                    echo json_encode(array('status' => 2, 'type' => 'error', 'msg' => 'Gagal Compress file', 'desc' => 'Gagal Kompress Gambar'));
+                }
                 $this->db->trans_begin();
 
                 // menghapus file lama
@@ -346,6 +344,15 @@ class InspeksiTruck extends CI_Controller
         $result = $this->M_InspeksiTruck->getInspeksi();
 
         echo json_encode($result);
+    }
+
+    public function hapusInspeksi()
+    {
+        $id_inspeksi = $this->input->post('idInspeksi');
+
+        $delete = $this->M_InspeksiTruck->hapusInspeksi($id_inspeksi);
+
+        echo $delete;
     }
 
     public function exportLaporanInspeksi($id_inspeksi)
