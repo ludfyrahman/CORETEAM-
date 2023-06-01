@@ -31,33 +31,21 @@
                         var role = <?= $this->session->userdata('role'); ?>;
 
                         var button = '';
-                        // if (idUser != v.inspected_by) {
-                        //     button = '<a href="<?= base_url('Inspeksi/InspeksiCar/exportLaporanInspeksi/') ?>' +
-                        //         v.id_inspeksi + '" class="btn btn-icon btn-3 btn-success w-30" type="button" title="Export Inspeksi">' +
-                        //         '<span class="btn-inner--icon text-white"><i class="fa-solid fa-file-excel"></i></span></a>'
-                        // } else {
-                        //     button = '<a href="<?= base_url('Inspeksi/InspeksiCar/editInspeksi/') ?>' +
-                        //         v.id_inspeksi + '" class="btn btn-icon btn-3 btn-warning w-30" type="button" title="Edit Inspeksi">' +
-                        //         '<span class="btn-inner--icon text-white"><i class="fa-solid fa-pencil-alt"></i></span></a> ' +
-                        //         '<a href="<?= base_url('Inspeksi/InspeksiCar/exportLaporanInspeksi/') ?>' +
-                        //         v.id_inspeksi + '" class="btn btn-icon btn-3 btn-success w-30" type="button" title="Export Inspeksi">' +
-                        //         '<span class="btn-inner--icon text-white"><i class="fa-solid fa-file-excel"></i></span></a> '
-                        // }
                         if (role == 0) {
                             button = '<a href="<?= base_url('Inspeksi/InspeksiCar/editInspeksi/') ?>' +
                                 v.id_inspeksi + '" class="btn btn-icon btn-3 btn-warning w-30" type="button" title="Edit Inspeksi">' +
                                 '<span class="btn-inner--icon text-white"><i class="fa-solid fa-pencil-alt"></i></span></a> ' +
-                                '<a href="<?= base_url('nspeksi/InspeksiCar/exportLaporanInspeksi/') ?>' +
+                                '<a href="<?= base_url('Inspeksi/InspeksiCar/exportLaporanInspeksi/') ?>' +
                                 v.id_inspeksi + '" class="btn btn-icon btn-3 btn-success w-30" type="button" title="Export Inspeksi">' +
                                 '<span class="btn-inner--icon text-white"><i class="fa-solid fa-file-excel"></i></span></a> ' +
                                 '<button onclick="hapusInspeksi(' + v.id_inspeksi + ')" class="btn btn-danger btn-3 btn-success w-30" title="Hapus Inspeksi"><span class="btn-inner--icon text-white"><i class="fa-solid fa-trash"></i></span></button>'
                         } else if (role == 2) {
-                            button = '<a href="<?= base_url('nspeksi/InspeksiCar/exportLaporanInspeksi/') ?>' +
+                            button = '<a href="<?= base_url('Inspeksi/InspeksiCar/exportLaporanInspeksi/') ?>' +
                                 v.id_inspeksi + '" class="btn btn-icon btn-3 btn-success w-30" type="button" title="Export Inspeksi">' +
                                 '<span class="btn-inner--icon text-white"><i class="fa-solid fa-file-excel"></i></span></a>'
                         } else {
                             if (idUser != v.inspected_by) {
-                                button = '<a href="<?= base_url('nspeksi/InspeksiCar/exportLaporanInspeksi/') ?>' +
+                                button = '<a href="<?= base_url('Inspeksi/InspeksiCar/exportLaporanInspeksi/') ?>' +
                                     v.id_inspeksi + '" class="btn btn-icon btn-3 btn-success w-30" type="button" title="Export Inspeksi">' +
                                     '<span class="btn-inner--icon text-white"><i class="fa-solid fa-file-excel"></i></span></a>'
                             } else {

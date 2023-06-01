@@ -14,7 +14,7 @@
                             </div>
                         </div>
                         <div class="col-4 text-end">
-                            <div class="icon icon-shape bg-gradient-primary shadow-primary text-center rounded-circle">
+                            <div class="icon icon-shape bg-gradient-info shadow-info text-center rounded-circle">
                                 <i class="ni ni-books text-lg opacity-10" aria-hidden="true"></i>
                             </div>
                         </div>
@@ -37,7 +37,7 @@
 								</div>
 							</div>
 							<div class="col-4 text-end">
-								<div class="icon icon-shape bg-gradient-danger shadow-danger text-center rounded-circle">
+								<div class="icon icon-shape bg-gradient-warning shadow-warning text-center rounded-circle">
 									<i class="fa-solid fa-car text-lg opacity-10" aria-hidden="true"></i>
 								</div>
 							</div>
@@ -61,7 +61,7 @@
 								</div>
 							</div>
 							<div class="col-4 text-end">
-								<div class="icon icon-shape bg-gradient-success shadow-success text-center rounded-circle">
+								<div class="icon icon-shape bg-gradient-danger shadow-danger text-center rounded-circle">
 									<i class="fa-solid fa-truck text-lg opacity-10" aria-hidden="true"></i>
 								</div>
 							</div>
@@ -85,7 +85,7 @@
 								</div>
 							</div>
 							<div class="col-4 text-end">
-								<div class="icon icon-shape bg-gradient-warning shadow-warning text-center rounded-circle">
+								<div class="icon icon-shape bg-gradient-info shadow-info text-center rounded-circle">
 									<i class="fa-solid fa-ship text-lg opacity-10" aria-hidden="true"></i>
 								</div>
 							</div>
