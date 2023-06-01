@@ -69,7 +69,7 @@ class M_InspeksiCar extends CI_Model
                                   ON a.inspected_by = b.id_user
                                 LEFT JOIN category c
                                   ON a.id_category = c.id_category
-                                WHERE c.category = '$this->category'");
+                                WHERE c.category = '$this->category' order by a.created_at desc");
 
     if ($query->num_rows() == 0) {
       $query = 0;
