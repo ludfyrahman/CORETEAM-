@@ -47,7 +47,7 @@
                                             if ($data['status'] == '0') {
                                                 echo 'FIC Assistant';
                                             } else if ($data['status'] == '1') {
-                                                echo 'FIC Commander';
+                                                echo 'Fire Incident Commander';
                                             } else {
                                                 echo 'Lainnya';
                                             }
