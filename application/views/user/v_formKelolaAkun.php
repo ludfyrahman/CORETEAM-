@@ -40,7 +40,7 @@
                                 <select class="form-control text-sm" id="status">
                                     <option value="">Pilih status</option>
                                     <option value="0">FIC Assistant</option>
-                                    <option value="1">FIC Commander</option>
+                                    <option value="1">Fire Incident Commander</option>
                                     <option value="2">Lainnya</option>
                                 </select>
                             </div>
