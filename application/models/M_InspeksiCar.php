@@ -82,7 +82,7 @@ class M_InspeksiCar extends CI_Model
 
   public function getKodeInspeksi()
   {
-    $query = $this->db->query("SELECT COUNT(*) as jml FROM inspeksi");
+    $query = $this->db->query("SELECT COUNT(*) as jml FROM inspeksi WHERE id_category = 2");
 
     if ($query->num_rows() == 0) {
       $query = 0;
