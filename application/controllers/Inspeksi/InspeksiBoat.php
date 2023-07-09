@@ -429,7 +429,7 @@ class InspeksiBoat extends CI_Controller
         $sheet->mergeCells('A2:G2');
         $sheet->setCellValue('A2', 'DAILY RESCUE BOAT INSPECTION SHEET');
         $sheet->mergeCells('A3:G3');
-        $sheet->setCellValue('A3', '( SMOB-BOAT-49 )');
+        $sheet->setCellValue('A3', '');
 
         // Header
         $sheet->mergeCells('A4:C5');
@@ -485,13 +485,13 @@ class InspeksiBoat extends CI_Controller
         $sheet->getStyle('A' . $colAF . ':E' . $colEG . '')->applyFromArray($leftArray);
 
         $drawing = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
-        //gambar header
-        $drawing->setPath('./uploads/Paiton.png');
-        $drawing->setCoordinates('A1');
-        $drawing->setWidthAndHeight(100, 100);
-        $drawing->setOffsetY(10);
-        $drawing->getShadow()->setVisible(true);
-        $drawing->setWorksheet($sheet);
+        //gambar header revisi hapus logo
+        // $drawing->setPath('./uploads/Paiton.png');
+        // $drawing->setCoordinates('A1');
+        // $drawing->setWidthAndHeight(100, 100);
+        // $drawing->setOffsetY(10);
+        // $drawing->getShadow()->setVisible(true);
+        // $drawing->setWorksheet($sheet);
 
         if ($dataInspeksi['attachment'] != '') {
             // Jika kolom gambar tidak kosong, lakukan penggabungan sel dan tampilkan gambar

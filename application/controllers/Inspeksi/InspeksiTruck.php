@@ -467,7 +467,7 @@ class InspeksiTruck extends CI_Controller
         $sheet->mergeCells('A1:H1');
         $sheet->setCellValue('A1', 'DAILY FIRE TRUCK INSPECTION SHEET');
         $sheet->mergeCells('A2:H2');
-        $sheet->setCellValue('A2', '(SMOB-164)');
+        $sheet->setCellValue('A2', '');
 
         // SUBKATEGORI 1
         $sheet->mergeCells('A3:H3');
