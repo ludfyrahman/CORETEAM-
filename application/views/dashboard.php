@@ -22,30 +22,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-xl-4 col-sm-6 mb-xl-0 mb-4">
-            <a href="<?= base_url('Inspeksi/InspeksiCar') ?>">
-				<div class="card">
-					<div class="card-body p-3">
-						<div class="row">
-							<div class="col-8">
-								<div class="numbers">
-									<p class="text-sm mb-0 text-uppercase font-weight-bold text-black">Rescue Car</p>
-									<h5 class="font-weight-bolder d-none">
-										<?= number_format($data[1]) ?>
-									</h5>
-
-								</div>
-							</div>
-							<div class="col-4 text-end">
-								<div class="icon icon-shape bg-gradient-warning shadow-warning text-center rounded-circle">
-									<i class="fa-solid fa-car text-lg opacity-10" aria-hidden="true"></i>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</a>
-        </div>
+        
         <div class="col-xl-4 col-sm-6 mb-xl-0 mb-4">
 			<a href="<?= base_url('Inspeksi/InspeksiTruck') ?>">
 				<div class="card">
@@ -63,6 +40,30 @@
 							<div class="col-4 text-end">
 								<div class="icon icon-shape bg-gradient-danger shadow-danger text-center rounded-circle">
 									<i class="fa-solid fa-truck text-lg opacity-10" aria-hidden="true"></i>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</a>
+        </div>
+		<div class="col-xl-4 col-sm-6 mb-xl-0 mb-4">
+            <a href="<?= base_url('Inspeksi/InspeksiCar') ?>">
+				<div class="card">
+					<div class="card-body p-3">
+						<div class="row">
+							<div class="col-8">
+								<div class="numbers">
+									<p class="text-sm mb-0 text-uppercase font-weight-bold text-black">Rescue Car</p>
+									<h5 class="font-weight-bolder d-none">
+										<?= number_format($data[1]) ?>
+									</h5>
+
+								</div>
+							</div>
+							<div class="col-4 text-end">
+								<div class="icon icon-shape bg-gradient-warning shadow-warning text-center rounded-circle">
+									<i class="fa-solid fa-car text-lg opacity-10" aria-hidden="true"></i>
 								</div>
 							</div>
 						</div>
@@ -101,7 +102,7 @@
                 <div id="carouselExampleCaptions" class="carousel slide h-100"  data-bs-interval="5000" data-bs-ride="carousel">
                     <div class="carousel-inner border-radius-lg h-100">
                         <?php
-                        for ($i = 0; $i < 10; $i++) {
+                        for ($i = 0; $i < 5; $i++) {
                         ?>
                             <div class="carousel-item h-100 <?= $i == 0 ? 'active' : '' ?>" style="background-image: url('<?= base_url('assets/img/sliders/slide' . ($i + 1) . '.jpeg') ?>'); background-size: auto;background-repeat: no-repeat;">
                                 <div class="carousel-caption d-none d-md-block bottom-0 text-start start-0 ms-5">

@@ -411,7 +411,7 @@ class InspeksiCar extends CI_Controller
         $sheet->mergeCells('A1:H1');
         $sheet->setCellValue('A1', 'DAILY RESCUE CAR INSPECTION SHEET');
         $sheet->mergeCells('A2:H2');
-        $sheet->setCellValue('A2', '(SMOB-PKUP-217)');
+        $sheet->setCellValue('A2', '');
 
         // SUBKATEGORI 1
         $sheet->mergeCells('A3:H3');
